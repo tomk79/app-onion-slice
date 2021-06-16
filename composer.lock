@@ -4,8 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac4b820587471ce589f5807b26a89069",
+    "content-hash": "3c3b88238789c0ee09c611083bd6767d",
     "packages": [
+        {
+            "name": "pickles2/px2agent",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pickles2/php-px2agent.git",
+                "reference": "9fbbfcc38395f9db8a1e04a86a5ef09ddb726ebf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pickles2/php-px2agent/zipball/9fbbfcc38395f9db8a1e04a86a5ef09ddb726ebf",
+                "reference": "9fbbfcc38395f9db8a1e04a86a5ef09ddb726ebf",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.4.0",
+                "tomk79/filesystem": "~1.0",
+                "tomk79/request": "~1.0"
+            },
+            "require-dev": {
+                "phpdocumentor/phpdocumentor": "^2.9.0",
+                "phpunit/phpunit": "~4.1",
+                "pickles2/px-fw-2.x": "~2.0"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "php/px2agent.php",
+                    "php/px2project.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tomoya Koyanagi",
+                    "email": "tomk79@gmail.com"
+                }
+            ],
+            "description": "Pickles 2 と PHP スクリプトを仲介するAPIを提供します。",
+            "keywords": [
+                "pickles2"
+            ],
+            "support": {
+                "issues": "https://github.com/pickles2/php-px2agent/issues",
+                "source": "https://github.com/pickles2/php-px2agent/tree/0.0.3"
+            },
+            "time": "2021-01-16T11:36:17+00:00"
+        },
         {
             "name": "tomk79/filesystem",
             "version": "1.0.x-dev",
@@ -2159,12 +2213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tomk79/rencon-builder.git",
-                "reference": "904f127d35eaeaf5f9be9551aa1ccd30076fdb76"
+                "reference": "4f73bf352ce8247ffde2a5e25c6f064facfdda7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/904f127d35eaeaf5f9be9551aa1ccd30076fdb76",
-                "reference": "904f127d35eaeaf5f9be9551aa1ccd30076fdb76",
+                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/4f73bf352ce8247ffde2a5e25c6f064facfdda7e",
+                "reference": "4f73bf352ce8247ffde2a5e25c6f064facfdda7e",
                 "shasum": ""
             },
             "require": {
@@ -2196,7 +2250,7 @@
                 "issues": "https://github.com/tomk79/rencon-builder/issues",
                 "source": "https://github.com/tomk79/rencon-builder/tree/develop"
             },
-            "time": "2021-06-16T12:16:33+00:00"
+            "time": "2021-06-16T16:49:27+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -2260,7 +2314,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "pickles2/px2agent": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
