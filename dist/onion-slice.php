@@ -1,7 +1,7 @@
 <?php
 /* ---------------------
 
-  <!-- appname --> v0.0.1
+  onion-slice v0.0.2-alpha.1+dev
 
 --------------------- */
 
@@ -17,7 +17,6 @@ $conf = new \stdClass();
 /* --------------------------------------
  * ログインユーザーのIDとパスワードの対
  * 
- * rencon の初期画面は、ログイン画面から始まります。
  * `$conf->users` に 登録されたユーザーが、ログインを許可されます。
  * ユーザーIDを キー に、sha1ハッシュ化されたパスワード文字列を 値 に持つ連想配列で設定してください。
  * ユーザーは、複数登録できます。
@@ -27,14 +26,24 @@ $conf->users = array(
 );
 
 
+/* --------------------------------------
+ * データディレクトリのパス
+ * 
+ * アプリケーションが専有的に使用するディレクトリを与えてください。
+ * ここには、各種の状態を記憶したり、設定を保存したり、
+ * Pickles 2 プロジェクトデータを生成したりする用途で使用します。
+ */
+$conf->path_data_dir = './.onion-slice/';
+
+
 
 // =-=-=-=-=-=-=-=-=-=-=-= / Configuration END =-=-=-=-=-=-=-=-=-=-=-=
 
 
-$app = new app( $conf );
-$app->run();
+$rencon = new rencon( $conf );
+$rencon->run();
 
-class app {
+class rencon {
 
 	private $conf;
 	private $fs;
@@ -60,17 +69,21 @@ class app {
 
 '' => (object) array(
 	"title" => 'Home',
-	"page" => function(){ ?>
-<p>トップページ</p>
+	"page" => function(){
+$rencon = $this; ?>
+<?php
 
-<p><?php
-var_dump( $_REQUEST );
-?></p>
+$setup = new \tomk79\onionSlice\setup( $rencon );
+if( !$setup->wizard() ){
+    return;
+}
 
 
-<p><img src="?res=images/sample-png.png" /></p>
-<p><img src="?res=images/sample-jpeg.jpg" /></p>
-<p><img src="?res=images/sample-gif.gif" /></p>
+
+
+?>
+
+<p>ようこそ、Pickles 2</p>
 <?php return; },
 ),
 'test' => (object) array(
@@ -143,17 +156,16 @@ namespace renconFramework;
 class conf{
 	private $conf;
 	public $users;
-	public $disabled;
 	public $databases;
-	public $files_path_root;
-	public $files_paths_invisible;
-	public $files_paths_readonly;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct( $conf ){
 		$this->conf = (object) $conf;
+		foreach( $this->conf as $key=>$val ){
+			$this->{$key} = $val;
+		}
 
 		// --------------------------------------
 		// $conf->users
@@ -163,40 +175,25 @@ class conf{
 		}
 
 		// --------------------------------------
-		// $conf->disabled
-		$this->disabled = array();
-		if( property_exists( $conf, 'disabled' ) && !is_null( $conf->disabled ) ){
-			$this->disabled = (array) $conf->disabled;
-		}
-
-		// --------------------------------------
 		// $conf->databases
 		$this->databases = null;
 		if( property_exists( $conf, 'databases' ) && !is_null( $conf->databases ) ){
 			$this->databases = (array) $conf->databases;
 		}
 
-		// --------------------------------------
-		// $conf->files_path_root
-		$this->files_path_root = realpath('/');
-		if( property_exists( $conf, 'files_path_root' ) && is_string( $conf->files_path_root ) ){
-			$this->files_path_root = $conf->files_path_root;
-		}
+	}
 
-		// --------------------------------------
-		// $conf->files_paths_invisible
-		$this->files_paths_invisible = null;
-		if( property_exists( $conf, 'files_paths_invisible' ) && !is_null( $conf->files_paths_invisible ) ){
-			$this->files_paths_invisible = (array) $conf->files_paths_invisible;
+	/**
+	 * コンフィグ値を取得する
+	 */
+	public function get( $key = null ){
+		if( is_null( $key ) ){
+			return $this->conf;
 		}
-
-		// --------------------------------------
-		// $conf->files_paths_readonly
-		$this->files_paths_readonly = null;
-		if( property_exists( $conf, 'files_paths_readonly' ) && !is_null( $conf->files_paths_readonly ) ){
-			$this->files_paths_readonly = (array) $conf->files_paths_readonly;
+		if( property_exists( $this->conf, $key ) ){
+			return $this->conf->{$key};
 		}
-
+		return false;
 	}
 
 	/**
@@ -2169,6 +2166,7 @@ class theme{
 			$action_ary[0] = '';
 		}
 		$class_active['active'] = $action_ary[0];
+		$rencon = $this->main;
 		$login = $this->login;
 
 		ob_start();
@@ -2350,6 +2348,57 @@ PW: <input type="password" name="login_pw" value="" class="form-element" />
 		$rtn = ob_get_clean();
 		print $rtn;
 		exit;
+	}
+
+}
+?><?php
+namespace tomk79\onionSlice;
+
+class setup {
+	private $rencon;
+	public function __construct( $rencon ){
+		$this->rencon = $rencon;
+	}
+
+	/**
+	 * セットアップを進行する
+	 */
+	public function wizard(){
+		$conf = $this->rencon->conf();
+
+		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir) ){
+			$this->step01();
+			return false;
+		}
+
+
+		return true;
+	}
+
+
+	/**
+	 * ステップ1: データディレクトリを作成する
+	 */
+	private function step01(){
+		if( $this->rencon->req()->get_param('cmd') == 'next' ){
+			if( !$this->rencon->fs()->mkdir($this->rencon->conf()->path_data_dir) ){
+				?>
+				<p>ディレクトリの作成に失敗しました。</p>
+				<?php
+				return;
+			}
+			header('Location: ?a='.urlencode($this->rencon->req()->get_param('a')));
+			return;
+		}
+		?>
+			<p>データディレクトリを作成します。</p>
+			<form action="?" method="post">
+				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
+				<input type="hidden" name="cmd" value="next" />
+				<button type="submit">次へ</button>
+			</form>
+		<?php
+		return;
 	}
 
 }

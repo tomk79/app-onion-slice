@@ -13,12 +13,17 @@
         "build": [
             "php ./vendor/tomk79/rencon-builder/rencon-builder.phar"
         ],
+        "preview": [
+            "open http://localhost:8088/onion-slice.php;"
+        ],
+        "start": [
+            "php -S localhost:8088 -t ./dist/;"
+        ],
         "test": [
             "php ./vendor/phpunit/phpunit/phpunit"
         ]
     } ,
-    "minimum-stability": "stable",
-    "prefer-stable": true,
+    "minimum-stability": "dev",
     "repositories": [
     ],
     "require": {
@@ -27,12 +32,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~9.5",
-        "tomk79/rencon-builder": "^0.0.1"
+        "tomk79/rencon-builder": "~0.0.1"
     },
     "autoload": {
         "psr-4": {
             "tomk79\\onionSlice\\": [
-                "src/"
+                "php/"
             ]
         }
     }

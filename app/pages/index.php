@@ -1,10 +1,13 @@
-<p>トップページ</p>
+<?php
 
-<p><?php
-var_dump( $_REQUEST );
-?></p>
+$setup = new \tomk79\onionSlice\setup( $rencon );
+if( !$setup->wizard() ){
+    return;
+}
 
 
-<p><img src="?res=images/sample-png.png" /></p>
-<p><img src="?res=images/sample-jpeg.jpg" /></p>
-<p><img src="?res=images/sample-gif.gif" /></p>
+
+
+?>
+
+<p>ようこそ、Pickles 2</p>
