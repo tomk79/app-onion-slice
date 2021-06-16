@@ -1,0 +1,18 @@
+{
+    "name": "onion-slice",
+    "app_id": "onion-slice",
+    "dist": "dist/onion-slice.php",
+    "resources": "resources/",
+    "route": {
+        "": {
+            "title": "Home",
+            "page": "app/pages/index.php"
+        },
+        "test": {
+            "title": "Test",
+            "page": "tomk79\\onionSlice\\test::start"
+        }
+    },
+    "theme": "app/theme/theme.php",
+    "config_template": "app/config.php"
+}
