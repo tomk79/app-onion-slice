@@ -1,6 +1,7 @@
 {
     "name": "onion-slice",
     "app_id": "onion-slice",
+    "version": "0.0.1-alpha.1+dev",
     "dist": "dist/onion-slice.php",
     "resources": "resources/",
     "route": {
@@ -13,6 +14,9 @@
             "page": "tomk79\\onionSlice\\test::start"
         }
     },
+    "middleware": [
+        "tomk79\\onionSlice\\middleware\\setup::setup_wizard"
+    ],
     "theme": "app/theme/theme.php",
     "config_template": "app/config.php"
 }

@@ -1,7 +1,7 @@
 <?php
 /* ---------------------
 
-  onion-slice v0.0.2-alpha.1+dev
+  onion-slice v0.0.1-alpha.1+dev
 
 --------------------- */
 
@@ -48,6 +48,8 @@ class rencon {
 	private $conf;
 	private $fs;
 	private $req;
+	private $user;
+	private $theme;
 	private $resources;
 
 	private $app_id = 'onion-slice';
@@ -57,33 +59,29 @@ class rencon {
 		$this->conf = new conf( $conf );
 		$this->fs = new filesystem();
 		$this->req = new request();
+		$this->user = new user($this);
 		$this->resources = new resources($this);
 	}
 
 	public function conf(){ return $this->conf; }
 	public function fs(){ return $this->fs; }
 	public function req(){ return $this->req; }
+	public function user(){ return $this->user; }
+	public function theme(){ return $this->theme; }
 	public function resources(){ return $this->resources; }
 
+	public function app_id(){ return $this->app_id; }
+	public function app_name(){ return $this->app_name; }
+
 	public function run(){
+		header('Content-type: text/html'); // default
+
 		$route = array(
 
 '' => (object) array(
 	"title" => 'Home',
 	"page" => function(){
 $rencon = $this; ?>
-<?php
-
-$setup = new \tomk79\onionSlice\setup( $rencon );
-if( !$setup->wizard() ){
-    return;
-}
-
-
-
-
-?>
-
 <p>ようこそ、Pickles 2</p>
 <?php return; },
 ),
@@ -103,7 +101,14 @@ if( !$setup->wizard() ){
 			'name' => $this->app_name,
 			'pages' => $route,
 		);
+		$page_info = array(
+			'id' => $action,
+			'title' => 'Home',
+		);
+		$this->theme = new theme( $this, $app_info, $page_info );
 
+		// --------------------------------------
+		// リソースへのリクエストを処理
 		if( strlen($resource) ){
 			header("Content-type: ".$this->resources->get_mime_type($resource));
 			$bin = $this->resources->get($resource);
@@ -112,37 +117,88 @@ if( !$setup->wizard() ){
 
 		}
 
-		header('Content-type: text/html'); // default
-
+		// --------------------------------------
+		// ログイン処理
 		$login = new login($this, $app_info);
-		if( !$login->check() ){
-			$login->please_login();
-			exit;
-		}
 
 		if( $action == 'logout' ){
 			$login->logout();
 			exit;
 		}
 
+		if( !$login->check() ){
+			if( $action == 'logout' || $action == 'login' ){
+				$this->req()->set_param('a', null);
+			}
+			$login->please_login();
+			exit;
+		}
 
+		if( $action == 'logout' || $action == 'login' ){
+			$this->req()->set_param('a', null);
+		}
+
+		// --------------------------------------
+		// middleware
+
+		$middleware = array (
+  0 => 'tomk79\\onionSlice\\middleware\\setup::setup_wizard',
+);
+
+		foreach( $middleware as $method ){
+			list( $className, $funcName ) = explode('::', $method);
+			$tmp_obj = new $className();
+			call_user_func( array($tmp_obj, $funcName), $this );
+		}
+
+
+
+		// --------------------------------------
+		// コンテンツを処理
 		if( array_key_exists( $action, $route ) ){
 			$controller = $route[$action];
+			$page_info['title'] = $controller->title;
+			$this->theme()->set_current_page_info( $page_info );
+
 			ob_start();
-			call_user_func($controller->page);
+			call_user_func( $controller->page );
 			$content = ob_get_clean();
 
-			$page_info = array(
-				'id' => $action,
-				'title' => $controller->title,
-			);
 
-			$theme = new theme( $this, $login, $app_info, $page_info );
-			$html = $theme->bind( $content );
+			$html = $this->theme()->bind( $content );
 			echo $html;
 
+		}else{
+			$this->notfound();
 		}
 		exit();
+	}
+
+
+	/**
+	 * Not Found ページを表示して終了する
+	 */
+	public function notfound(){
+		$page_info['title'] = 'Not Found';
+		$this->theme()->set_current_page_info( $page_info );
+
+		$content = '<p>404: Not Found</p>';
+		$html = $this->theme()->bind( $content );
+		echo $html;
+		exit;
+	}
+
+	/**
+	 * Forbidden ページを表示して終了する
+	 */
+	public function forbidden(){
+		$page_info['title'] = 'Forbidden';
+		$this->theme()->set_current_page_info( $page_info );
+
+		$content = '<p>403: Forbidden</p>';
+		$html = $this->theme()->bind( $content );
+		echo $html;
+		exit;
 	}
 
 }
@@ -2124,24 +2180,65 @@ class request{
 namespace renconFramework;
 
 /**
+ * user class
+ *
+ * @author Tomoya Koyanagi <tomk79@gmail.com>
+ */
+class user{
+	private $rencon;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct( $rencon ){
+		$this->rencon = $rencon;
+	}
+
+	/**
+	 * ログインしているか
+	 */
+	public function is_login(){
+		$login_id = $this->get_user_id();
+		return !!strlen($login_id);
+	}
+
+	/**
+	 * ユーザーIDを取得
+	 */
+	public function get_user_id(){
+		$login_id = $this->rencon->req()->get_session($this->rencon->app_id().'_ses_login_id');
+		return $login_id;
+	}
+
+}
+?><?php
+namespace renconFramework;
+
+/**
  * theme class
  *
  * @author Tomoya Koyanagi <tomk79@gmail.com>
  */
 class theme{
-	private $main;
-	private $login;
+	private $rencon;
 	private $app_info;
 	private $current_page_info;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct( $main, $login, $app_info, $current_page_info ){
-		$this->main = $main;
-		$this->login = $login;
+	public function __construct( $rencon, $app_info, $current_page_info = array() ){
+		$this->rencon = $rencon;
 		$this->app_info = (object) $app_info;
 		$this->current_page_info = (object) $current_page_info;
+	}
+
+	/**
+	 * ページ情報
+	 */
+	public function set_current_page_info( $page_info ){
+		$this->current_page_info = (object) array_merge((array) $this->current_page_info, (array) $page_info);
+		return true;
 	}
 
 	/**
@@ -2162,13 +2259,12 @@ class theme{
 	 * テーマにコンテンツを包んで返す
 	 */
 	public function bind( $content ){
-		$action_ary = explode('.', $this->main->req()->get_param('a'));
+		$action_ary = explode('.', $this->rencon->req()->get_param('a'));
 		if( !is_array($action_ary) || !count($action_ary) ){
 			$action_ary[0] = '';
 		}
 		$class_active['active'] = $action_ary[0];
-		$rencon = $this->main;
-		$login = $this->login;
+		$rencon = $this->rencon;
 
 		ob_start();
 		?><?php
@@ -2203,7 +2299,7 @@ foreach( $app_info->pages as $pid=>$page_info ){
 
 <hr />
 
-<?php if( $this->main->conf()->is_login_required() && $login->check() ) { ?>
+<?php if( $rencon->conf()->is_login_required() && $rencon->user()->is_login() ) { ?>
 <p>
     <a href="?a=logout">Logout</a>
 </p>
@@ -2227,15 +2323,14 @@ namespace renconFramework;
  * @author Tomoya Koyanagi <tomk79@gmail.com>
  */
 class login{
-	private $main;
-	private $app_id = 'onion-slice';
+	private $rencon;
 	private $app_info;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct( $main, $app_info ){
-		$this->main = $main;
+	public function __construct( $rencon, $app_info ){
+		$this->rencon = $rencon;
 		$this->app_info = (object) $app_info;
 	}
 
@@ -2244,37 +2339,39 @@ class login{
 	 */
 	public function check(){
 
-		if( !$this->main->conf()->is_login_required() ){
+		if( !$this->rencon->conf()->is_login_required() ){
 			// ユーザーが設定されていなければ、ログインの評価を行わない。
 			return true;
 		}
 
-		$users = (array) $this->main->conf()->users;
+		$users = (array) $this->rencon->conf()->users;
+		$ses_id = $this->rencon->app_id().'_ses_login_id';
+		$ses_pw = $this->rencon->app_id().'_ses_login_pw';
 
-		$login_id = $this->main->req()->get_param('login_id');
-		$login_pw = $this->main->req()->get_param('login_pw');
-		$login_try = $this->main->req()->get_param('login_try');
+		$login_id = $this->rencon->req()->get_param('login_id');
+		$login_pw = $this->rencon->req()->get_param('login_pw');
+		$login_try = $this->rencon->req()->get_param('login_try');
 		if( strlen( $login_try ) && strlen($login_id) && strlen($login_pw) ){
 			// ログイン評価
 			if( array_key_exists($login_id, $users) && $users[$login_id] == sha1($login_pw) ){
-				$this->main->req()->set_session($this->app_id.'_ses_login_id', $login_id);
-				$this->main->req()->set_session($this->app_id.'_ses_login_pw', sha1($login_pw));
-				header('Location: ?a='.urlencode($this->main->req()->get_param('a')));
+				$this->rencon->req()->set_session($ses_id, $login_id);
+				$this->rencon->req()->set_session($ses_pw, sha1($login_pw));
+				header('Location: ?a='.urlencode($this->rencon->req()->get_param('a')));
 				return true;
 			}
 		}
 
 
-		$login_id = $this->main->req()->get_session($this->app_id.'_ses_login_id');
-		$login_pw_hash = $this->main->req()->get_session($this->app_id.'_ses_login_pw');
+		$login_id = $this->rencon->req()->get_session($ses_id);
+		$login_pw_hash = $this->rencon->req()->get_session($ses_pw);
 		if( strlen($login_id) && strlen($login_pw_hash) ){
 			// ログイン済みか評価
 			if( array_key_exists($login_id, $users) && $users[$login_id] == $login_pw_hash ){
 				return true;
 			}
-			$this->main->req()->delete_session($this->app_id.'_ses_login_id');
-			$this->main->req()->delete_session($this->app_id.'_ses_login_pw');
-			$this->main->forbidden();
+			$this->rencon->req()->delete_session($ses_id);
+			$this->rencon->req()->delete_session($ses_pw);
+			$this->rencon->forbidden();
 			exit;
 		}
 
@@ -2286,6 +2383,9 @@ class login{
 	 */
 	public function please_login(){
 		header('Content-type: text/html');
+
+
+
 		ob_start();
 		?>
 <!doctype html>
@@ -2294,22 +2394,25 @@ class login{
 		<meta charset="UTF-8" />
 		<title><?= htmlspecialchars( $this->app_info->name ) ?></title>
 		<meta name="robots" content="nofollow, noindex, noarchive" />
+		<?= $this->mk_css() ?>
 	</head>
 	<body>
-		<div class="container">
+		<div class="theme-container">
 			<h1><?= htmlspecialchars( $this->app_info->name ) ?></h1>
-			<?php if( strlen($this->main->req()->get_param('login_try')) ){ ?>
+			<?php if( strlen($this->rencon->req()->get_param('login_try')) ){ ?>
 				<div class="alert alert-danger" role="alert">
 					<div>IDまたはパスワードが違います。</div>
 				</div>
 			<?php } ?>
 
 			<form action="?" method="post">
-ID: <input type="text" name="login_id" value="" class="form-element" />
-PW: <input type="password" name="login_pw" value="" class="form-element" />
-<input type="submit" value="Login" class="btn btn-primary" />
+<table>
+	<tr><th>ID:</th><td><input type="text" name="login_id" value="" /></td>
+	<tr><th>Password:</th><td><input type="password" name="login_pw" value="" /></td>
+</table>
+<p><button type="submit">Login</button></p>
 <input type="hidden" name="login_try" value="1" />
-<input type="hidden" name="a" value="<?= htmlspecialchars($this->main->req()->get_param('a')) ?>" />
+<input type="hidden" name="a" value="<?= htmlspecialchars($this->rencon->req()->get_param('a')) ?>" />
 			</form>
 		</div>
 	</body>
@@ -2324,8 +2427,10 @@ PW: <input type="password" name="login_pw" value="" class="form-element" />
 	 * ログアウトして終了する
 	 */
 	public function logout(){
-		$this->main->req()->delete_session($this->app_id.'_ses_login_id');
-		$this->main->req()->delete_session($this->app_id.'_ses_login_pw');
+		$this->rencon->req()->delete_session($this->rencon->app_id().'_ses_login_id');
+		$this->rencon->req()->delete_session($this->rencon->app_id().'_ses_login_pw');
+
+
 
 		header('Content-type: text/html');
 		ob_start();
@@ -2336,9 +2441,10 @@ PW: <input type="password" name="login_pw" value="" class="form-element" />
 		<meta charset="UTF-8" />
 		<title><?= htmlspecialchars( $this->app_info->name ) ?></title>
 		<meta name="robots" content="nofollow, noindex, noarchive" />
+		<?= $this->mk_css() ?>
 	</head>
 	<body>
-		<div class="container">
+		<div class="theme-container">
 			<h1><?= htmlspecialchars( $this->app_info->name ) ?></h1>
 			<p>Logged out.</p>
 			<p><a href="?">Back to Home</a></p>
@@ -2349,6 +2455,132 @@ PW: <input type="password" name="login_pw" value="" class="form-element" />
 		$rtn = ob_get_clean();
 		print $rtn;
 		exit;
+	}
+
+
+	/**
+	 * CSSを生成
+	 */
+	private function mk_css(){
+		ob_start();?>
+		<style>
+			html, body {
+				background-color: #e7e7e7;
+				color: #333;
+				font-size: 16px;
+				margin: 0;
+				padding: 0;
+			}
+			.theme-container {
+				box-sizing: border-box;
+				text-align: center;
+				padding: 4em 20px;
+				margin: 30px auto;
+				width: calc(100% - 20px);
+				max-width: 600px;
+				background-color: #f6f6f6;
+				border: 1px solid #bbb;
+				border-radius: 5px;
+				box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+			}
+			h1 {
+				font-size: 22px;
+			}
+			table{
+				margin: 0 auto;
+				max-width: 100%;
+			}
+			th {
+				text-align: right;
+				padding: 3px;
+			}
+			td {
+				text-align: left;
+				padding: 3px;
+			}
+			input[type=text],
+			input[type=password]{
+				display: inline-block;
+				box-sizing: border-box;
+				width: 160px;
+				min-width: 50px;
+				max-width: 100%;
+				padding: .375rem .75rem;
+				font-size: 1em;
+				font-weight: normal;
+				line-height: 1.5;
+				color: #333;
+				background-color: #f6f6f6;
+				background-clip: padding-box;
+				border: 1px solid #ced4da;
+				border-radius: .25rem;
+				transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+			}
+			input[type=text]:focus,
+			input[type=password]:focus{
+				color: #333;
+				background-color: #fff;
+				border-color: #80bdff;
+				outline: 0;
+				box-shadow: 0 0 0 .2rem rgba(0,123,255,.25);
+			}
+
+			button {
+				display: inline-block;
+				border-radius: 3px;
+				background-color: #f5fbfe;
+				color: #00a0e6;
+				border: 1px solid #00a0e6;
+				box-shadow: 0 2px 0px rgba(0,0,0,0.1);
+				padding: 0.5em 2em;
+				font-size:1em;
+				font-weight: normal;
+				line-height: 1;
+				text-decoration: none;
+				text-align: center;
+				cursor: pointer;
+				box-sizing: border-box;
+				align-items: stretch;
+				transition:
+					color 0.1s,
+					background-color 0.1s,
+					transform 0.1s
+				;
+			}
+			button:focus,
+			button:hover{
+				background-color: #d9f1fb;
+			}
+			button:hover{
+				background-color: #ccecfa;
+			}
+			button:active{
+				background-color: #00a0e6;
+				color: #fff;
+			}
+
+		</style>
+
+		<?php
+		$src = ob_get_clean();
+		return $src;
+	}
+
+}
+?><?php
+namespace tomk79\onionSlice\middleware;
+
+class setup {
+
+	/**
+	 * セットアップを進行する
+	 */
+	public function setup_wizard( $rencon ){
+		$setup = new \tomk79\onionSlice\setup( $rencon );
+		if( !$setup->wizard() ){
+			return;
+		}
+		return;
 	}
 
 }
@@ -2376,14 +2608,20 @@ class setup {
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir) ||
 			!$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/') ||
 			!$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar') ){
+			ob_start();
 			$this->step01();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 
 		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
+			ob_start();
 			$this->step02();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 		$path_entry_script = $this->get_entry_script();
@@ -2393,8 +2631,11 @@ class setup {
 
 
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/.git/') ){
+			ob_start();
 			$this->step03();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 

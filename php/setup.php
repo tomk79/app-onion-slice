@@ -22,14 +22,20 @@ class setup {
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir) ||
 			!$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/') ||
 			!$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar') ){
+			ob_start();
 			$this->step01();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 
 		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
+			ob_start();
 			$this->step02();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 		$path_entry_script = $this->get_entry_script();
@@ -39,8 +45,11 @@ class setup {
 
 
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/.git/') ){
+			ob_start();
 			$this->step03();
-			return false;
+			$html = ob_get_clean();
+			echo $this->rencon->theme()->bind( $html );
+			exit();
 		}
 
 
