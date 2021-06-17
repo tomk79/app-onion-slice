@@ -24,4 +24,14 @@ $conf->users = array(
  */
 $conf->path_data_dir = './.onion-slice/';
 
+
+/* --------------------------------------
+ * コマンドのパス
+ */
+$conf->commands = (object) array();
+$conf->commands->php = 'php';
+$conf->commands->git = 'git';
+
+
+
 ?>

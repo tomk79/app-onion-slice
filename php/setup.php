@@ -150,7 +150,7 @@ class setup {
 			$current_dir = realpath('.');
 			chdir($base_dir);
 
-			exec('php '.$path_composer.' create-project pickles2/preset-get-start-pickles2 ./');
+			exec($this->rencon->conf()->commands->php.' '.$path_composer.' create-project pickles2/preset-get-start-pickles2 ./');
 
 			chdir($current_dir);
 			$this->reload();
@@ -177,9 +177,9 @@ class setup {
 			$current_dir = realpath('.');
 			chdir($base_dir);
 
-			exec('git init');
-			exec('git add ./');
-			exec('git commit -m "Initial commit."');
+			exec($this->rencon->conf()->commands->git.' init');
+			exec($this->rencon->conf()->commands->git.' add ./');
+			exec($this->rencon->conf()->commands->git.' commit -m "Initial commit."');
 
 			chdir($current_dir);
 			$this->reload();
