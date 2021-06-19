@@ -94,7 +94,7 @@ class setup {
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
 				<input type="hidden" name="cmd" value="next" />
-				<button type="submit">次へ</button>
+				<button type="submit" class="px2-btn px2-btn--primary">次へ</button>
 			</form>
 		<?php
 		return;
@@ -121,7 +121,7 @@ class setup {
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
 				<input type="hidden" name="cmd" value="next" />
-				<button type="submit">次へ</button>
+				<button type="submit" class="px2-btn px2-btn--primary">次へ</button>
 			</form>
 		<?php
 		return;
@@ -150,7 +150,7 @@ class setup {
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
 				<input type="hidden" name="cmd" value="next" />
-				<button type="submit">次へ</button>
+				<button type="submit" class="px2-btn px2-btn--primary">次へ</button>
 			</form>
 		<?php
 		return;
