@@ -1,6 +1,6 @@
-const px2style = require('px2style');
-const $ = require('jquery');
+window.$ = require('jquery');
+window.px2style = new (require('px2style'))();
 window.addEventListener('load', function(){
-    console.log('window.onload(): done.');
-	console.log(px2style);
+    console.log('window.onload(): done.', window.px2style);
+	window.px2style.header.init({'current':window.current});
 });

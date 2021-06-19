@@ -689,12 +689,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "081c5cd98bdadad027415f1478f495c9fa5d4247"
+                "reference": "65501989b43de9fe36edc82df807223608737880"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/081c5cd98bdadad027415f1478f495c9fa5d4247",
-                "reference": "081c5cd98bdadad027415f1478f495c9fa5d4247",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/65501989b43de9fe36edc82df807223608737880",
+                "reference": "65501989b43de9fe36edc82df807223608737880",
                 "shasum": ""
             },
             "require": {
@@ -758,7 +758,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-05T04:18:13+00:00"
+            "time": "2021-06-18T06:29:39+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1008,12 +1008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "dc2af669678440c640b39285b66fed04af65922c"
+                "reference": "4cadc6ac51fe7607468a220bea91372415fed5c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/dc2af669678440c640b39285b66fed04af65922c",
-                "reference": "dc2af669678440c640b39285b66fed04af65922c",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4cadc6ac51fe7607468a220bea91372415fed5c8",
+                "reference": "4cadc6ac51fe7607468a220bea91372415fed5c8",
                 "shasum": ""
             },
             "require": {
@@ -1103,7 +1103,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-15T12:49:31+00:00"
+            "time": "2021-06-18T06:24:54+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -1974,12 +1974,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914"
+                "reference": "f24cbc541026c3bb7d27c647f0f9ea337135b22a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/b8cd8a1c753c90bc1a0f5372170e3e489136f914",
-                "reference": "b8cd8a1c753c90bc1a0f5372170e3e489136f914",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/f24cbc541026c3bb7d27c647f0f9ea337135b22a",
+                "reference": "f24cbc541026c3bb7d27c647f0f9ea337135b22a",
                 "shasum": ""
             },
             "require": {
@@ -2022,7 +2022,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-06-15T12:49:02+00:00"
+            "time": "2021-06-18T06:28:45+00:00"
         },
         {
             "name": "sebastian/version",
@@ -2213,12 +2213,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tomk79/rencon-builder.git",
-                "reference": "bdb26a886cd9022b7ef44095331c096f58444b31"
+                "reference": "84242b4b067abc76d91c9bb02243bf0e52aa6fdd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/bdb26a886cd9022b7ef44095331c096f58444b31",
-                "reference": "bdb26a886cd9022b7ef44095331c096f58444b31",
+                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/84242b4b067abc76d91c9bb02243bf0e52aa6fdd",
+                "reference": "84242b4b067abc76d91c9bb02243bf0e52aa6fdd",
                 "shasum": ""
             },
             "require": {
@@ -2250,7 +2250,7 @@
                 "issues": "https://github.com/tomk79/rencon-builder/issues",
                 "source": "https://github.com/tomk79/rencon-builder/tree/develop"
             },
-            "time": "2021-06-17T15:21:25+00:00"
+            "time": "2021-06-19T04:12:21+00:00"
         },
         {
             "name": "webmozart/assert",

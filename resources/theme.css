@@ -1891,7 +1891,27 @@ html, body {
 img {
   max-width: 100%; }
 
+.theme-header {
+  position: sticky; }
+  .theme-header ul {
+    margin: 0;
+    padding: 0;
+    display: -ms-flexbox;
+    display: flex; }
+    .theme-header ul li {
+      margin: 0;
+      padding: 0;
+      list-style-type: none; }
+
 .theme-middle {
   margin: 0 auto;
   max-width: 600px;
   width: calc(100% - 40px); }
+
+.theme-footer {
+  border-top: 1px solid #ddd;
+  margin-top: 20px; }
+  .theme-footer__inner {
+    margin: 0 auto;
+    max-width: 600px;
+    width: calc(100% - 40px); }
