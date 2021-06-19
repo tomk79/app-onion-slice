@@ -12,6 +12,7 @@
     "scripts":{
         "build": [
             "gulp",
+            "php ./build/pre-build.php",
             "php ./vendor/tomk79/rencon-builder/rencon-builder.phar"
         ],
         "preview": [
@@ -30,7 +31,8 @@
     "require": {
         "tomk79/filesystem": "^1.0",
         "tomk79/request": "^1.1",
-        "pickles2/px2agent": "9999999-dev"
+        "pickles2/px2agent": "~0.0.3",
+        "tomk79/remote-finder": "~0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.5",

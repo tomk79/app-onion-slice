@@ -1,0 +1,31 @@
+<p>パブリッシュします。</p>
+<p><button class="px2-btn px2-btn--primary cont-btn-publish">パブリッシュを実行する</button></p>
+<pre class="cont-console"><code></code></pre>
+<script>
+$('.cont-btn-publish').on('click', function(){
+    var $btn = $(this);
+    var $console = $('.cont-console code');
+    $console.html('');
+
+    $btn.attr({'disabled': true});
+    px2style.loading();
+
+    $.ajax({
+        "url": '?a=api.publish',
+        'success': function(data){
+            console.log(data);
+            if( data.result ){
+                $console.html(data.stdout);
+            }
+        },
+        'error': function(data){
+            console.error(data);
+        },
+        'complete': function(){
+            console.log('done!');
+            $btn.attr({'disabled': false});
+            px2style.closeLoading();
+        }
+    });
+});
+</script>

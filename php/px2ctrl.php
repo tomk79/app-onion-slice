@@ -13,16 +13,18 @@ class px2ctrl {
 	}
 
 
-    /**
-     * px2agent を生成する
-     */
+	/**
+	 * px2agent を生成する
+	 */
 	public function create_px2agent(){
 		$path_entry_script = $this->get_entry_script();
 
-		$px2agent = new \picklesFramework2\px2agent\px2agent();
+		$px2agent = new \picklesFramework2\px2agent\px2agent(array(
+			'bin' => $this->rencon->conf()->commands->php,
+		));
 		$px2proj = $px2agent->createProject( $this->rencon->conf()->path_data_dir.'/project/'.$path_entry_script );
-        return $px2proj;
-    }
+		return $px2proj;
+	}
 
 
 

@@ -1,30 +1,47 @@
 {
-    "name": "onion-slice",
-    "app_id": "onion-slice",
-    "version": "0.0.1-alpha.1+dev",
-    "dist": "dist/onion-slice.php",
-    "resources": "resources/",
-    "route": {
-        "": {
-            "title": "Home",
-            "page": "app/pages/index.php"
-        },
-        "clearcache": {
-            "title": "キャッシュを消去する",
-            "page": "app/pages/a/clearcache/index.php"
-        },
-        "api.clearcache": {
-            "title": "PX=clearcache",
-            "page": "tomk79\\onionSlice\\api\\clearcache::clearcache"
-        },
-        "api.px2all": {
-            "title": "PX=px2dthelper.get.all",
-            "page": "tomk79\\onionSlice\\api\\px2all::px2all"
-        }
-    },
-    "middleware": [
-        "tomk79\\onionSlice\\middleware\\setup::setup_wizard"
-    ],
-    "theme": "app/theme/theme.php",
-    "config_template": "app/config.php"
+	"name": "onion-slice",
+	"app_id": "onion-slice",
+	"version": "0.0.1-alpha.1+dev",
+	"dist": "dist/onion-slice.php",
+	"resources": "resources/",
+	"middleware": [
+		"tomk79\\onionSlice\\middleware\\setup::setup_wizard"
+	],
+	"route": {
+		"": {
+			"title": "Home",
+			"page": "app/pages/index.php"
+		},
+		"publish": {
+			"title": "パブリッシュ",
+			"page": "app/pages/publish/index.php"
+		},
+		"clearcache": {
+			"title": "キャッシュを消去する",
+			"page": "app/pages/clearcache/index.php"
+		},
+		"files_and_folders": {
+			"title": "ファイルとフォルダ",
+			"page": "app/pages/files_and_folders/index.php"
+		},
+
+		"api.clearcache": {
+			"title": "PX=clearcache",
+			"page": "tomk79\\onionSlice\\api\\clearcache::clearcache"
+		},
+		"api.publish": {
+			"title": "PX=publish.run",
+			"page": "tomk79\\onionSlice\\api\\publish::publish"
+		},
+		"api.remote_finder.gpi": {
+			"title": "Remote Finder: GPI",
+			"page": "tomk79\\onionSlice\\api\\remote_finder::gpi"
+		},
+		"api.px2all": {
+			"title": "PX=px2dthelper.get.all",
+			"page": "tomk79\\onionSlice\\api\\px2all::px2all"
+		}
+	},
+	"theme": "app/theme/theme.php",
+	"config_template": "app/config_template.php"
 }

@@ -13,9 +13,9 @@ let packageJson = require(__dirname+'/package.json');
 
 // client-libs (frontend) を処理
 gulp.task("client-libs", function(callback) {
-	// return gulp.src(["node_modules/px2style/dist/**/*"])
-	// 	.pipe(gulp.dest( './tests/app/client/libs/px2style/dist/' ))
-	// ;
+	return gulp.src(["vendor/tomk79/remote-finder/dist/**/*"])
+		.pipe(gulp.dest( './resources/remote-finder/' ))
+	;
 	callback();
 });
 

@@ -17,7 +17,7 @@ class px2all {
 
 		header('Content-type: text/json');
 		echo json_encode($result);
-		return;
+		exit;
 	}
 
 }
