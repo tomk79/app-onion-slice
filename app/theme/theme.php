@@ -9,6 +9,8 @@ $current_page_info = $this->get_current_page_info();
 <title><?= htmlspecialchars( $app_info->name ) ?> | <?= htmlspecialchars( $current_page_info->title ) ?></title>
 <link rel="stylesheet" href="?res=bootstrap5/css/bootstrap.css" />
 <link rel="stylesheet" href="?res=theme.css" />
+<script src="?res=bootstrap5/js/bootstrap.js"></script>
+<script src="?res=theme.js"></script>
 </head>
 <body>
 
@@ -66,7 +68,5 @@ $current_page_info = $this->get_current_page_info();
 <script>
 window.current = <?= var_export($rencon->req()->get_param('a'), true) ?>;
 </script>
-<script src="?res=bootstrap5/js/bootstrap.js"></script>
-<script src="?res=theme.js"></script>
 </body>
 </html>

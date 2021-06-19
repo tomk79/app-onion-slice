@@ -1966,6 +1966,7 @@
                     "type": "github"
                 }
             ],
+            "abandoned": true,
             "time": "2020-09-28T06:45:17+00:00"
         },
         {
@@ -2213,12 +2214,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tomk79/rencon-builder.git",
-                "reference": "84242b4b067abc76d91c9bb02243bf0e52aa6fdd"
+                "reference": "c9131ad89b143d0db13db84685f3f5752c7d5d91"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/84242b4b067abc76d91c9bb02243bf0e52aa6fdd",
-                "reference": "84242b4b067abc76d91c9bb02243bf0e52aa6fdd",
+                "url": "https://api.github.com/repos/tomk79/rencon-builder/zipball/c9131ad89b143d0db13db84685f3f5752c7d5d91",
+                "reference": "c9131ad89b143d0db13db84685f3f5752c7d5d91",
                 "shasum": ""
             },
             "require": {
@@ -2250,7 +2251,7 @@
                 "issues": "https://github.com/tomk79/rencon-builder/issues",
                 "source": "https://github.com/tomk79/rencon-builder/tree/develop"
             },
-            "time": "2021-06-19T04:12:21+00:00"
+            "time": "2021-06-19T08:02:38+00:00"
         },
         {
             "name": "webmozart/assert",

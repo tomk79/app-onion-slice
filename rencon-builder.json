@@ -9,9 +9,17 @@
             "title": "Home",
             "page": "app/pages/index.php"
         },
-        "test": {
-            "title": "Test",
-            "page": "tomk79\\onionSlice\\test::start"
+        "clearcache": {
+            "title": "キャッシュを消去する",
+            "page": "app/pages/a/clearcache/index.php"
+        },
+        "api.clearcache": {
+            "title": "PX=clearcache",
+            "page": "tomk79\\onionSlice\\api\\clearcache::clearcache"
+        },
+        "api.px2all": {
+            "title": "PX=px2dthelper.get.all",
+            "page": "tomk79\\onionSlice\\api\\px2all::px2all"
         }
     },
     "middleware": [

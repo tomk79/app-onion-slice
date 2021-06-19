@@ -90,14 +90,43 @@ class rencon {
 
 '' => (object) array(
 	"title" => 'Home',
-	"page" => function(){
-$rencon = $this; ?>
+	"page" => function( $rencon ){ ?>
 <p>ようこそ、Pickles 2</p>
 <?php return; },
 ),
-'test' => (object) array(
-	"title" => 'Test',
-	"page" => 'tomk79\\onionSlice\\test::start',
+'clearcache' => (object) array(
+	"title" => 'キャッシュを消去する',
+	"page" => function( $rencon ){ ?>
+<p>キャッシュを消去します。</p>
+<p><button class="px2-btn px2-btn--primary cont-btn-clearcache">消去する</button></p>
+<pre class="cont-console"><code></code></pre>
+<script>
+$('.cont-btn-clearcache').on('click', function(){
+    $.ajax({
+        "url": '?a=api.clearcache',
+        'success': function(data){
+            console.log(data);
+            if( data.result ){
+                $('.cont-console code').html(data.stdout);
+            }
+        },
+        'error': function(data){
+            console.error(data);
+        },
+        'complete': function(){
+            console.log('done!');
+        }
+    });
+});
+</script><?php return; },
+),
+'api.clearcache' => (object) array(
+	"title" => 'PX=clearcache',
+	"page" => 'tomk79\\onionSlice\\api\\clearcache::clearcache',
+),
+'api.px2all' => (object) array(
+	"title" => 'PX=px2dthelper.get.all',
+	"page" => 'tomk79\\onionSlice\\api\\px2all::px2all',
 ),
 
 
@@ -169,7 +198,7 @@ $rencon = $this; ?>
 			$this->theme()->set_current_page_info( $page_info );
 
 			ob_start();
-			call_user_func( $controller->page );
+			call_user_func( $controller->page, $this );
 			$content = ob_get_clean();
 
 
@@ -2286,6 +2315,8 @@ $current_page_info = $this->get_current_page_info();
 <title><?= htmlspecialchars( $app_info->name ) ?> | <?= htmlspecialchars( $current_page_info->title ) ?></title>
 <link rel="stylesheet" href="?res=bootstrap5/css/bootstrap.css" />
 <link rel="stylesheet" href="?res=theme.css" />
+<script src="?res=bootstrap5/js/bootstrap.js"></script>
+<script src="?res=theme.js"></script>
 </head>
 <body>
 
@@ -2343,8 +2374,6 @@ $current_page_info = $this->get_current_page_info();
 <script>
 window.current = <?= var_export($rencon->req()->get_param('a'), true) ?>;
 </script>
-<script src="?res=bootstrap5/js/bootstrap.js"></script>
-<script src="?res=theme.js"></script>
 </body>
 </html>
 <?php
@@ -2607,6 +2636,51 @@ class login{
 
 }
 ?><?php
+namespace tomk79\onionSlice\api;
+
+class clearcache {
+
+	/**
+	 * Pickles 2 のキャッシュを消去する
+	 */
+	static public function clearcache( $rencon ){
+		$px2ctrl = new \tomk79\onionSlice\px2ctrl($rencon);
+		$px2proj = $px2ctrl->create_px2agent();
+		$result = $px2proj->clearcache();
+
+		header('Content-type: text/json');
+		echo json_encode(array(
+			'result' => true,
+			'stdout' => $result,
+		));
+		exit;
+	}
+
+}
+?><?php
+namespace tomk79\onionSlice\api;
+
+class px2all {
+
+	/**
+	 * Pickles 2 の `PX=px2dthelper.get.all` を実行する
+	 */
+	static public function px2all( $rencon ){
+		$px2ctrl = new \tomk79\onionSlice\px2ctrl($rencon);
+		$px2proj = $px2ctrl->create_px2agent();
+		$result = $px2proj->px_command(
+			'px2dthelper.get.all',
+			'/index.html',
+			array()
+		);
+
+		header('Content-type: text/json');
+		echo json_encode($result);
+		return;
+	}
+
+}
+?><?php
 namespace tomk79\onionSlice\middleware;
 
 class setup {
@@ -2620,6 +2694,70 @@ class setup {
 			return;
 		}
 		return;
+	}
+
+}
+?><?php
+namespace tomk79\onionSlice;
+
+class px2ctrl {
+	private $rencon;
+
+
+	/**
+	 * Constructor
+	 */
+	public function __construct( $rencon ){
+		$this->rencon = $rencon;
+	}
+
+
+    /**
+     * px2agent を生成する
+     */
+	public function create_px2agent(){
+		$path_entry_script = $this->get_entry_script();
+
+		$px2agent = new \picklesFramework2\px2agent\px2agent();
+		$px2proj = $px2agent->createProject( $this->rencon->conf()->path_data_dir.'/project/'.$path_entry_script );
+        return $px2proj;
+    }
+
+
+
+
+	/**
+	 * entryScriptのパスを調べる
+	 */
+	public function get_entry_script(){
+		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
+			return false;
+		}
+
+		$path_entry_script = '.px_execute.php';
+
+		$src_composer_json = $this->rencon->fs()->read_file( $this->rencon->conf()->path_data_dir.'/project/composer.json' );
+		$composer_json = json_decode( $src_composer_json );
+
+		if( !isset( $composer_json->extra->px2package ) ){
+			return $path_entry_script;
+		}
+
+		if( is_object($composer_json->extra->px2package) && isset($composer_json->extra->px2package->path) ){
+			$path_entry_script = $composer_json->extra->px2package->path;
+		}elseif( is_array($composer_json->extra->px2package) ){
+			foreach( $composer_json->extra->px2package as $row ){
+				if( is_object($row) && isset($row->path) ){
+					if( isset($row->type) && $row->type != 'project' ){
+						continue;
+					}
+					$path_entry_script = $row->path;
+					break;
+				}
+			}
+		}
+
+		return $path_entry_script;
 	}
 
 }
@@ -2663,12 +2801,6 @@ class setup {
 			exit();
 		}
 
-		$path_entry_script = $this->get_entry_script();
-
-		$px2agent = new \picklesFramework2\px2agent\px2agent();
-		$px2proj = $px2agent->createProject( $this->rencon->conf()->path_data_dir.'/project/'.$path_entry_script );
-
-
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/.git/') ){
 			ob_start();
 			$this->step03();
@@ -2681,40 +2813,6 @@ class setup {
 		return true;
 	}
 
-
-	/**
-	 * entryScriptのパスを調べる
-	 */
-	private function get_entry_script(){
-		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
-			return false;
-		}
-
-		$path_entry_script = '.px_execute.php';
-
-		$src_composer_json = $this->rencon->fs()->read_file( $this->rencon->conf()->path_data_dir.'/project/composer.json' );
-		$composer_json = json_decode( $src_composer_json );
-
-		if( !isset( $composer_json->extra->px2package ) ){
-			return $path_entry_script;
-		}
-
-		if( is_object($composer_json->extra->px2package) && isset($composer_json->extra->px2package->path) ){
-			$path_entry_script = $composer_json->extra->px2package->path;
-		}elseif( is_array($composer_json->extra->px2package) ){
-			foreach( $composer_json->extra->px2package as $row ){
-				if( is_object($row) && isset($row->path) ){
-					if( isset($row->type) && $row->type != 'project' ){
-						continue;
-					}
-					$path_entry_script = $row->path;
-					break;
-				}
-			}
-		}
-
-		return $path_entry_script;
-	}
 
 	/**
 	 * reload
@@ -2821,16 +2919,6 @@ class setup {
 		return;
 	}
 
-}
-?><?php
-
-namespace tomk79\onionSlice;
-
-class test {
-    static public function start(){
-        echo "test::start()"."\n";
-        return;
-    }
 }
 ?><?php
 /**
