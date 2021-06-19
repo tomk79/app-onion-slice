@@ -100,8 +100,8 @@ class remote_finder {
 					'output' => 'json'
 				)
 			);
-			$realpath_files = $pageInfoAll->realpath_files;
-			$realpath_basedir = $rencon->conf()->path_data_dir.'project/';
+			$realpath_files = $rencon->fs()->get_realpath($pageInfoAll->realpath_files);
+			$realpath_basedir = $rencon->fs()->get_realpath($rencon->conf()->path_data_dir.'project/');
 			$path_files = preg_replace('/^'.preg_quote($realpath_basedir, '/').'/', '/', $realpath_files);
 			$rtn['pathFiles'] = $path_files;
 		}

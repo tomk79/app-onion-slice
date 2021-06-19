@@ -506,7 +506,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 
 								new Promise(function(rlv){rlv();})
 									.then(function(){ return new Promise(function(rlv, rjt){
-
 										if( is_file && pxExternalPath && pathType == 'contents' && $body.find('[name=is_remove_files_too]:checked').val() && pathFiles.length ){
 											// リソースも一緒に削除する
 											fs('is_dir', pathFiles, {}, function(result){
@@ -548,7 +547,7 @@ remoteFinder.init('/', {}, function(){
 });
 
 function parsePx2FilePathEndpoint( filepath, callback ){
-	console.log('====== parsePx2FilePathEndpoint():', filepath);
+	// console.log('====== parsePx2FilePathEndpoint():', filepath);
 	callback = callback || function(){};
 	$.ajax({
 		type : 'get',
@@ -563,7 +562,7 @@ function parsePx2FilePathEndpoint( filepath, callback ){
 			console.error(data);
 		},
 		success: function(data){
-			console.log('---- parsePx2FilePathEndpoint():', data);
+			// console.log('---- parsePx2FilePathEndpoint():', data);
 			callback(data.pxExternalPath, data.pathFiles, data.pathType);
 		}
 	});
@@ -572,7 +571,7 @@ function parsePx2FilePathEndpoint( filepath, callback ){
 
 
 function fs(method, filename, options, callback){
-	console.log('====== fs():', method, filename, options);
+	// console.log('====== fs():', method, filename, options);
 	callback = callback || function(){};
 	$.ajax({
 		type : 'post',
@@ -591,7 +590,7 @@ function fs(method, filename, options, callback){
 			console.error(err);
 		},
 		success: function(data){
-			console.log('-- fs():', data);
+			// console.log('-- fs():', data);
 			callback(data);
 		}
 	});
