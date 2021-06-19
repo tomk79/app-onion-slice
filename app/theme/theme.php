@@ -25,10 +25,10 @@ $current_page_info = $this->get_current_page_info();
 			</div>
 			<div class="px2-header__global-menu">
 				<ul>
-					<li><a href="?a=" data-name="">HOME</a></li>
-					<li><a href="?a=sitemaps" data-name="sitemaps">Sitemaps</a></li>
-					<li><a href="?a=themes" data-name="themes">Themes</a></li>
-					<li><a href="?a=contents" data-name="contents">Contents</a></li>
+					<li><a href="?a=" data-name="">ホーム</a></li>
+					<li><a href="?a=sitemaps" data-name="sitemaps">サイトマップ</a></li>
+					<li><a href="?a=themes" data-name="themes">テーマ</a></li>
+					<li><a href="?a=contents" data-name="contents">コンテンツ</a></li>
 					<li><a href="?a=publish" data-name="publish">パブリッシュ</a></li>
 				</ul>
 			</div>
@@ -37,6 +37,8 @@ $current_page_info = $this->get_current_page_info();
 			<button><span class="px2-header__hamburger"></span></button>
 			<ul>
 				<li><a href="?a=clearcache" data-name="clearcache">キャッシュを消去する</a></li>
+				<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
+				<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
 				<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
 <?php if( $rencon->conf()->is_login_required() && $rencon->user()->is_login() ) { ?>
 				<li><a href="?a=logout" data-name="quit">Logout</a></li>

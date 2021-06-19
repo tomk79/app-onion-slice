@@ -20,6 +20,14 @@
 			"title": "キャッシュを消去する",
 			"page": "app/pages/clearcache/index.php"
 		},
+		"composer": {
+			"title": "Composerを操作する",
+			"page": "app/pages/composer/index.php"
+		},
+		"git": {
+			"title": "Gitを操作する",
+			"page": "app/pages/git/index.php"
+		},
 		"files_and_folders": {
 			"title": "ファイルとフォルダ",
 			"page": "app/pages/files_and_folders/index.php"
