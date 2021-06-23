@@ -22,7 +22,7 @@ $conf->users = array(
  * ここには、各種の状態を記憶したり、設定を保存したり、
  * Pickles 2 プロジェクトデータを生成したりする用途で使用します。
  */
-$conf->path_data_dir = './.onion-slice/';
+$conf->path_data_dir = './onion-slice/';
 
 
 /* --------------------------------------
