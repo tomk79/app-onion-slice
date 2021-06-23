@@ -46,15 +46,15 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 						console.log(pxExternalPath, pathType);
 						var url = 'about:blank';
 						if(pathType == 'contents'){
-							url = window.contContentsEditorEndpoint + '?page_path='+encodeURIComponent(pxExternalPath);
+							url = '?a=contents_editor&page_path='+encodeURIComponent(pxExternalPath);
 						}else{
-							url = window.contCommonFileEditorEndpoint + '?filename='+encodeURIComponent(fileinfo.path);
+							url = '?a=common_file_editor&filename='+encodeURIComponent(fileinfo.path);
 						}
 						window.open(url);
 					});
 					break;
 				default:
-					var url = window.contCommonFileEditorEndpoint + '?filename='+encodeURIComponent(fileinfo.path);
+					var url = '?a=common_file_editor&filename='+encodeURIComponent(fileinfo.path);
 					window.open(url);
 					break;
 			}

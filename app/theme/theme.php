@@ -36,6 +36,7 @@ $current_page_info = $this->get_current_page_info();
 		<div class="px2-header__shoulder-menu">
 			<button><span class="px2-header__hamburger"></span></button>
 			<ul>
+				<li><a href="?a=env_config" data-name="env_config">環境設定</a></li>
 				<li><a href="?a=clearcache" data-name="clearcache">キャッシュを消去する</a></li>
 				<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
 				<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
@@ -50,12 +51,28 @@ $current_page_info = $this->get_current_page_info();
 
 
 
-<div class="theme-middle">
-<h1><?= nl2br( htmlspecialchars( $current_page_info->title ) ) ?></h1>
-<div class="contents">
+
+		<div class="theme-frame">
+
+			<div class="theme-h1-container">
+				<div class="theme-h1-container__heading">
+					<h1><?= nl2br( htmlspecialchars( $current_page_info->title ) ) ?></h1>
+				</div>
+			</div>
+			<div class="theme-main-container">
+				<div class="theme-main-container__header-info">
+				</div>
+
+				<div class="theme-main-container__body">
+					<div class="contents">
 <?= $content ?>
-</div>
-</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
 
 
 <footer class="theme-footer">

@@ -12,9 +12,25 @@
 			"title": "Home",
 			"page": "app/pages/index.php"
 		},
+		"sitemaps": {
+			"title": "サイトマップ",
+			"page": "app/pages/sitemaps/index.php"
+		},
+		"themes": {
+			"title": "テーマ",
+			"page": "app/pages/themes/index.php"
+		},
+		"contents": {
+			"title": "コンテンツ",
+			"page": "app/pages/contents/index.php"
+		},
 		"publish": {
 			"title": "パブリッシュ",
 			"page": "app/pages/publish/index.php"
+		},
+		"env_config": {
+			"title": "環境設定",
+			"page": "app/pages/env_config/index.php"
 		},
 		"clearcache": {
 			"title": "キャッシュを消去する",
@@ -31,6 +47,14 @@
 		"files_and_folders": {
 			"title": "ファイルとフォルダ",
 			"page": "app/pages/files_and_folders/index.php"
+		},
+		"contents_editor": {
+			"title": "コンテンツエディタ",
+			"page": "app/pages/contents_editor/index.php"
+		},
+		"common_file_editor": {
+			"title": "汎用ファイルエディタ",
+			"page": "app/pages/common_file_editor/index.php"
 		},
 
 		"api.clearcache": {

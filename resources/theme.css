@@ -1891,27 +1891,129 @@ html, body {
 img {
   max-width: 100%; }
 
-.theme-header {
-  position: sticky; }
-  .theme-header ul {
-    margin: 0;
-    padding: 0;
-    display: -ms-flexbox;
-    display: flex; }
-    .theme-header ul li {
+/**
+ * px2-header
+ */
+.px2-header {
+  z-index: 10000;
+  position: relative;
+  height: 33px; }
+
+/**
+ * theme-frame
+ */
+.theme-frame {
+  -ms-flex-positive: 100;
+      flex-grow: 100;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  overflow: auto; }
+
+/**
+ * テーマ
+ */
+.theme-h1-container {
+  box-sizing: border-box;
+  box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  position: relative;
+  z-index: 901; }
+  .theme-h1-container__heading {
+    max-width: 1170px;
+    width: calc(100% - 57px - 57px);
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 1em 0 0.5em; }
+    .theme-h1-container__heading h1 {
       margin: 0;
       padding: 0;
-      list-style-type: none; }
+      font-size: 28px;
+      font-weight: normal; }
+    @media all and (max-width: calc(1170px + 57px + 57px)) {
+      .theme-h1-container__heading {
+        width: calc(100% - 57px - 15px);
+        margin: 0 auto 0 57px; } }
+    @media all and (max-width: 768px) {
+      .theme-h1-container__heading {
+        width: calc(100% - 15px - 15px);
+        margin: 0 auto; }
+        .theme-h1-container__heading h1 {
+          font-size: 24px; } }
 
-.theme-middle {
-  margin: 0 auto;
-  max-width: 600px;
-  width: calc(100% - 40px); }
+.theme-main-container {
+  box-sizing: border-box;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+  position: relative;
+  z-index: 900; }
+  .theme-main-container__header-info, .theme-main-container__body {
+    max-width: 1170px;
+    width: calc(100% - 57px - 57px);
+    margin: 0 auto; }
+    @media all and (max-width: calc(1170px + 57px + 57px)) {
+      .theme-main-container__header-info, .theme-main-container__body {
+        width: calc(100% - 57px - 15px);
+        margin: 0 auto 0 57px; } }
+    @media all and (max-width: 768px) {
+      .theme-main-container__header-info, .theme-main-container__body {
+        width: calc(100% - 15px - 15px);
+        margin: 0 auto; } }
+
+/**
+ * コンテンツ領域をウィンドウにフィットさせる
+ */
+body.theme-content-fit-to-window {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column; }
+  body.theme-content-fit-to-window .theme-h1-container {
+    -ms-flex-positive: 0;
+        flex-grow: 0; }
+    body.theme-content-fit-to-window .theme-h1-container__heading {
+      max-width: 100% !important;
+      width: calc(100% - 30px);
+      margin: 0 auto !important; }
+  body.theme-content-fit-to-window .theme-main-container {
+    -ms-flex-positive: 2;
+        flex-grow: 2;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+        flex-direction: column;
+    overflow: hidden;
+    max-width: 100% !important;
+    width: 100%;
+    margin: 0 auto !important;
+    padding-top: 0; }
+    body.theme-content-fit-to-window .theme-main-container__body,
+    body.theme-content-fit-to-window .theme-main-container .contents {
+      max-width: 100% !important;
+      width: 100%;
+      margin: 0 auto !important;
+      -ms-flex-positive: 2;
+          flex-grow: 2;
+      overflow: auto;
+      display: -ms-flexbox;
+      display: flex;
+      -ms-flex-direction: column;
+          flex-direction: column; }
+      body.theme-content-fit-to-window .theme-main-container__body > *,
+      body.theme-content-fit-to-window .theme-main-container .contents > * {
+        -ms-flex-positive: 1;
+            flex-grow: 1; }
+
+/**
+ * 見出しエリアを非表示にする
+ */
+body.theme-hide-h1-container .theme-h1-container {
+  display: none; }
 
 .theme-footer {
-  border-top: 1px solid #ddd;
-  margin-top: 20px; }
+  padding: 13px 10px;
+  margin: 0 auto;
+  border-top: 1px solid #ccc; }
   .theme-footer__inner {
+    max-width: 1024px;
     margin: 0 auto;
-    max-width: 600px;
-    width: calc(100% - 40px); }
+    text-align: center; }

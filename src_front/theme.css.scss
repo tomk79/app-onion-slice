@@ -1,37 +1,166 @@
 @import "../node_modules/px2style/dist/px2style";
 
 html, body {
-    background: #f4f4f4;
-    margin: 0;
-    padding: 0;
+	background: #f4f4f4;
+	margin: 0;
+	padding: 0;
 }
 img {
-    max-width: 100%;
+	max-width: 100%;
 }
-.theme-header {
-    position: sticky;
-    ul {
-        margin: 0;
-        padding: 0;
-        display: flex;
-        li {
-            margin: 0;
-            padding: 0;
-            list-style-type: none;
-        }
-    }
+
+/**
+ * px2-header
+ */
+.px2-header {
+	z-index: 10000;
+	position: relative;
+	height: 33px;
+
+	// position: sticky;
+	// ul {
+	// 	margin: 0;
+	// 	padding: 0;
+	// 	display: flex;
+	// 	li {
+	// 		margin: 0;
+	// 		padding: 0;
+	// 		list-style-type: none;
+	// 	}
+	// }
 }
-.theme-middle {
-    margin: 0 auto;
-    max-width: 600px;
-    width: calc(100% - 40px);
+
+/**
+ * theme-frame
+ */
+.theme-frame{
+	flex-grow: 100;
+	flex-shrink: 0;
+	// height: 10px;
+	overflow: auto;
 }
-.theme-footer {
-    border-top: 1px solid #ddd;
-    margin-top: 20px;
-    &__inner {
-        margin: 0 auto;
-        max-width: 600px;
-        width: calc(100% - 40px);
-    }
+
+/**
+ * テーマ
+ */
+.theme-h1-container {
+	box-sizing: border-box;
+	box-shadow: 0 0 15px 5px rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+	position: relative;
+	z-index: 901;
+
+	&__heading {
+		max-width: 1170px;
+		width: calc(100% - 57px - 57px);
+		box-sizing: border-box;
+		margin: 0 auto;
+		padding: 1em 0 0.5em;
+		h1{
+			margin: 0;
+			padding: 0;
+			font-size: 28px;
+			font-weight: normal;
+		}
+		@media all and (max-width: calc(1170px + 57px + 57px)) {
+			width: calc(100% - 57px - 15px);
+			margin: 0 auto 0 57px;
+		}
+		@media all and (max-width: 768px) {
+			width: calc(100% - 15px - 15px);
+			margin: 0 auto;
+			h1{
+				font-size: 24px;
+			}
+		}
+	}
+}
+.theme-main-container {
+	box-sizing: border-box;
+	border-top: 1px solid #eee;
+	padding-top: 15px;
+	position: relative;
+	z-index: 900;
+
+	&__header-info,
+	&__body {
+		max-width: 1170px;
+		width: calc(100% - 57px - 57px);
+		margin: 0 auto;
+
+		@media all and (max-width: calc(1170px + 57px + 57px)) {
+			width: calc(100% - 57px - 15px);
+			margin: 0 auto 0 57px;
+		}
+		@media all and (max-width: 768px) {
+			width: calc(100% - 15px - 15px);
+			margin: 0 auto;
+		}
+	}
+}
+
+/**
+ * コンテンツ領域をウィンドウにフィットさせる
+ */
+body.theme-content-fit-to-window {
+	display: flex;
+	flex-direction: column;
+
+	.theme-h1-container {
+		flex-grow: 0;
+		&__heading {
+			max-width: 100% !important;
+			width: calc(100% - 30px);
+			margin: 0 auto !important;
+		}
+	}
+	.theme-main-container {
+		flex-grow: 2;
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+
+		max-width: 100% !important;
+		width: 100%;
+		margin: 0 auto !important;
+		padding-top: 0;
+
+		&__body,
+		.contents {
+			max-width: 100% !important;
+			width: 100%;
+			margin: 0 auto !important;
+
+			flex-grow: 2;
+			overflow: auto;
+
+			display: flex;
+			flex-direction: column;
+			> * {
+				flex-grow: 1;
+			}
+		}
+	}
+}
+
+/**
+ * 見出しエリアを非表示にする
+ */
+body.theme-hide-h1-container {
+	.theme-h1-container {
+		display: none;
+	}
+}
+
+
+// フッター
+.theme-footer{
+	padding: 13px 10px;
+	margin: 0 auto;
+	border-top: 1px solid #ccc;
+	&__inner{
+		max-width: 1024px;
+		margin: 0 auto;
+		text-align: center;
+	}
 }
