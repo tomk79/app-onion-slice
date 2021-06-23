@@ -32,7 +32,8 @@
         "tomk79/filesystem": "^1.0",
         "tomk79/request": "^1.1",
         "pickles2/px2agent": "~0.0.3",
-        "tomk79/remote-finder": "~0.1.0"
+        "tomk79/remote-finder": "~0.1.0",
+        "tomk79/h": "~0.1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~9.5",
