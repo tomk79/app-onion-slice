@@ -19,6 +19,8 @@ class env_config {
 		$this->path_env_config_json = $this->rencon->conf()->path_data_dir.'/env_config.json';
 
 		$data = $this->read();
+		$this->url_preview = $data->url_preview;
+		$this->url_production = $data->url_production;
 		$this->git_url = $data->git_url;
 		$this->git_username = $data->git_username;
 		$this->git_password = $data->git_password;
@@ -37,6 +39,8 @@ class env_config {
 			$data = json_decode( $json );
 		}
 
+		if( !isset($data->url_preview) ){ $data->url_preview = null; }
+		if( !isset($data->url_production) ){ $data->url_production = null; }
 		if( !isset($data->git_url) ){ $data->git_url = null; }
 		if( !isset($data->git_username) ){ $data->git_username = null; }
 		if( !isset($data->git_password) ){ $data->git_password = null; }
@@ -50,6 +54,8 @@ class env_config {
 	public function save(){
 
 		$data = (object) array();
+		$data->url_preview = $this->url_preview;
+		$data->url_production = $this->url_production;
 		$data->git_url = $this->git_url;
 		$data->git_username = $this->git_username;
 		$data->git_password = $this->git_password;

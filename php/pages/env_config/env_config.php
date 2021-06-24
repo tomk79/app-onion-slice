@@ -33,6 +33,8 @@ class env_config {
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m')) ){
+			$this->rencon->req()->set_param('url-preview', $this->env_config->url_preview);
+			$this->rencon->req()->set_param('url-production', $this->env_config->url_production);
 			$this->rencon->req()->set_param('git-url', $this->env_config->git_url);
 			$this->rencon->req()->set_param('git-username', $this->env_config->git_username);
 			$this->rencon->req()->set_param('git-password', $this->env_config->git_password);
@@ -60,6 +62,19 @@ class env_config {
 	<!-- ID/PWのオートコンプリートを無効にするためのダミー入力欄 -->
 	<input type="password" name="autocomplete-off" value="" style="position: absolute; visibility: hidden; top: -100px; left: -100px;" />
 
+
+	<div class="px2-form-input-list">
+		<ul class="px2-form-input-list__ul">
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-url-preview">プレビューURL</label></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-url-preview" name="input-url-preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-preview')) ?>" class="px2-input px2-input--block" /></div>
+			</li>
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-url-production">本番URL</label></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-url-production" name="input-url-production" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-production')) ?>" class="px2-input px2-input--block" /></div>
+			</li>
+		</ul>
+	</div>
 
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
@@ -95,6 +110,8 @@ class env_config {
 	 * 保存処理を実行する
 	 */
 	private function save(){
+		$this->env_config->url_preview = $this->rencon->req()->get_param('input-url-preview');
+		$this->env_config->url_production = $this->rencon->req()->get_param('input-url-production');
 		$this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');
 		$this->env_config->git_username = $this->rencon->req()->get_param('input-git-username');
 		if( strlen($this->rencon->req()->get_param('input-git-password')) ){

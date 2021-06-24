@@ -40,6 +40,7 @@ class contents_editor {
 	 * 編集画面
 	 */
 	private function index(){
+		$env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 
 		$page_path = $this->rencon->req()->get_param('page_path');
 		$theme_id = $this->rencon->req()->get_param('theme_id');
@@ -61,11 +62,12 @@ class contents_editor {
 			)
 		);
 
+		$relative_path = $this->rencon->fs()->get_relatedpath( $client_resources_dist );
 		foreach($px2ce_client_resources->css as $value) {
-			echo '<link href="?a='.urlencode( $this->rencon->req()->get_param('a') ).'&amp;m=res&amp;path='.$value.'" rel="stylesheet" />'."\n";
+			echo '<link href="'.$relative_path.$value.'" rel="stylesheet" />'."\n";
 		}
 		foreach($px2ce_client_resources->js as $value) {
-			echo '<script src="?a='.urlencode( $this->rencon->req()->get_param('a') ).'&amp;m=res&amp;path='.$value.'"></script>'."\n";
+			echo '<script src="'.$relative_path.$value.'"></script>'."\n";
 		}
 
 
@@ -86,7 +88,7 @@ class contents_editor {
 		var theme_id = <?= json_encode($theme_id, JSON_UNESCAPED_SLASHES); ?>;
 		var layout_id = <?= json_encode($layout_id, JSON_UNESCAPED_SLASHES); ?>;
 		var target_mode = 'page_content';
-		var preview_url = '//localhost:8088'; // TODO: プレビューURLを設定から取得する
+		var preview_url = <?= json_encode($env_config->url_preview, JSON_UNESCAPED_SLASHES) ?>;
 		var resizeTimer;
 
 		if( page_path ){
@@ -106,7 +108,7 @@ class contents_editor {
 				'page_path': page_path , // <- 編集対象ページのパス
 				'elmCanvas': document.getElementById('canvas'), // <- 編集画面を描画するための器となる要素
 				'preview':{
-					'origin': preview_url// プレビュー用サーバーの情報を設定します。
+					'origin': preview_url,
 				},
 				'lang': 'ja', // language
 				'gpiBridge': function(input, callback){
