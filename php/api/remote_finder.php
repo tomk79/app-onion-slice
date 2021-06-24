@@ -44,8 +44,8 @@ class remote_finder {
 
 		$is_file = is_file($realpath_file);
 
-		$px2ctrl = new \tomk79\onionSlice\px2ctrl($rencon);
-		$px2proj = $px2ctrl->create_px2agent();
+		$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+		$px2proj = $pickles2->create_px2agent();
 
 		$pageInfoAll = $px2proj->query(
 			'/?PX=px2dthelper.get.all',

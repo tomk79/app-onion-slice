@@ -7,8 +7,8 @@ class publish {
 	 * パブリッシュする
 	 */
 	static public function publish( $rencon ){
-		$px2ctrl = new \tomk79\onionSlice\px2ctrl($rencon);
-		$px2proj = $px2ctrl->create_px2agent();
+		$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+		$px2proj = $pickles2->create_px2agent();
 		$result = $px2proj->publish();
 
 		header('Content-type: text/json');

@@ -7,8 +7,8 @@ class clearcache {
 	 * Pickles 2 のキャッシュを消去する
 	 */
 	static public function clearcache( $rencon ){
-		$px2ctrl = new \tomk79\onionSlice\px2ctrl($rencon);
-		$px2proj = $px2ctrl->create_px2agent();
+		$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+		$px2proj = $pickles2->create_px2agent();
 		$result = $px2proj->clearcache();
 
 		header('Content-type: text/json');

@@ -173,7 +173,7 @@ window.contApp = new (function(){
 
 		$rtn = $gitUtil->git( $git_command_array );
 
-		// $gitUtil->clear_remote_origin();
+		$gitUtil->clear_remote_origin();
 
 		$rtn = (object) $rtn;
 

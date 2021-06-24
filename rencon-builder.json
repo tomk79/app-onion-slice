@@ -50,7 +50,7 @@
 		},
 		"contents_editor": {
 			"title": "コンテンツエディタ",
-			"page": "app/pages/contents_editor/index.php"
+			"page": "tomk79\\onionSlice\\pages\\contents_editor\\contents_editor::start"
 		},
 		"common_file_editor": {
 			"title": "汎用ファイルエディタ",
