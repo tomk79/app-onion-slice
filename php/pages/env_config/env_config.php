@@ -4,7 +4,7 @@ namespace tomk79\onionSlice\pages\env_config;
 class env_config {
 
 	private $rencon;
-	private $data;
+	private $env_config;
 
 	/**
 	 * 処理の開始
@@ -19,9 +19,13 @@ class env_config {
 	 */
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
-		$this->data = new \tomk79\onionSlice\model\env_config( $this->rencon );
+		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 	}
 
+
+	/**
+	 * ルーティング
+	 */
 	private function route(){
 
 		if( $this->rencon->req()->get_param('m') == 'completed' ){
@@ -29,19 +33,17 @@ class env_config {
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m')) ){
-			$this->rencon->req()->set_param('git-remote', $this->data->git_remote);
-			$this->rencon->req()->set_param('git-user-name', $this->data->git_user_name);
-			$this->rencon->req()->set_param('git-password', $this->data->git_password);
+			$this->rencon->req()->set_param('git-url', $this->env_config->git_url);
+			$this->rencon->req()->set_param('git-username', $this->env_config->git_username);
+			$this->rencon->req()->set_param('git-password', $this->env_config->git_password);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
 			$this->save();
 			exit;
-		}else{
-			return $this->edit();
 		}
 
-		return;
+		return $this->edit();
 	}
 
 
@@ -62,12 +64,12 @@ class env_config {
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-git-remote">Gitリモート URL</label></div>
-				<div class="px2-form-input-list__input"><input type="text" id="input-git-remote" name="input-git-remote" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-remote')) ?>" class="px2-input px2-input--block" /></div>
+				<div class="px2-form-input-list__label"><label for="input-git-url">Gitリモート URL</label></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-git-url" name="input-git-url" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-url')) ?>" class="px2-input px2-input--block" /></div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-git-user-name">Gitリモート ユーザー名</label></div>
-				<div class="px2-form-input-list__input"><input type="text" id="input-git-user-name" name="input-git-user-name" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-user-name')) ?>" class="px2-input px2-input--block" /></div>
+				<div class="px2-form-input-list__label"><label for="input-git-username">Gitリモート ユーザー名</label></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-git-username" name="input-git-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-username')) ?>" class="px2-input px2-input--block" /></div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-git-password">Gitリモート パスワード</label></div>
@@ -93,12 +95,12 @@ class env_config {
 	 * 保存処理を実行する
 	 */
 	private function save(){
-		$this->data->git_remote = $this->rencon->req()->get_param('input-git-remote');
-		$this->data->git_user_name = $this->rencon->req()->get_param('input-git-user-name');
+		$this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');
+		$this->env_config->git_username = $this->rencon->req()->get_param('input-git-username');
 		if( strlen($this->rencon->req()->get_param('input-git-password')) ){
-			$this->data->git_password = $this->rencon->req()->get_param('input-git-password');
+			$this->env_config->git_password = $this->rencon->req()->get_param('input-git-password');
 		}
-		$this->data->save();
+		$this->env_config->save();
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a')).'&m=completed');
 		exit;

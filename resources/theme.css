@@ -1884,9 +1884,17 @@ select.px2-input--error {
   border: 1px solid #666; }
 
 html, body {
-  background: #f4f4f4;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  width: 100%;
+  height: 100%; }
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  background-color: #f9f9f9; }
 
 img {
   max-width: 100%; }

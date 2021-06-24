@@ -6,8 +6,8 @@ class env_config {
 	private $rencon;
 	private $path_env_config_json;
 
-	public $git_remote;
-	public $git_user_name;
+	public $git_url;
+	public $git_username;
 	public $git_password;
 
 	/**
@@ -19,8 +19,8 @@ class env_config {
 		$this->path_env_config_json = $this->rencon->conf()->path_data_dir.'/env_config.json';
 
 		$data = $this->read();
-		$this->git_remote = $data->git_remote;
-		$this->git_user_name = $data->git_user_name;
+		$this->git_url = $data->git_url;
+		$this->git_username = $data->git_username;
 		$this->git_password = $data->git_password;
 
 		return;
@@ -37,8 +37,8 @@ class env_config {
 			$data = json_decode( $json );
 		}
 
-		if( !isset($data->git_remote) ){ $data->git_remote = null; }
-		if( !isset($data->git_user_name) ){ $data->git_user_name = null; }
+		if( !isset($data->git_url) ){ $data->git_url = null; }
+		if( !isset($data->git_username) ){ $data->git_username = null; }
 		if( !isset($data->git_password) ){ $data->git_password = null; }
 
 		return $data;
@@ -50,8 +50,8 @@ class env_config {
 	public function save(){
 
 		$data = (object) array();
-		$data->git_remote = $this->git_remote;
-		$data->git_user_name = $this->git_user_name;
+		$data->git_url = $this->git_url;
+		$data->git_username = $this->git_username;
 		$data->git_password = $this->git_password;
 
 		$result = $this->rencon->fs()->save_file($this->path_env_config_json, json_encode($data));

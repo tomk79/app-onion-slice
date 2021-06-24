@@ -52,38 +52,26 @@ $current_page_info = $this->get_current_page_info();
 
 
 
-		<div class="theme-frame">
+<div class="theme-frame">
 
-			<div class="theme-h1-container">
-				<div class="theme-h1-container__heading">
-					<h1><?= nl2br( htmlspecialchars( $current_page_info->title ) ) ?></h1>
-				</div>
-			</div>
-			<div class="theme-main-container">
-				<div class="theme-main-container__header-info">
-				</div>
+	<div class="theme-h1-container">
+		<div class="theme-h1-container__heading">
+			<h1><?= nl2br( htmlspecialchars( $current_page_info->title ) ) ?></h1>
+		</div>
+	</div>
+	<div class="theme-main-container">
+		<div class="theme-main-container__header-info">
+		</div>
 
-				<div class="theme-main-container__body">
-					<div class="contents">
+		<div class="theme-main-container__body">
+			<div class="contents">
 <?= $content ?>
-					</div>
-				</div>
-
 			</div>
 		</div>
 
-
-
-
-<footer class="theme-footer">
-<div class="theme-footer__inner">
-<?php if( $rencon->conf()->is_login_required() && $rencon->user()->is_login() ) { ?>
-<p>
-	<a href="?a=logout">Logout</a>
-</p>
-<?php } ?>
+	</div>
 </div>
-</footer>
+
 
 <script>
 window.current = <?= var_export($rencon->req()->get_param('a'), true) ?> || 'home';

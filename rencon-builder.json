@@ -42,7 +42,7 @@
 		},
 		"git": {
 			"title": "Gitを操作する",
-			"page": "app/pages/git/index.php"
+			"page": "tomk79\\onionSlice\\pages\\git\\git::start"
 		},
 		"files_and_folders": {
 			"title": "ファイルとフォルダ",
