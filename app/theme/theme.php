@@ -25,7 +25,7 @@ $current_page_info = $this->get_current_page_info();
 			</div>
 			<div class="px2-header__global-menu">
 				<ul>
-					<li><a href="?a=" data-name="">ホーム</a></li>
+					<li><a href="?a=" data-name="home">ホーム</a></li>
 					<li><a href="?a=sitemaps" data-name="sitemaps">サイトマップ</a></li>
 					<li><a href="?a=themes" data-name="themes">テーマ</a></li>
 					<li><a href="?a=contents" data-name="contents">コンテンツ</a></li>
@@ -86,7 +86,7 @@ $current_page_info = $this->get_current_page_info();
 </footer>
 
 <script>
-window.current = <?= var_export($rencon->req()->get_param('a'), true) ?>;
+window.current = <?= var_export($rencon->req()->get_param('a'), true) ?> || 'home';
 </script>
 </body>
 </html>

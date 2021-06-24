@@ -30,7 +30,7 @@
 		},
 		"env_config": {
 			"title": "環境設定",
-			"page": "app/pages/env_config/index.php"
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::start"
 		},
 		"clearcache": {
 			"title": "キャッシュを消去する",
