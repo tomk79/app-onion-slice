@@ -11,10 +11,34 @@ let rename = require("gulp-rename");//ファイル名の置き換えを行う
 let packageJson = require(__dirname+'/package.json');
 
 
-// client-libs (frontend) を処理
-gulp.task("client-libs", function(callback) {
+// client-libs:remote-finder
+gulp.task("client-libs:remote-finder", function(callback) {
 	return gulp.src(["vendor/tomk79/remote-finder/dist/**/*"])
 		.pipe(gulp.dest( './resources/remote-finder/' ))
+	;
+	callback();
+});
+
+// client-libs:common-file-editor
+gulp.task("client-libs:common-file-editor", function(callback) {
+	return gulp.src(["submodules/common-file-editor/dist/**/*"])
+		.pipe(gulp.dest( './resources/common-file-editor/' ))
+	;
+	callback();
+});
+
+// client-libs:gitui79.js
+gulp.task("client-libs:gitui79.js", function(callback) {
+	return gulp.src(["submodules/gitui79.js/dist/**/*"])
+		.pipe(gulp.dest( './resources/gitui79.js/' ))
+	;
+	callback();
+});
+
+// client-libs:node-git-parser
+gulp.task("client-libs:node-git-parser", function(callback) {
+	return gulp.src(["submodules/node-git-parser/dist/**/*"])
+		.pipe(gulp.dest( './resources/node-git-parser/' ))
 	;
 	callback();
 });
@@ -74,7 +98,10 @@ gulp.task("preview", function(callback) {
 
 
 let _tasks = gulp.parallel(
-	'client-libs',
+	'client-libs:remote-finder',
+	'client-libs:common-file-editor',
+	'client-libs:gitui79.js',
+	'client-libs:node-git-parser',
 	'theme.js',
 	'.css.scss'
 );
