@@ -28,6 +28,7 @@ img {
 	z-index: 10000;
 	position: relative;
 	height: 33px;
+	min-height: 33px;
 
 	// position: sticky;
 	// ul {
@@ -50,6 +51,8 @@ img {
 	flex-shrink: 0;
 	// height: 10px;
 	overflow: auto;
+	display: flex;
+	flex-direction: column;
 }
 
 /**

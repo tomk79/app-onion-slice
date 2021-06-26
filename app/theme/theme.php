@@ -14,6 +14,30 @@ $current_page_info = $this->get_current_page_info();
 </head>
 <body>
 
+<?php if( $rencon->req()->get_param('a') == 'contents_editor' || $rencon->req()->get_param('a') == 'common_file_editor' ){ ?>
+
+
+<style>
+.theme-wrap,
+.theme-wrap .contents {
+    flex-grow: 100;
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    height: 100px;
+}
+</style>
+<div class="theme-wrap">
+	<div class="contents">
+<?= $content ?>
+	</div>
+</div>
+
+
+
+<?php }else{ ?>
+
 <header class="px2-header">
 	<div class="px2-header__inner">
 		<div class="px2-header__px2logo">
@@ -76,5 +100,8 @@ $current_page_info = $this->get_current_page_info();
 <script>
 window.current = <?= var_export($rencon->req()->get_param('a'), true) ?> || 'home';
 </script>
+
+<?php } ?>
+
 </body>
 </html>

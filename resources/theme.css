@@ -1905,7 +1905,8 @@ img {
 .px2-header {
   z-index: 10000;
   position: relative;
-  height: 33px; }
+  height: 33px;
+  min-height: 33px; }
 
 /**
  * theme-frame
@@ -1915,7 +1916,11 @@ img {
       flex-grow: 100;
   -ms-flex-negative: 0;
       flex-shrink: 0;
-  overflow: auto; }
+  overflow: auto;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column; }
 
 /**
  * テーマ

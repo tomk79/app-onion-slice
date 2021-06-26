@@ -73,7 +73,7 @@ class contents_editor {
 
 ?>
 
-<div id="canvas" style="height:500px;"></div>
+<div id="canvas" style="flex-grow: 100; height:100%;"></div>
 
 
 <!-- Ace Editor -->
