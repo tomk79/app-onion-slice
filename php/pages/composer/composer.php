@@ -140,8 +140,8 @@ window.addEventListener('load', function(e){
 		$command = $this->rencon->req()->get_param('command');
 		$rtn = (object) array();
 
-		$path_composer = realpath($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar');
-		$base_dir = $this->rencon->conf()->path_data_dir.'/project/';
+		$path_composer = realpath($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar');
+		$base_dir = $this->rencon->conf()->path_project_root_dir;
 		$current_dir = realpath('.');
 
 		$rtn->command = $this->rencon->conf()->commands->php.' '.$path_composer.' '.$command;

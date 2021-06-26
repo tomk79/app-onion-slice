@@ -8,7 +8,7 @@ class remote_finder {
 	 */
 	static public function gpi( $rencon ){
 		$remoteFinder = new \tomk79\remoteFinder\main(array(
-			'default' => $rencon->conf()->path_data_dir.'/project/'
+			'default' => $rencon->conf()->path_project_root_dir,
 		), array(
 			'paths_invisible' => array(
 				// '/invisibles/*',
@@ -39,7 +39,7 @@ class remote_finder {
 		$pxExternalPath = $rencon->req()->get_param('path');
 		$pxExternalPath = preg_replace( '/^\/*/', '', $pxExternalPath );
 
-		$realpath_basedir = $rencon->conf()->path_data_dir.'project/';
+		$realpath_basedir = $rencon->conf()->path_project_root_dir;
 		$realpath_file = $fs->normalize_path($fs->get_realpath($realpath_basedir.$pxExternalPath));
 
 		$is_file = is_file($realpath_file);
@@ -101,7 +101,7 @@ class remote_finder {
 				)
 			);
 			$realpath_files = $rencon->fs()->get_realpath($pageInfoAll->realpath_files);
-			$realpath_basedir = $rencon->fs()->get_realpath($rencon->conf()->path_data_dir.'project/');
+			$realpath_basedir = $rencon->fs()->get_realpath($rencon->conf()->path_project_root_dir);
 			$path_files = preg_replace('/^'.preg_quote($realpath_basedir, '/').'/', '/', $realpath_files);
 			$rtn['pathFiles'] = $path_files;
 		}

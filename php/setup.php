@@ -20,8 +20,8 @@ class setup {
 		$conf = $this->rencon->conf();
 
 		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir) ||
-			!$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/') ||
-			!$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar') ){
+			!$this->rencon->fs()->is_dir($this->rencon->conf()->path_project_root_dir) ||
+			!$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar') ){
 			ob_start();
 			$this->step01();
 			$html = ob_get_clean();
@@ -30,7 +30,7 @@ class setup {
 		}
 
 
-		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
+		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_project_root_dir.'composer.json') ){
 			ob_start();
 			$this->step02();
 			$html = ob_get_clean();
@@ -38,7 +38,7 @@ class setup {
 			exit();
 		}
 
-		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir.'/project/.git/') ){
+		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_project_root_dir.'.git/') ){
 			ob_start();
 			$this->step03();
 			$html = ob_get_clean();
@@ -66,26 +66,32 @@ class setup {
 	 */
 	private function step01(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			if( !$this->rencon->fs()->mkdir($this->rencon->conf()->path_data_dir) ){
+			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_data_dir) ){
 				?>
 				<p>ディレクトリの作成に失敗しました。</p>
 				<?php
 				return;
 			}
-			if( !$this->rencon->fs()->mkdir($this->rencon->conf()->path_data_dir.'/project/') ){
+			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_project_root_dir) ){
 				?>
 				<p>ディレクトリの作成に失敗しました。</p>
 				<?php
 				return;
 			}
-			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_data_dir.'/commands/composer/') ){
+			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_data_dir.'private/commands/composer/') ){
 				?>
 				<p>ディレクトリの作成に失敗しました。</p>
 				<?php
 				return;
 			}
 			$bin = $this->rencon->resources()->get('resources/composer.phar');
-			$this->rencon->fs()->save_file( $this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar', $bin );
+			$this->rencon->fs()->save_file( $this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar', $bin );
+
+			$htaccess = '';
+			$htaccess .= 'RewriteEngine off'."\n";
+			$htaccess .= 'Deny from all'."\n";
+			$this->rencon->fs()->save_file( $this->rencon->conf()->path_data_dir.'private/.htaccess', $htaccess );
+
 			$this->reload();
 			return;
 		}
@@ -96,7 +102,7 @@ class setup {
 			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_data_dir) ) ?></code></pre>
 			<p>よろしければ、「次へ」をクリックしてください。</p>
 			<form action="?" method="post">
-				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
@@ -109,8 +115,8 @@ class setup {
 	 */
 	private function step02(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			$path_composer = realpath($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar');
-			$base_dir = $this->rencon->conf()->path_data_dir.'/project/';
+			$path_composer = realpath($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar');
+			$base_dir = $this->rencon->conf()->path_project_root_dir;
 			$current_dir = realpath('.');
 
 			if( $this->rencon->req()->get_param('setup-option') == 'pickles2' ){
@@ -132,6 +138,7 @@ class setup {
 					$gitHelper->url_bind_confidentials($gitremote, $username, $password),
 					'./',
 				) );
+
 				chdir($base_dir);
 				exec($this->rencon->conf()->commands->php.' '.$path_composer.' install');
 				chdir($current_dir);
@@ -148,6 +155,8 @@ class setup {
 		}
 		?>
 			<p>続いて、プロジェクトをセットアップします。</p>
+			<p>プロジェクトのセットアップ先ディレクトリのパスは次の通りです。</p>
+			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_project_root_dir) ) ?></code></pre>
 			<form action="?" method="post">
 				<ul>
 					<li><label><input type="radio" name="setup-option" value="pickles2" checked="checked" /> Packagist から Pickles 2 プロジェクトテンプレート をセットアップ</label></li>
@@ -168,7 +177,7 @@ class setup {
 						</table>
 					</li>
 				</ul>
-				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
@@ -181,8 +190,8 @@ class setup {
 	 */
 	private function step03(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			$path_composer = realpath($this->rencon->conf()->path_data_dir.'/commands/composer/composer.phar');
-			$base_dir = $this->rencon->conf()->path_data_dir.'/project/';
+			$path_composer = realpath($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar');
+			$base_dir = $this->rencon->conf()->path_project_root_dir;
 			$current_dir = realpath('.');
 			chdir($base_dir);
 
@@ -197,7 +206,7 @@ class setup {
 		?>
 			<p>Gitを初期化します。</p>
 			<form action="?" method="post">
-				<input type="hidden" name="a" value="<?= $this->rencon->req()->get_param('a') ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>

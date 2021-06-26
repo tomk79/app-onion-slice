@@ -42,7 +42,7 @@ class git{
 	 * @return array 実行結果
 	 */
 	public function git( $git_sub_command ){
-		$realpath_pj_git_root = $this->rencon->conf()->path_data_dir.'/project/';
+		$realpath_pj_git_root = $this->rencon->conf()->path_project_root_dir;
 		$error_message = false;
 
 		if( !is_array($git_sub_command) ){

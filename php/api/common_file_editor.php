@@ -11,7 +11,7 @@ class common_file_editor {
 		header('Content-type: text/json');
 
 		$fs = $rencon->fs();
-		$realpath_basedir = $rencon->conf()->path_data_dir.'project/';
+		$realpath_basedir = $rencon->conf()->path_project_root_dir;
 		$rtn = array();
 
 		if( !strlen($rencon->req()->get_param('filename')) ){

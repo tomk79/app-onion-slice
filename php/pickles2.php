@@ -22,7 +22,7 @@ class pickles2 {
 		$px2agent = new \picklesFramework2\px2agent\px2agent(array(
 			'bin' => $this->rencon->conf()->commands->php,
 		));
-		$px2proj = $px2agent->createProject( $this->rencon->conf()->path_data_dir.'/project/'.$path_entry_script );
+		$px2proj = $px2agent->createProject( $this->rencon->conf()->path_project_root_dir.$path_entry_script );
 		return $px2proj;
 	}
 
@@ -33,13 +33,13 @@ class pickles2 {
 	 * entryScriptのパスを調べる
 	 */
 	public function get_entry_script(){
-		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'/project/composer.json') ){
+		if( !$this->rencon->fs()->is_file($this->rencon->conf()->path_project_root_dir.'composer.json') ){
 			return false;
 		}
 
 		$path_entry_script = '.px_execute.php';
 
-		$src_composer_json = $this->rencon->fs()->read_file( $this->rencon->conf()->path_data_dir.'/project/composer.json' );
+		$src_composer_json = $this->rencon->fs()->read_file( $this->rencon->conf()->path_project_root_dir.'composer.json' );
 		$composer_json = json_decode( $src_composer_json );
 
 		if( !isset( $composer_json->extra->px2package ) ){

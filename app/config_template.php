@@ -26,6 +26,15 @@ $conf->path_data_dir = './onion-slice/';
 
 
 /* --------------------------------------
+ * プロジェクトルートディレクトリのパス
+ * 
+ * Pickles 2 プロジェクトをインストールするパスを設定します。
+ */
+$conf->path_project_root_dir = './onion-slice/private/project/';
+
+
+
+/* --------------------------------------
  * コマンドのパス
  */
 $conf->commands = (object) array();
