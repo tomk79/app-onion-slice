@@ -38,7 +38,7 @@
 		},
 		"composer": {
 			"title": "Composerを操作する",
-			"page": "app/pages/composer/index.php"
+			"page": "tomk79\\onionSlice\\pages\\composer\\composer::start"
 		},
 		"git": {
 			"title": "Gitを操作する",
