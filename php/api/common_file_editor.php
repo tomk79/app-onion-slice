@@ -68,7 +68,7 @@ class common_file_editor {
 			$rtn['result'] = $fs->rm( $realpath_filename );
 
 		}elseif( $rencon->req()->get_param('method') == 'px_command' ){
-			$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
 			$px2proj = $pickles2->create_px2agent();
 			$rtn['result'] = $px2proj->query(
 				( strlen($filename) ? $filename : '/' ).'?PX='.urlencode($rencon->req()->get_param('px_command')),
@@ -78,7 +78,7 @@ class common_file_editor {
 			);
 
 		}elseif( $rencon->req()->get_param('method') == 'initialize_data_dir' ){
-			$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
 			$px2proj = $pickles2->create_px2agent();
 			$json = $px2proj->query(
 				( strlen($filename) ? $filename : '/' ).'?PX=px2dthelper.get.all',

@@ -53,7 +53,7 @@ class contents_editor {
 			$this->rencon->fs()->mkdir_r($client_resources_dist);
 		}
 
-		$pickles2 = new \tomk79\onionSlice\pickles2($this->rencon);
+		$pickles2 = new \tomk79\onionSlice\helpers\pickles2($this->rencon);
 		$px2proj = $pickles2->create_px2agent();
 		$px2ce_client_resources = $px2proj->query(
 			'/?PX=px2dthelper.px2ce.client_resources&dist='.urlencode($client_resources_dist),
@@ -232,7 +232,7 @@ class contents_editor {
 	private function px2ce_gpi()
 	{
 
-		$pickles2 = new \tomk79\onionSlice\pickles2($this->rencon);
+		$pickles2 = new \tomk79\onionSlice\helpers\pickles2($this->rencon);
 		$px2proj = $pickles2->create_px2agent();
 		$current = $px2proj->query(
 			'/?PX=px2dthelper.get.all',

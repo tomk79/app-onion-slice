@@ -2,7 +2,7 @@
 
 <?php
 
-$pickles2 = new \tomk79\onionSlice\pickles2($rencon);
+$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
 $px2proj = $pickles2->create_px2agent();
 $sitemap = $px2proj->query(
 	'/?PX=api.get.sitemap',

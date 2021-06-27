@@ -1,5 +1,5 @@
 <?php
-namespace tomk79\onionSlice;
+namespace tomk79\onionSlice\helpers;
 
 class pickles2 {
 	private $rencon;
