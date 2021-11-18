@@ -1,0 +1,30 @@
+os:
+  - linux
+
+language: php
+dist: bionic
+
+jobs:
+  include:
+    - php: "8.0"
+      dist: bionic
+    - php: "7.4"
+      dist: bionic
+    - php: "7.3"
+      dist: bionic
+
+before_install:
+  - composer selfupdate
+
+before_script:
+  - composer install
+  - composer check-platform-reqs --no-dev
+
+script:
+  - ./vendor/phpunit/phpunit/phpunit
+
+notifications:
+  emails:
+    - tomk79@gmail.com
+  on_success: always
+  on_failure: always
