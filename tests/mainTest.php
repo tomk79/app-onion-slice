@@ -16,6 +16,10 @@ class mainTest extends PHPUnit\Framework\TestCase{
 	 */
 	public function testStandard(){
 		$this->assertEquals( 1, 1 );
+		if( is_dir(__DIR__.'/../dist/onion-slice/') ){
+			$this->fs->rm(__DIR__.'/../dist/onion-slice/');
+		}
+		$this->assertTrue( !$this->fs->is_dir(__DIR__.'/../dist/onion-slice/') );
 	}
 
 }
