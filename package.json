@@ -6,7 +6,8 @@
     "build:dev": "webpack --mode development",
     "build:watch": "webpack -w --mode development",
     "build:prod": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "testcafe": "./node_modules/.bin/testcafe firefox ./tests/testcafe/mainTest.js --skip-js-errors"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -34,6 +35,7 @@
     "sass": "^1.35.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^2.0.0",
+    "testcafe": "^1.17.1",
     "twig": "^1.13.3",
     "webpack": "^4.39.2",
     "webpack-cli": "^4.2.0",
