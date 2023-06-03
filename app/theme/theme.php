@@ -7,9 +7,7 @@ $current_page_info = $this->get_current_page_info();
 <head>
 <meta charset="utf-8" />
 <title><?= htmlspecialchars( $app_info->name ?? '' ) ?> | <?= htmlspecialchars( $current_page_info->title ?? '' ) ?></title>
-<link rel="stylesheet" href="?res=bootstrap5/css/bootstrap.css" />
 <link rel="stylesheet" href="?res=theme.css" />
-<script src="?res=bootstrap5/js/bootstrap.js"></script>
 <script src="?res=theme.js"></script>
 </head>
 <body>
@@ -39,37 +37,25 @@ $current_page_info = $this->get_current_page_info();
 <?php }else{ ?>
 
 <header class="px2-header">
-	<div class="px2-header__inner">
-		<div class="px2-header__px2logo">
-			<a href="?a="><img src="?res=logo.svg" alt="" /></a>
-		</div>
-		<div class="px2-header__block">
-			<div class="px2-header__id">
-				<span><?= htmlspecialchars( $app_info->name ?? '' ) ?></span>
-			</div>
-			<div class="px2-header__global-menu">
-				<ul>
-					<li><a href="?a=" data-name="home">ホーム</a></li>
-					<li><a href="?a=sitemaps" data-name="sitemaps">サイトマップ</a></li>
-					<li><a href="?a=themes" data-name="themes">テーマ</a></li>
-					<li><a href="?a=contents" data-name="contents">コンテンツ</a></li>
-					<li><a href="?a=publish" data-name="publish">パブリッシュ</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="px2-header__shoulder-menu">
-			<button><span class="px2-header__hamburger"></span></button>
-			<ul>
-				<li><a href="?a=env_config" data-name="env_config">環境設定</a></li>
-				<li><a href="?a=clearcache" data-name="clearcache">キャッシュを消去する</a></li>
-				<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
-				<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
-				<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
+	<div class="px2-header__id">
+		<span><?= htmlspecialchars( $app_info->name ?? '' ) ?></span>
+	</div>
+	<div class="px2-header__global-menu">
+		<ul>
+			<li><a href="?a=" data-name="home">ホーム</a></li>
+			<li><a href="?a=sitemaps" data-name="sitemaps">サイトマップ</a></li>
+			<li><a href="?a=themes" data-name="themes">テーマ</a></li>
+			<li><a href="?a=contents" data-name="contents">コンテンツ</a></li>
+			<li><a href="?a=publish" data-name="publish">パブリッシュ</a></li>
+			<li><a href="?a=env_config" data-name="env_config">環境設定</a></li>
+			<li><a href="?a=clearcache" data-name="clearcache">キャッシュを消去する</a></li>
+			<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
+			<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
+			<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
 <?php if( $rencon->conf()->is_login_required() && $rencon->user()->is_login() ) { ?>
-				<li><a href="?a=logout" data-name="quit">Logout</a></li>
+			<li><a href="?a=logout" data-name="quit">Logout</a></li>
 <?php } ?>
-			</ul>
-		</div>
+		</ul>
 	</div>
 </header>
 
