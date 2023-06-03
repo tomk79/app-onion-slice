@@ -15,7 +15,7 @@ $sitemap = $px2proj->query(
 
 echo '<ul>';
 foreach( $sitemap as $pid=>$page_info ){
-echo '<li><a href="?a=contents_editor&page_path='.htmlspecialchars(urlencode($page_info->path)).'" target="_blank">'.htmlspecialchars($page_info->title).'</a></li>';
+echo '<li><a href="?a=contents_editor&page_path='.htmlspecialchars(urlencode($page_info->path ?? '')).'" target="_blank">'.htmlspecialchars($page_info->title ?? '').'</a></li>';
 }
 echo '</ul>';
 

@@ -4,32 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0de38bc20198ed4d3f38a7bd18f48e5d",
+    "content-hash": "3c7163359d8fefe39ef0bf0d8477f8ab",
     "packages": [
         {
             "name": "pickles2/px2agent",
-            "version": "0.0.x-dev",
+            "version": "0.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pickles2/php-px2agent.git",
-                "reference": "4624a4b86db1ba73aa12e69aa4ed22930f456cd3"
+                "reference": "4af090da307ebb3faa6e58e172f165e187962c25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pickles2/php-px2agent/zipball/4624a4b86db1ba73aa12e69aa4ed22930f456cd3",
-                "reference": "4624a4b86db1ba73aa12e69aa4ed22930f456cd3",
+                "url": "https://api.github.com/repos/pickles2/php-px2agent/zipball/4af090da307ebb3faa6e58e172f165e187962c25",
+                "reference": "4af090da307ebb3faa6e58e172f165e187962c25",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
-                "php": ">=5.4.0",
+                "php": ">=7.3.0",
                 "tomk79/filesystem": "~1.0",
                 "tomk79/request": "~1.0"
             },
             "require-dev": {
-                "phpdocumentor/phpdocumentor": "^2.9.0",
-                "phpunit/phpunit": "~4.1",
+                "phpdocumentor/phpdocumentor": "~3.0.0",
+                "phpunit/phpunit": "~9.5",
                 "pickles2/px-fw-2.x": "~2.0"
             },
             "type": "library",
@@ -55,9 +55,9 @@
             ],
             "support": {
                 "issues": "https://github.com/pickles2/php-px2agent/issues",
-                "source": "https://github.com/pickles2/php-px2agent/tree/0.0.4"
+                "source": "https://github.com/pickles2/php-px2agent/tree/develop"
             },
-            "time": "2022-01-03T06:12:17+00:00"
+            "time": "2023-06-03T12:35:34+00:00"
         },
         {
             "name": "tomk79/filesystem",

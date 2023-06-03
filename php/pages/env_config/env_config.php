@@ -67,7 +67,7 @@ class env_config {
 
 ?>
 
-<form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a')) ?>" method="post">
+<form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
 
 	<!-- ID/PWのオートコンプリートを無効にするためのダミー入力欄 -->
@@ -79,17 +79,17 @@ class env_config {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url-preview">プレビューURL</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-url-preview" name="input-url-preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-preview')) ?>" class="px2-input px2-input--block" />
+					<input type="text" id="input-url-preview" name="input-url-preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-preview') ?? '') ?>" class="px2-input px2-input--block" />
 					<p>次のパスに割り当ててください。</p>
-					<pre><code><?= htmlspecialchars( $px2all->realpath_docroot ) ?></code></pre>
+					<pre><code><?= htmlspecialchars( $px2all->realpath_docroot ?? '' ) ?></code></pre>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url-production">本番URL</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-url-production" name="input-url-production" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-production')) ?>" class="px2-input px2-input--block" />
+					<input type="text" id="input-url-production" name="input-url-production" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-production') ?? '') ?>" class="px2-input px2-input--block" />
 					<p>次のパスに割り当ててください。</p>
-					<pre><code><?= htmlspecialchars( $realpath_publish_dir ) ?></code></pre>
+					<pre><code><?= htmlspecialchars( $realpath_publish_dir ?? '' ) ?></code></pre>
 				</div>
 			</li>
 		</ul>
@@ -99,11 +99,11 @@ class env_config {
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-git-url">Gitリモート URL</label></div>
-				<div class="px2-form-input-list__input"><input type="text" id="input-git-url" name="input-git-url" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-url')) ?>" class="px2-input px2-input--block" /></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-git-url" name="input-git-url" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-url') ?? '') ?>" class="px2-input px2-input--block" /></div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-git-username">Gitリモート ユーザー名</label></div>
-				<div class="px2-form-input-list__input"><input type="text" id="input-git-username" name="input-git-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-username')) ?>" class="px2-input px2-input--block" /></div>
+				<div class="px2-form-input-list__input"><input type="text" id="input-git-username" name="input-git-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('git-username') ?? '') ?>" class="px2-input px2-input--block" /></div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-git-password">Gitリモート パスワード</label></div>
@@ -138,7 +138,7 @@ class env_config {
 		}
 		$this->env_config->save();
 
-		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a')).'&m=completed');
+		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
 	}
 
@@ -150,7 +150,7 @@ class env_config {
 ?>
 
 <p>保存しました。</p>
-<p><button class="px2-btn" onclick="window.location.href='?a=<?= htmlspecialchars($this->rencon->req()->get_param('a')) ?>';">完了</button></p>
+<p><button class="px2-btn" onclick="window.location.href='?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>';">完了</button></p>
 
 <?php
 		return;

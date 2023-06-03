@@ -6,7 +6,7 @@ $current_page_info = $this->get_current_page_info();
 <html>
 <head>
 <meta charset="utf-8" />
-<title><?= htmlspecialchars( $app_info->name ) ?> | <?= htmlspecialchars( $current_page_info->title ) ?></title>
+<title><?= htmlspecialchars( $app_info->name ?? '' ) ?> | <?= htmlspecialchars( $current_page_info->title ?? '' ) ?></title>
 <link rel="stylesheet" href="?res=bootstrap5/css/bootstrap.css" />
 <link rel="stylesheet" href="?res=theme.css" />
 <script src="?res=bootstrap5/js/bootstrap.js"></script>
@@ -45,7 +45,7 @@ $current_page_info = $this->get_current_page_info();
 		</div>
 		<div class="px2-header__block">
 			<div class="px2-header__id">
-				<span><?= htmlspecialchars( $app_info->name ) ?></span>
+				<span><?= htmlspecialchars( $app_info->name ?? '' ) ?></span>
 			</div>
 			<div class="px2-header__global-menu">
 				<ul>
@@ -80,7 +80,7 @@ $current_page_info = $this->get_current_page_info();
 
 	<div class="theme-h1-container">
 		<div class="theme-h1-container__heading">
-			<h1><?= nl2br( htmlspecialchars( $current_page_info->title ) ) ?></h1>
+			<h1><?= nl2br( htmlspecialchars( $current_page_info->title ?? '' ) ) ?></h1>
 		</div>
 	</div>
 	<div class="theme-main-container">

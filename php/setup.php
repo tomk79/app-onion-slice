@@ -99,10 +99,10 @@ class setup {
 			<p>Onion Slice のセットアップへようこそ！</p>
 			<p>はじめに、データディレクトリを作成します。</p>
 			<p>データディレクトリのパスは次の通りです。</p>
-			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_data_dir) ) ?></code></pre>
+			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_data_dir ?? null) ?? '' ) ?></code></pre>
 			<p>よろしければ、「次へ」をクリックしてください。</p>
 			<form action="?" method="post">
-				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
@@ -156,7 +156,7 @@ class setup {
 		?>
 			<p>続いて、プロジェクトをセットアップします。</p>
 			<p>プロジェクトのセットアップ先ディレクトリのパスは次の通りです。</p>
-			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_project_root_dir) ) ?></code></pre>
+			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_project_root_dir ?? null) ?? '' ) ?></code></pre>
 			<form action="?" method="post">
 				<ul>
 					<li><label><input type="radio" name="setup-option" value="pickles2" checked="checked" /> Packagist から Pickles 2 プロジェクトテンプレート をセットアップ</label></li>
@@ -177,7 +177,7 @@ class setup {
 						</table>
 					</li>
 				</ul>
-				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
@@ -206,7 +206,7 @@ class setup {
 		?>
 			<p>Gitを初期化します。</p>
 			<form action="?" method="post">
-				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ) ?>" />
+				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>

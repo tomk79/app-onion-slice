@@ -17,11 +17,11 @@ $realpath_publish_dir = $rencon->fs()->get_realpath('./'.$px2all->config->path_p
 
 
 <h2>プレビューURL</h2>
-<p><a href="<?= htmlspecialchars( $env_config->url_preview.$px2all->config->path_controot ) ?>" target="_blank"><?= htmlspecialchars( $env_config->url_preview ) ?></a></p>
+<p><a href="<?= htmlspecialchars( ($env_config->url_preview ?? '').($px2all->config->path_controot ?? '') ) ?>" target="_blank"><?= htmlspecialchars( $env_config->url_preview ?? '' ) ?></a></p>
 <p>次のパスに割り当ててください。</p>
-<pre><code><?= htmlspecialchars( $px2all->realpath_docroot ) ?></code></pre>
+<pre><code><?= htmlspecialchars( $px2all->realpath_docroot ?? '' ) ?></code></pre>
 
 <h2>本番URL</h2>
-<p><a href="<?= htmlspecialchars( $env_config->url_production.$px2all->config->path_controot ) ?>" target="_blank"><?= htmlspecialchars( $env_config->url_production ) ?></a></p>
+<p><a href="<?= htmlspecialchars( ($env_config->url_production ?? '').($px2all->config->path_controot ?? '') ) ?>" target="_blank"><?= htmlspecialchars( $env_config->url_production ?? '' ) ?></a></p>
 <p>次のパスに割り当ててください。</p>
-<pre><code><?= htmlspecialchars( $realpath_publish_dir ) ?></code></pre>
+<pre><code><?= htmlspecialchars( $realpath_publish_dir ?? '' ) ?></code></pre>
