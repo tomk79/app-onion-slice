@@ -61,7 +61,7 @@ mix
 	// --------------------------------------
 	// cloverCommon Script
 	.js('src_front/theme.js', 'resources/')
-	.sass('src_front/theme.css.scss', 'resources/')
+	.sass('src_front/theme.scss', 'resources/')
 
 
 	// --------------------------------------
