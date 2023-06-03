@@ -1,9 +1,18 @@
+# Composer
+composer.lock
 # composer.phar
-# composer.lock
 /vendor/
 .phpunit.result.cache
 
-# package-lock.json
+# node/npm
 /node_modules/
+package-lock.json
+mix-manifest.json
 
+# onion-slice
 dist/onion-slice/
+
+# other
+.DS_Store
+Thumbs.db
+.phpunit.result.cache
