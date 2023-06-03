@@ -11,7 +11,7 @@
     ],
     "scripts":{
         "build": [
-            "gulp",
+            "npm run prod",
             "php ./build/pre-build.php",
             "php ./vendor/tomk79/rencon-builder/rencon-builder.phar"
         ],
