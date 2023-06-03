@@ -14,12 +14,12 @@ class common_file_editor {
 		$realpath_basedir = $rencon->conf()->path_project_root_dir;
 		$rtn = array();
 
-		if( !strlen($rencon->req()->get_param('filename')) ){
+		if( !strlen($rencon->req()->get_param('filename') ?? '') ){
 			echo json_encode(false);
 			exit();
 		}
 		$filename = $fs->normalize_path( $fs->get_realpath('/'.$rencon->req()->get_param('filename')) );
-		if( !strlen($filename) || $filename == '/' ){
+		if( !strlen($filename ?? '') || $filename == '/' ){
 			echo json_encode(false);
 			exit();
 		}
@@ -39,9 +39,9 @@ class common_file_editor {
 
 		}elseif( $rencon->req()->get_param('method') == 'write' ){
 			$bin = '';
-			if( strlen($rencon->req()->get_param('base64')) ){
+			if( strlen($rencon->req()->get_param('base64') ?? '') ){
 				$bin = base64_decode( $rencon->req()->get_param('base64') );
-			}elseif( strlen($rencon->req()->get_param('bin')) ){
+			}elseif( strlen($rencon->req()->get_param('bin') ?? '') ){
 				$bin = $rencon->req()->get_param('bin');
 			}
 			$rtn['result'] = $rencon->fs()->write_file( $realpath_filename, $bin );
@@ -71,7 +71,7 @@ class common_file_editor {
 			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
 			$px2proj = $pickles2->create_px2agent();
 			$rtn['result'] = $px2proj->query(
-				( strlen($filename) ? $filename : '/' ).'?PX='.urlencode($rencon->req()->get_param('px_command')),
+				( strlen($filename ?? '') ? $filename : '/' ).'?PX='.urlencode($rencon->req()->get_param('px_command')),
 				array(
 					'output' => 'json'
 				)
@@ -81,7 +81,7 @@ class common_file_editor {
 			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
 			$px2proj = $pickles2->create_px2agent();
 			$json = $px2proj->query(
-				( strlen($filename) ? $filename : '/' ).'?PX=px2dthelper.get.all',
+				( strlen($filename ?? '') ? $filename : '/' ).'?PX=px2dthelper.get.all',
 				array(
 					'output' => 'json'
 				)

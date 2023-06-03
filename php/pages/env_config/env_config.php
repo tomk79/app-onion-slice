@@ -34,7 +34,7 @@ class env_config {
 			return $this->completed();
 		}
 
-		if( !strlen($this->rencon->req()->get_param('m')) ){
+		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
 			$this->rencon->req()->set_param('url-preview', $this->env_config->url_preview);
 			$this->rencon->req()->set_param('url-production', $this->env_config->url_production);
 			$this->rencon->req()->set_param('git-url', $this->env_config->git_url);
@@ -133,7 +133,7 @@ class env_config {
 		$this->env_config->url_production = $this->rencon->req()->get_param('input-url-production');
 		$this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');
 		$this->env_config->git_username = $this->rencon->req()->get_param('input-git-username');
-		if( strlen($this->rencon->req()->get_param('input-git-password')) ){
+		if( strlen($this->rencon->req()->get_param('input-git-password') ?? '') ){
 			$this->env_config->git_password = $this->rencon->req()->get_param('input-git-password');
 		}
 		$this->env_config->save();

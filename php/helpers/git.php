@@ -17,14 +17,14 @@ class git{
 	 */
 	public function get_remote_default_branch_name( $git_url = null ) {
 		$default = 'master';
-		if( !strlen( $git_url ) ){
+		if( !strlen( $git_url ?? '' ) ){
 			$git_url = $this->url_bind_confidentials();
 		}
-		if( !strlen( $git_url ) ){
+		if( !strlen( $git_url ?? '' ) ){
 			return $default;
 		}
 		$result = shell_exec('git ls-remote --symref '.escapeshellarg($git_url).' HEAD');
-		if(!is_string($result) || !strlen($result)){
+		if(!is_string($result) || !strlen($result ?? '')){
 			return $default;
 		}
 
@@ -162,7 +162,7 @@ class git{
 	 */
 	public function set_remote_origin(){
 		$git_remote = $this->url_bind_confidentials();
-		if( !strlen($git_remote) ){
+		if( !strlen($git_remote ?? '') ){
 			return true;
 		}
 		$this->git(array('remote', 'add', 'origin', $git_remote));
@@ -184,35 +184,35 @@ class git{
 	public function url_bind_confidentials($url = null, $user_name = null, $password = null){
 		$env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 
-		if( $env_config && !strlen($url) ){
+		if( $env_config && !strlen($url ?? '') ){
 			$url = $env_config->git_url;
 		}
-		if( $env_config && !strlen($user_name) && strlen($env_config->git_username) ){
+		if( $env_config && !strlen($user_name ?? '') && strlen($env_config->git_username ?? '') ){
 			$user_name = $env_config->git_username;
 		}
-		if( $env_config && !strlen($password) && strlen($env_config->git_password) ){
+		if( $env_config && !strlen($password ?? '') && strlen($env_config->git_password ?? '') ){
 			$password = $env_config->git_password;
 		}
-		if( !strlen($url) ){
+		if( !strlen($url ?? '') ){
 			return null;
 		}
 
 		$parsed_git_url = parse_url($url);
 		$rtn = '';
 		$rtn .= $parsed_git_url['scheme'].'://';
-		if( strlen($user_name) ){
+		if( strlen($user_name ?? '') ){
 			$rtn .= urlencode($user_name);
-			if( strlen($password) ){
+			if( strlen($password ?? '') ){
 				$rtn .= ':'.urlencode($password);
 			}
 			$rtn .= '@';
 		}
 		$rtn .= $parsed_git_url['host'];
-		if( array_key_exists('port', $parsed_git_url) && strlen($parsed_git_url['port']) ){
+		if( array_key_exists('port', $parsed_git_url) && strlen($parsed_git_url['port'] ?? '') ){
 			$rtn .= ':'.$parsed_git_url['port'];
 		}
 		$rtn .= $parsed_git_url['path'];
-		if( array_key_exists('query', $parsed_git_url) && strlen($parsed_git_url['query']) ){
+		if( array_key_exists('query', $parsed_git_url) && strlen($parsed_git_url['query'] ?? '') ){
 			$rtn .= '?'.$parsed_git_url['query'];
 		}
 		return $rtn;
