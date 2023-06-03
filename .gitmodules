@@ -1,9 +1,0 @@
-[submodule "submodules/common-file-editor"]
-	path = submodules/common-file-editor
-	url = https://github.com/tomk79/common-file-editor.git
-[submodule "submodules/gitui79.js"]
-	path = submodules/gitui79.js
-	url = https://github.com/tomk79/gitui79.js.git
-[submodule "submodules/node-git-parser"]
-	path = submodules/node-git-parser
-	url = https://github.com/tomk79/node-git-parser.git

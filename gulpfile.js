@@ -21,7 +21,7 @@ gulp.task("client-libs:remote-finder", function(callback) {
 
 // client-libs:common-file-editor
 gulp.task("client-libs:common-file-editor", function(callback) {
-	return gulp.src(["submodules/common-file-editor/dist/**/*"])
+	return gulp.src(["node_modules/@tomk79/common-file-editor/dist/**/*"])
 		.pipe(gulp.dest( './resources/common-file-editor/' ))
 	;
 	callback();
@@ -29,7 +29,7 @@ gulp.task("client-libs:common-file-editor", function(callback) {
 
 // client-libs:gitui79.js
 gulp.task("client-libs:gitui79.js", function(callback) {
-	return gulp.src(["submodules/gitui79.js/dist/**/*"])
+	return gulp.src(["node_modules/gitui79/dist/**/*"])
 		.pipe(gulp.dest( './resources/gitui79.js/' ))
 	;
 	callback();
@@ -37,7 +37,7 @@ gulp.task("client-libs:gitui79.js", function(callback) {
 
 // client-libs:node-git-parser
 gulp.task("client-libs:node-git-parser", function(callback) {
-	return gulp.src(["submodules/node-git-parser/dist/**/*"])
+	return gulp.src(["node_modules/gitparse79/dist/**/*"])
 		.pipe(gulp.dest( './resources/node-git-parser/' ))
 	;
 	callback();
