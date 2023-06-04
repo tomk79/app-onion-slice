@@ -104,7 +104,8 @@ window.contApp = new (function(){
 				},
 				"dataType": 'json',
 				"data": {
-					"command_ary": cmdAry
+					"command_ary": cmdAry,
+		            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 				},
 				"error": function(data){
 					result = data;

@@ -104,6 +104,7 @@ class setup {
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
+				<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
 		<?php
@@ -121,9 +122,9 @@ class setup {
 
 			if( $this->rencon->req()->get_param('setup-option') == 'pickles2' ){
 				// --------------------------------------
-				// preset-get-start-pickles2 からセットアップ
+				// pickles2/pickles2 からセットアップ
 				chdir($base_dir);
-				exec($this->rencon->conf()->commands->php.' '.$path_composer.' create-project pickles2/preset-get-start-pickles2 ./');
+				exec($this->rencon->conf()->commands->php.' '.$path_composer.' create-project pickles2/pickles2 ./');
 				chdir($current_dir);
 
 			}elseif( $this->rencon->req()->get_param('setup-option') == 'git' ){
@@ -179,6 +180,7 @@ class setup {
 				</ul>
 				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
+				<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
 		<?php
@@ -208,6 +210,7 @@ class setup {
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
 				<input type="hidden" name="cmd" value="next" />
+				<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 				<p><button type="submit" class="px2-btn px2-btn--primary">次へ</button></p>
 			</form>
 		<?php

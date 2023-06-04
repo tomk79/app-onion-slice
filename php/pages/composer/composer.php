@@ -102,6 +102,7 @@ window.addEventListener('load', function(e){
 			'data': {
 				'm': 'composer_cmd',
 				'command': command,
+				'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 			},
 			'success': function(data){
 				console.log(data);

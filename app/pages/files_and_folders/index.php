@@ -17,13 +17,14 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 			// console.log('===== GPI Bridge:', input, callback, $);
 			var rtn = false;
 			$.ajax({
-				type : 'post',
 				url : "?a=api.remote_finder.gpi",
 				headers: {
 				},
 				dataType: 'json',
+				method : 'post',
 				data: {
-					'gpi_param': JSON.stringify(input)
+					'gpi_param': JSON.stringify(input),
+		            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 				},
 				success: function(data){
 					// px2style.closeLoading();
@@ -574,17 +575,18 @@ function fs(method, filename, options, callback){
 	// console.log('====== fs():', method, filename, options);
 	callback = callback || function(){};
 	$.ajax({
-		type : 'post',
 		url : '?a=api.common_file_editor.gpi',
 		headers: {
 		},
 		dataType: 'json',
+        method: "post",
 		data: {
 			'method': method,
 			'filename': filename,
 			'to': options.to,
 			'px_command': options.px_command,
-			'bin': options.bin
+			'bin': options.bin,
+            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 		},
 		error: function(err){
 			console.error(err);

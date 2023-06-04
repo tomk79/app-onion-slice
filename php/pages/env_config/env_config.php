@@ -63,7 +63,10 @@ class env_config {
 			)
 		);
 		$realpath_entry_script = $this->pickles2->get_entry_script();
-		$realpath_publish_dir = $this->rencon->fs()->get_realpath('./'.$px2all->config->path_publish_dir, dirname($realpath_entry_script));
+		$realpath_publish_dir = null;
+		if( strlen($px2all->config->path_publish_dir ?? '') ){
+			$realpath_publish_dir = $this->rencon->fs()->get_realpath('./'.$px2all->config->path_publish_dir, dirname($realpath_entry_script));
+		}
 
 ?>
 

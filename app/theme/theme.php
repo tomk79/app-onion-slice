@@ -6,6 +6,8 @@ $current_page_info = $this->get_current_page_info();
 <html>
 <head>
 <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+<meta name="csrf-token" content="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 <title><?= htmlspecialchars( $app_info->name ?? '' ) ?> | <?= htmlspecialchars( $current_page_info->title ?? '' ) ?></title>
 <link rel="stylesheet" href="?res=theme.css" />
 <script src="?res=theme.js"></script>
@@ -52,7 +54,7 @@ $current_page_info = $this->get_current_page_info();
 			<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
 			<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
 			<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
-<?php if( $rencon->conf()->is_login_required() && $rencon->user()->is_login() ) { ?>
+<?php if( $rencon->auth()->is_login_required() && $rencon->user()->is_login() ) { ?>
 			<li><a href="?a=logout" data-name="quit">Logout</a></li>
 <?php } ?>
 		</ul>

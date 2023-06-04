@@ -37,7 +37,7 @@ class pickles2 {
 			return false;
 		}
 
-		$path_entry_script = '.px_execute.php';
+		$path_entry_script = 'src_px2/.px_execute.php';
 
 		$src_composer_json = $this->rencon->fs()->read_file( $this->rencon->conf()->path_project_root_dir.'composer.json' );
 		$composer_json = json_decode( $src_composer_json );

@@ -12,6 +12,10 @@ $('.cont-btn-clearcache').on('click', function(){
 
     $.ajax({
         "url": '?a=api.clearcache',
+        "method": "post",
+        "data": {
+            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+        },
         'success': function(data){
             console.log(data);
             if( data.result ){

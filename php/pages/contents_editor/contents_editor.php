@@ -119,7 +119,7 @@ class contents_editor {
 						"method": 'post',
 						'data': {
 							'data':JSON.stringify(input),
-							_token: '{{ csrf_token() }}'
+				            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 						},
 						"error": function(error){
 							console.error('------ GPI Response Error:', typeof(error), error);
