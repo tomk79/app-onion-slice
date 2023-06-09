@@ -5,36 +5,19 @@
 	"dist": "dist/onion-slice.php",
 	"resources": "resources/",
 	"middleware": [
-		"tomk79\\onionSlice\\middleware\\setup::setup_wizard"
 	],
 	"route": {
 		"": {
 			"title": "Home",
 			"page": "app/pages/index.php"
 		},
-		"sitemaps": {
-			"title": "サイトマップ",
-			"page": "app/pages/sitemaps/index.php"
-		},
-		"themes": {
-			"title": "テーマ",
-			"page": "app/pages/themes/index.php"
-		},
-		"contents": {
-			"title": "コンテンツ",
-			"page": "app/pages/contents/index.php"
-		},
-		"publish": {
-			"title": "パブリッシュ",
-			"page": "app/pages/publish/index.php"
+		"{projectId?}": {
+			"title": "Dashboard",
+			"page": "app/pages/dashboard.php"
 		},
 		"env_config": {
 			"title": "環境設定",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::start"
-		},
-		"clearcache": {
-			"title": "キャッシュを消去する",
-			"page": "app/pages/clearcache/index.php"
 		},
 		"composer": {
 			"title": "Composerを操作する",
@@ -48,23 +31,11 @@
 			"title": "ファイルとフォルダ",
 			"page": "app/pages/files_and_folders/index.php"
 		},
-		"contents_editor": {
-			"title": "コンテンツエディタ",
-			"page": "tomk79\\onionSlice\\pages\\contents_editor\\contents_editor::start"
-		},
 		"common_file_editor": {
 			"title": "汎用ファイルエディタ",
 			"page": "app/pages/common_file_editor/index.php"
 		},
 
-		"api.clearcache": {
-			"title": "PX=clearcache",
-			"page": "tomk79\\onionSlice\\api\\clearcache::clearcache"
-		},
-		"api.publish": {
-			"title": "PX=publish.run",
-			"page": "tomk79\\onionSlice\\api\\publish::publish"
-		},
 		"api.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::gpi"

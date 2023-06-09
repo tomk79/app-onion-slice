@@ -38,19 +38,14 @@ $current_page_info = $this->get_current_page_info();
 
 <?php }else{ ?>
 
-<header class="px2-header">
-	<div class="px2-header__id">
+<header class="theme-header">
+	<div class="theme-header__id">
 		<span><?= htmlspecialchars( $app_info->name ?? '' ) ?></span>
 	</div>
-	<div class="px2-header__global-menu">
+	<div class="theme-header__global-menu">
 		<ul>
 			<li><a href="?a=" data-name="home">ホーム</a></li>
-			<li><a href="?a=sitemaps" data-name="sitemaps">サイトマップ</a></li>
-			<li><a href="?a=themes" data-name="themes">テーマ</a></li>
-			<li><a href="?a=contents" data-name="contents">コンテンツ</a></li>
-			<li><a href="?a=publish" data-name="publish">パブリッシュ</a></li>
 			<li><a href="?a=env_config" data-name="env_config">環境設定</a></li>
-			<li><a href="?a=clearcache" data-name="clearcache">キャッシュを消去する</a></li>
 			<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
 			<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
 			<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
@@ -66,13 +61,13 @@ $current_page_info = $this->get_current_page_info();
 
 <div class="theme-frame">
 
-	<div class="theme-h1-container">
-		<div class="theme-h1-container__heading">
-			<h1><?= nl2br( htmlspecialchars( $current_page_info->title ?? '' ) ) ?></h1>
-		</div>
-	</div>
 	<div class="theme-main-container">
 		<div class="theme-main-container__header-info">
+			<div class="theme-h1-container">
+				<div class="theme-h1-container__heading">
+					<h1><?= nl2br( htmlspecialchars( $current_page_info->title ?? '' ) ) ?></h1>
+				</div>
+			</div>
 		</div>
 
 		<div class="theme-main-container__body">
