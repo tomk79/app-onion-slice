@@ -46,7 +46,7 @@ class contents_editor {
 		$theme_id = $this->rencon->req()->get_param('theme_id');
 		$layout_id = $this->rencon->req()->get_param('layout_id');
 
-		$client_resources_dist = $this->rencon->conf()->path_data_dir.'/temporary_assets/px2ce_resources/';
+		$client_resources_dist = $this->rencon->conf()->realpath_private_data_dir.'/temporary_assets/px2ce_resources/';
 		$client_resources_dist = $this->rencon->fs()->get_realpath( $client_resources_dist );
 
 		if( !is_dir($client_resources_dist) ){
@@ -194,7 +194,7 @@ class contents_editor {
 	 * リソースを出力
 	 */
 	private function res(){
-		$client_resources_dist = $this->rencon->conf()->path_data_dir.'/temporary_assets/px2ce_resources/';
+		$client_resources_dist = $this->rencon->conf()->realpath_private_data_dir.'/temporary_assets/px2ce_resources/';
 		$res_path = $this->rencon->req()->get_param('path');
 		$bin = '';
 		if( !is_file($client_resources_dist.$res_path) ){

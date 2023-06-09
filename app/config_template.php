@@ -11,18 +11,20 @@ $conf = new \stdClass();
  * ユーザーは、複数登録できます。
  */
 $conf->users = array(
-	"admin" => sha1("admin"),
+	// "admin" => sha1("admin"),
 );
 
 
 /* --------------------------------------
- * データディレクトリのパス
- * 
- * アプリケーションが専有的に使用するディレクトリを与えてください。
- * ここには、各種の状態を記憶したり、設定を保存したり、
- * Pickles 2 プロジェクトデータを生成したりする用途で使用します。
+ * 非公開データディレクトリのパス
  */
-$conf->path_data_dir = './onion-slice/';
+$conf->realpath_private_data_dir = __DIR__.'/'.basename(__FILE__, '.php').'_files/';
+
+
+/* --------------------------------------
+ * DB接続情報
+ */
+$conf->databases = null;
 
 
 /* --------------------------------------
@@ -30,8 +32,7 @@ $conf->path_data_dir = './onion-slice/';
  * 
  * Pickles 2 プロジェクトをインストールするパスを設定します。
  */
-$conf->path_project_root_dir = './onion-slice/project/';
-
+$conf->path_project_root_dir = $conf->realpath_private_data_dir.'project/';
 
 
 /* --------------------------------------

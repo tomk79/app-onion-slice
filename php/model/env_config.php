@@ -18,7 +18,7 @@ class env_config {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 
-		$this->path_env_config_json = $this->rencon->conf()->path_data_dir.'env_config.json';
+		$this->path_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'env_config.json';
 
 		$data = $this->read();
 		$this->url_preview = $data->url_preview ?? null;

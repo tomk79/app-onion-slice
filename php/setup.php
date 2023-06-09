@@ -19,9 +19,9 @@ class setup {
 	public function wizard(){
 		$conf = $this->rencon->conf();
 
-		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->path_data_dir) ||
+		if( !$this->rencon->fs()->is_dir($this->rencon->conf()->realpath_private_data_dir) ||
 			!$this->rencon->fs()->is_dir($this->rencon->conf()->path_project_root_dir) ||
-			!$this->rencon->fs()->is_file($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar') ){
+			!$this->rencon->fs()->is_file($this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/composer.phar') ){
 			ob_start();
 			$this->step01();
 			$html = ob_get_clean();
@@ -66,7 +66,7 @@ class setup {
 	 */
 	private function step01(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_data_dir) ){
+			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->realpath_private_data_dir) ){
 				?>
 				<p>ディレクトリの作成に失敗しました。</p>
 				<?php
@@ -78,19 +78,19 @@ class setup {
 				<?php
 				return;
 			}
-			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->path_data_dir.'private/commands/composer/') ){
+			if( !$this->rencon->fs()->mkdir_r($this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/') ){
 				?>
 				<p>ディレクトリの作成に失敗しました。</p>
 				<?php
 				return;
 			}
 			$bin = $this->rencon->resources()->get('resources/composer.phar');
-			$this->rencon->fs()->save_file( $this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar', $bin );
+			$this->rencon->fs()->save_file( $this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/composer.phar', $bin );
 
 			$htaccess = '';
 			$htaccess .= 'RewriteEngine off'."\n";
 			$htaccess .= 'Deny from all'."\n";
-			$this->rencon->fs()->save_file( $this->rencon->conf()->path_data_dir.'private/.htaccess', $htaccess );
+			$this->rencon->fs()->save_file( $this->rencon->conf()->realpath_private_data_dir.'private/.htaccess', $htaccess );
 
 			$this->reload();
 			return;
@@ -99,7 +99,7 @@ class setup {
 			<p>Onion Slice のセットアップへようこそ！</p>
 			<p>はじめに、データディレクトリを作成します。</p>
 			<p>データディレクトリのパスは次の通りです。</p>
-			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->path_data_dir ?? null) ?? '' ) ?></code></pre>
+			<pre><code><?= htmlspecialchars( $this->rencon->fs()->get_realpath($this->rencon->conf()->realpath_private_data_dir ?? null) ?? '' ) ?></code></pre>
 			<p>よろしければ、「次へ」をクリックしてください。</p>
 			<form action="?" method="post">
 				<input type="hidden" name="a" value="<?= htmlspecialchars( $this->rencon->req()->get_param('a') ?? '' ) ?>" />
@@ -116,7 +116,7 @@ class setup {
 	 */
 	private function step02(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			$path_composer = realpath($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar');
+			$path_composer = realpath($this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/composer.phar');
 			$base_dir = $this->rencon->conf()->path_project_root_dir;
 			$current_dir = realpath('.');
 
@@ -192,7 +192,7 @@ class setup {
 	 */
 	private function step03(){
 		if( $this->rencon->req()->get_param('cmd') == 'next' ){
-			$path_composer = realpath($this->rencon->conf()->path_data_dir.'private/commands/composer/composer.phar');
+			$path_composer = realpath($this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/composer.phar');
 			$base_dir = $this->rencon->conf()->path_project_root_dir;
 			$current_dir = realpath('.');
 			chdir($base_dir);
