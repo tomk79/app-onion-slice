@@ -36,21 +36,17 @@
 			"page": "app/pages/common_file_editor/index.php"
 		},
 
-		"api.remote_finder.gpi": {
+		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::gpi"
 		},
-		"api.remote_finder.parse_px2_filepath": {
+		"api.{projectId?}.remote_finder.parse_px2_filepath": {
 			"title": "api.parse_px2_filepath",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::parse_px2_filepath"
 		},
-		"api.common_file_editor.gpi": {
+		"api.{projectId?}.common_file_editor.gpi": {
 			"title": "api.common_file_editor.gpi",
 			"page": "tomk79\\onionSlice\\api\\common_file_editor::gpi"
-		},
-		"api.px2all": {
-			"title": "PX=px2dthelper.get.all",
-			"page": "tomk79\\onionSlice\\api\\px2all::px2all"
 		}
 	},
 	"theme": "app/theme/theme.php",

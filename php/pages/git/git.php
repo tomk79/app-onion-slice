@@ -5,6 +5,10 @@ class git {
 
 	private $rencon;
 
+	private $projects;
+	private $project_id;
+	private $project_info;
+
 	/**
 	 * 処理の開始
 	 */
@@ -18,6 +22,10 @@ class git {
 	 */
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
+
+		$this->projects = new \tomk79\onionSlice\model\projects($rencon);
+		$this->project_id = $rencon->get_route_param('projectId');
+		$this->project_info = $this->projects->get_project($this->project_id);
 	}
 
 
@@ -86,7 +94,7 @@ window.contApp = new (function(){
 	function init(){
 		$cont = $('.cont-git').html('');
 		var method = 'post';
-		var apiUrl = "?a=git&m=git_cmd";
+		var apiUrl = "?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.git&m=git_cmd";
 
 
 		// --------------------------------------
@@ -168,8 +176,25 @@ window.contApp = new (function(){
 		$git_command_array = $this->rencon->req()->get_param('command_ary');
 		$rtn = (object) array();
 
+		if( !$this->project_info ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project is not defined.";
+			echo json_encode($rtn);
+			exit;
+		}
 
-		$gitUtil = new \tomk79\onionSlice\helpers\git( $this->rencon );
+		$base_dir = $this->project_info->realpath_base_dir;
+
+		if( !is_dir($base_dir) ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project base dir is not exists.";
+			echo json_encode($rtn);
+			exit;
+		}
+
+		$gitUtil = new \tomk79\onionSlice\helpers\git( $this->rencon, $this->project_info );
 		$gitUtil->set_remote_origin();
 
 		$rtn = $gitUtil->git( $git_command_array );

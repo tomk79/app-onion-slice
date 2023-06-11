@@ -7,8 +7,30 @@ class remote_finder {
 	 * Pickles 2 の `PX=px2dthelper.get.all` を実行する
 	 */
 	static public function gpi( $rencon ){
+		$projects = new \tomk79\onionSlice\model\projects($rencon);
+		$project_id = $rencon->get_route_param('projectId');
+		$project_info = $projects->get_project($project_id);
+
+		if( !$project_info ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project is not defined.";
+			echo json_encode($rtn);
+			exit;
+		}
+
+		$base_dir = $project_info->realpath_base_dir;
+
+		if( !is_dir($base_dir) ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project base dir is not exists.";
+			echo json_encode($rtn);
+			exit;
+		}
+
 		$remoteFinder = new \tomk79\remoteFinder\main(array(
-			'default' => $rencon->conf()->path_project_root_dir,
+			'default' => $base_dir,
 		), array(
 			'paths_invisible' => array(
 				// '/invisibles/*',
@@ -17,6 +39,7 @@ class remote_finder {
 			'paths_readonly' => array(
 				'/.git/*',
 				'/vendor/*',
+				'/node_modules/*',
 			),
 		));
 
@@ -32,6 +55,10 @@ class remote_finder {
 	 * parse_px2_filepath
 	 */
 	static public function parse_px2_filepath( $rencon ){
+		$projects = new \tomk79\onionSlice\model\projects($rencon);
+		$project_id = $rencon->get_route_param('projectId');
+		$project_info = $projects->get_project($project_id);
+
 		header('Content-type: text/json');
 
 		$fs = $rencon->fs();

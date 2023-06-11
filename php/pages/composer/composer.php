@@ -5,6 +5,10 @@ class composer {
 
 	private $rencon;
 
+	private $projects;
+	private $project_id;
+	private $project_info;
+
 	/**
 	 * 処理の開始
 	 */
@@ -18,6 +22,10 @@ class composer {
 	 */
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
+
+		$this->projects = new \tomk79\onionSlice\model\projects($rencon);
+		$this->project_id = $rencon->get_route_param('projectId');
+		$this->project_info = $this->projects->get_project($this->project_id);
 	}
 
 
@@ -141,9 +149,29 @@ window.addEventListener('load', function(e){
 		$command = $this->rencon->req()->get_param('command');
 		$rtn = (object) array();
 
-		$path_composer = realpath($this->rencon->conf()->realpath_private_data_dir.'private/commands/composer/composer.phar');
-		$base_dir = $this->rencon->conf()->path_project_root_dir;
+		if( !$this->project_info ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project is not defined.";
+			echo json_encode($rtn);
+			exit;
+		}
+
+		$path_composer = $this->rencon->fs()->get_realpath($this->rencon->conf()->realpath_private_data_dir.'commands/composer/composer.phar');
+		if( !is_file($path_composer) ){
+			$this->rencon->fs()->mkdir_r( dirname($path_composer) );
+			$this->rencon->fs()->save_file( $path_composer, $this->rencon->resources()->get('resources/composer.phar') );
+		}
+		$base_dir = $this->project_info->realpath_base_dir;
 		$current_dir = realpath('.');
+
+		if( !is_dir($base_dir) ) {
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Project base dir is not exists.";
+			echo json_encode($rtn);
+			exit;
+		}
 
 		$rtn->command = $this->rencon->conf()->commands->php.' '.$path_composer.' '.$command;
 

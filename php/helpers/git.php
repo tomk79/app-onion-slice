@@ -4,12 +4,14 @@ namespace tomk79\onionSlice\helpers;
 class git{
 
 	private $rencon;
+	private $project_info;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct( $rencon ){
+	public function __construct( $rencon, $project_info ){
 		$this->rencon = $rencon;
+		$this->project_info = $project_info;
 	}
 
 	/**
@@ -42,7 +44,7 @@ class git{
 	 * @return array 実行結果
 	 */
 	public function git( $git_sub_command ){
-		$realpath_pj_git_root = $this->rencon->conf()->path_project_root_dir;
+		$realpath_pj_git_root = $this->project_info->realpath_base_dir;
 		$error_message = false;
 
 		if( !is_array($git_sub_command) ){

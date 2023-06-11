@@ -1,3 +1,9 @@
+<?php
+$projects = new \tomk79\onionSlice\model\projects($rencon);
+$project_id = $rencon->get_route_param('projectId');
+$project_info = $projects->get_project($project_id);
+?>
+
 <div id="cont-files-and-folders"></div>
 
 
@@ -17,7 +23,7 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 			// console.log('===== GPI Bridge:', input, callback, $);
 			var rtn = false;
 			$.ajax({
-				url : "?a=api.remote_finder.gpi",
+				url : "?a=api.<?= htmlspecialchars( $project_id ?? '' ) ?>.remote_finder.gpi",
 				headers: {
 				},
 				dataType: 'json',
@@ -47,15 +53,15 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 						console.log(pxExternalPath, pathType);
 						var url = 'about:blank';
 						if(pathType == 'contents'){
-							url = '?a=contents_editor&page_path='+encodeURIComponent(pxExternalPath);
+							url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.contents_editor&page_path='+encodeURIComponent(pxExternalPath);
 						}else{
-							url = '?a=common_file_editor&filename='+encodeURIComponent(fileinfo.path);
+							url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.common_file_editor&filename='+encodeURIComponent(fileinfo.path);
 						}
 						window.open(url);
 					});
 					break;
 				default:
-					var url = '?a=common_file_editor&filename='+encodeURIComponent(fileinfo.path);
+					var url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.common_file_editor&filename='+encodeURIComponent(fileinfo.path);
 					window.open(url);
 					break;
 			}
