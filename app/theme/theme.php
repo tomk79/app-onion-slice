@@ -1,6 +1,10 @@
 <?php
 $app_info = $this->app_info();
 $current_page_info = $this->get_current_page_info();
+
+$projects = new \tomk79\onionSlice\model\projects($rencon);
+$project_id = $rencon->get_route_param('projectId');
+$project_info = $projects->get_project($project_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,13 +50,18 @@ $current_page_info = $this->get_current_page_info();
 		<ul>
 			<li><a href="?a=" data-name="home">ホーム</a></li>
 			<li><a href="?a=env_config" data-name="env_config">環境設定</a></li>
-			<li><a href="?a=composer" data-name="composer">Composerを操作する</a></li>
-			<li><a href="?a=git" data-name="git">Gitを操作する</a></li>
-			<li><a href="?a=files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
 <?php if( $rencon->auth()->is_login_required() && $rencon->user()->is_login() ) { ?>
 			<li><a href="?a=logout" data-name="quit">Logout</a></li>
 <?php } ?>
 		</ul>
+<?php if( $project_info ){ ?>
+		<ul>
+			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>" data-name="dashboard">Dashboard</a></li>
+			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.composer" data-name="composer">Composerを操作する</a></li>
+			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.git" data-name="git">Gitを操作する</a></li>
+			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.files_and_folders" data-name="files_and_folders">ファイルとフォルダ</a></li>
+		</ul>
+<?php } ?>
 	</div>
 </header>
 

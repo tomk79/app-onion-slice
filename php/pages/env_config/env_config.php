@@ -72,6 +72,7 @@ class env_config {
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
+	<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 
 	<!-- ID/PWのオートコンプリートを無効にするためのダミー入力欄 -->
 	<input type="password" name="autocomplete-off" value="" style="position: absolute; visibility: hidden; top: -100px; left: -100px;" />

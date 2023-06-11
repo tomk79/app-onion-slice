@@ -11,27 +11,27 @@
 			"title": "Home",
 			"page": "app/pages/index.php"
 		},
-		"{projectId?}": {
-			"title": "Dashboard",
-			"page": "app/pages/dashboard.php"
-		},
 		"env_config": {
 			"title": "環境設定",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::start"
 		},
-		"composer": {
+		"proj.{projectId?}": {
+			"title": "Dashboard",
+			"page": "app/pages/dashboard.php"
+		},
+		"proj.{projectId?}.composer": {
 			"title": "Composerを操作する",
 			"page": "tomk79\\onionSlice\\pages\\composer\\composer::start"
 		},
-		"git": {
+		"proj.{projectId?}.git": {
 			"title": "Gitを操作する",
 			"page": "tomk79\\onionSlice\\pages\\git\\git::start"
 		},
-		"files_and_folders": {
+		"proj.{projectId?}.files_and_folders": {
 			"title": "ファイルとフォルダ",
 			"page": "app/pages/files_and_folders/index.php"
 		},
-		"common_file_editor": {
+		"proj.{projectId?}.common_file_editor": {
 			"title": "汎用ファイルエディタ",
 			"page": "app/pages/common_file_editor/index.php"
 		},

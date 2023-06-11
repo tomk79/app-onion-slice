@@ -1,10 +1,11 @@
 <?php
 namespace tomk79\onionSlice\model;
+use renconFramework\dataDotPhp;
 
 class env_config {
 
 	private $rencon;
-	private $path_env_config_json;
+	private $realpath_env_config_json;
 
 	public $url_preview;
 	public $url_production;
@@ -18,7 +19,7 @@ class env_config {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 
-		$this->path_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'env_config.json';
+		$this->realpath_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'env_config.json.php';
 
 		$data = $this->read();
 		$this->url_preview = $data->url_preview ?? null;
@@ -36,9 +37,8 @@ class env_config {
 	private function read(){
 
 		$data = (object) array();
-		if( is_file( $this->path_env_config_json ) ){
-			$json = file_get_contents( $this->path_env_config_json );
-			$data = json_decode( $json );
+		if( is_file( $this->realpath_env_config_json ) ){
+			$data = dataDotPhp::read_json($this->realpath_env_config_json);
 		}
 
 		if( !isset($data->url_preview) ){ $data->url_preview = null; }
@@ -62,7 +62,7 @@ class env_config {
 		$data->git_username = $this->git_username;
 		$data->git_password = $this->git_password;
 
-		$result = $this->rencon->fs()->save_file($this->path_env_config_json, json_encode($data));
+		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 
 		return $result;
 	}

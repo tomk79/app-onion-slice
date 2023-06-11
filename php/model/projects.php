@@ -1,0 +1,66 @@
+<?php
+namespace tomk79\onionSlice\model;
+use renconFramework\dataDotPhp;
+
+class projects {
+
+	private $rencon;
+	private $realpath_env_config_json;
+	private $projects;
+
+	/**
+	 * Constructor
+	 */
+	public function __construct( $rencon ){
+		$this->rencon = $rencon;
+
+		$this->realpath_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'projects.json.php';
+
+		$data = $this->read();
+		$this->projects = $data->projects ?? new \stdClass();
+
+		return;
+	}
+
+	/**
+	 * データを読み込む
+	 */
+	private function read(){
+
+		$data = (object) array();
+		if( is_file( $this->realpath_env_config_json ) ){
+			$data = dataDotPhp::read_json($this->realpath_env_config_json);
+		}
+
+		$data->projects = $data->projects ?? new \stdClass();
+
+		return $data;
+	}
+
+	/**
+	 * データを保存する
+	 */
+	public function save(){
+
+		$data = (object) array();
+		$data->projects = $data->projects ?? new \stdClass();
+
+		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
+
+		return $result;
+	}
+
+	/**
+	 * プロジェクト一覧を取得する
+	 */
+	public function get_projects(){
+		return $this->projects;
+	}
+
+	/**
+	 * プロジェクト情報を取得する
+	 */
+	public function get_project( $project_id ){
+		return $this->projects->{$project_id} ?? false;
+	}
+}
