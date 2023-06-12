@@ -1,5 +1,6 @@
 <?php
 namespace tomk79\onionSlice\model;
+use tomk79\onionSlice\helpers\crypt;
 use renconFramework\dataDotPhp;
 
 class env_config {
@@ -21,12 +22,14 @@ class env_config {
 
 		$this->realpath_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'env_config.json.php';
 
+		$crypt = new crypt( $this->rencon );
+
 		$data = $this->read();
 		$this->url_preview = $data->url_preview ?? null;
 		$this->url_production = $data->url_production ?? null;
 		$this->git_url = $data->git_url ?? null;
 		$this->git_username = $data->git_username ?? null;
-		$this->git_password = $data->git_password ?? null;
+		$this->git_password = (strlen($data->git_password ?? '') ? $crypt->decrypt($data->git_password) : null);
 
 		return;
 	}
@@ -54,13 +57,14 @@ class env_config {
 	 * データを保存する
 	 */
 	public function save(){
+		$crypt = new crypt( $this->rencon );
 
 		$data = (object) array();
 		$data->url_preview = $this->url_preview;
 		$data->url_production = $this->url_production;
 		$data->git_url = $this->git_url;
 		$data->git_username = $this->git_username;
-		$data->git_password = $this->git_password;
+		$data->git_password = $crypt->encrypt( $this->git_password );
 
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 

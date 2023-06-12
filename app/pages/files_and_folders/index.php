@@ -43,23 +43,9 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 			});
 		},
 		"open": function(fileinfo, callback){
-			// console.log(fileinfo);
 			px2style.loading();
 
 			switch( fileinfo.ext ){
-				case 'html':
-				case 'htm':
-					parsePx2FilePathEndpoint(fileinfo.path, function(pxExternalPath, pathFiles, pathType){
-						console.log(pxExternalPath, pathType);
-						var url = 'about:blank';
-						if(pathType == 'contents'){
-							url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.contents_editor&page_path='+encodeURIComponent(pxExternalPath);
-						}else{
-							url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.common_file_editor&filename='+encodeURIComponent(fileinfo.path);
-						}
-						window.open(url);
-					});
-					break;
 				default:
 					var url = '?a=proj.<?= htmlspecialchars( $project_id ?? '' ) ?>.common_file_editor&filename='+encodeURIComponent(fileinfo.path);
 					window.open(url);
@@ -120,21 +106,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 			var pageInfoAll_before;
 			new Promise(function(rlv){rlv();})
 				.then(function(){ return new Promise(function(rlv, rjt){
-					parsePx2FilePathEndpoint(current_dir+'___before.html', function(_pxExternalPath, _pathFiles, _pathType){
-						pxExternalPath_before = _pxExternalPath;
-						pathType_before = _pathType;
-						if( !pxExternalPath_before || pathType_before != 'contents' ){
-							rlv();
-							return;
-						}
-						fs('px_command', pxExternalPath_before, {px_command: 'px2dthelper.get.all'}, function(result){
-							pageInfoAll_before = result.result;
-							rlv();
-						});
-					});
-					return;
-				}); })
-				.then(function(){ return new Promise(function(rlv, rjt){
 					$body.find('.cont_current_dir').text(current_dir);
 					$body.find('[name=filename]').on('change keyup', function(){
 						var filename = $body.find('[name=filename]').val();
@@ -172,30 +143,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 								px2style.loading();
 
 								new Promise(function(rlv){rlv();})
-									.then(function(){ return new Promise(function(rlv, rjt){
-										if( pxExternalPath_before && pathType_before == 'contents' && filename.match(/\.html?$/i) && $body.find('[name=is_guieditor]:checked').val() ){
-											// GUI編集モードが有効
-											parsePx2FilePathEndpoint(current_dir+filename, function(_pxExternalPath, _pathFiles, _pathType){
-												pxExternalPath = _pxExternalPath;
-												pathType = _pathType;
-												if( !pxExternalPath || pathType != 'contents' ){
-													rlv();
-													return;
-												}
-												fs('px_command', pxExternalPath, {px_command: 'px2dthelper.get.all'}, function(result){
-													pageInfoAll = result.result;
-													fs('initialize_data_dir', pxExternalPath, {}, function(result){
-														rlv();
-													});
-													return;
-												});
-												return;
-											});
-											return;
-										}
-										rlv();
-										return;
-									}); })
 									.then(function(){ return new Promise(function(rlv, rjt){
 										px2style.closeLoading();
 										callback( filename );
@@ -239,26 +186,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 					return;
 				}); })
 				.then(function(){ return new Promise(function(rlv, rjt){
-					if(!is_file){
-						rlv();
-						return;
-					}
-					parsePx2FilePathEndpoint(copyFrom, function(_pxExternalPath, _pathFiles, _pathType){
-						pxExternalPathFrom = _pxExternalPath;
-						pathFilesFrom = _pathFiles;
-						pathTypeFrom = _pathType;
-						if( !pxExternalPathFrom || pathTypeFrom != 'contents' ){
-							rlv();
-							return;
-						}
-						fs('px_command', pxExternalPathFrom, {px_command: 'px2dthelper.get.all'}, function(result){
-							pageInfoAllFrom = result.result;
-							rlv();
-						});
-					});
-					return;
-				}); })
-				.then(function(){ return new Promise(function(rlv, rjt){
 					var $body = $('<div>').html( $('#template-copy').html() );
 					$body.find('.cont_target_item').text(copyFrom);
 					$body.find('[name=copy_to]').val(copyFrom);
@@ -290,30 +217,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 
 								px2style.loading();
 								new Promise(function(rlv){rlv();})
-									.then(function(){ return new Promise(function(rlv, rjt){
-										if( is_file && $body.find('[name=is_copy_files_too]:checked').val() ){
-											// リソースも一緒に複製する
-											parsePx2FilePathEndpoint(copyTo, function(_pxExternalPath, _pathFiles, _pathType){
-												pxExternalPathTo = _pxExternalPath;
-												pathFilesTo = _pathFiles;
-												pathTypeTo = _pathType;
-
-												fs('is_dir', pathFilesFrom, {}, function(result){
-													if(result.result){
-														fs('copy', pathFilesFrom, {to: pathFilesTo}, function(result){
-															rlv();
-														});
-														return;
-													}
-													rlv();
-												});
-												return;
-											});
-											return;
-										}
-										rlv();
-										return;
-									}); })
 									.then(function(){ return new Promise(function(rlv, rjt){
 										px2style.closeLoading();
 										callback(copyFrom, copyTo);
@@ -353,20 +256,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 					return;
 				}); })
 				.then(function(){ return new Promise(function(rlv, rjt){
-					if(!is_file){
-						rlv();
-						return;
-					}
-					parsePx2FilePathEndpoint(renameFrom, function(_pxExternalPath, _pathFiles, _pathType){
-						pxExternalPathFrom = _pxExternalPath;
-						pathFilesFrom = _pathFiles;
-						pathTypeFrom = _pathType;
-						rlv();
-						return;
-					});
-					return;
-				}); })
-				.then(function(){ return new Promise(function(rlv, rjt){
 					var $body = $('<div>').html( $('#template-rename').html() );
 					$body.find('.cont_target_item').text(renameFrom);
 					$body.find('[name=rename_to]').val(renameFrom);
@@ -401,33 +290,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 
 								new Promise(function(rlv){rlv();})
 									.then(function(){ return new Promise(function(rlv, rjt){
-										if( is_file && pxExternalPathFrom && pathTypeFrom == 'contents' && $body.find('[name=is_rename_files_too]:checked').val() ){
-											// リソースも一緒に移動する
-											parsePx2FilePathEndpoint(renameTo, function(_pxExternalPath, _pathFiles, _pathType){
-												pxExternalPathTo = _pxExternalPath;
-												pathFilesTo = _pathFiles;
-												pathTypeTo = _pathType;
-												if( !pxExternalPathTo || pathTypeTo != 'contents' ){
-													rlv();
-													return;
-												}
-												fs('is_dir', pathFilesFrom, {}, function(result){
-													if(result.result){
-														fs('rename', pathFilesFrom, {to: pathFilesTo}, function(result){
-															rlv();
-														});
-														return;
-													}
-													rlv();
-												});
-												return;
-											});
-											return;
-										}
-										rlv();
-										return;
-									}); })
-									.then(function(){ return new Promise(function(rlv, rjt){
 										px2style.closeLoading();
 										callback(renameFrom, renameTo);
 										rlv();
@@ -461,26 +323,6 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 					fs('is_file', target_item, {}, function(result){
 						is_file = result.result;
 						rlv();
-					});
-					return;
-				}); })
-				.then(function(){ return new Promise(function(rlv, rjt){
-					if(!is_file){
-						rlv();
-						return;
-					}
-					parsePx2FilePathEndpoint(target_item, function(_pxExternalPath, _pathFiles, _pathType){
-						pxExternalPath = _pxExternalPath;
-						pathFiles = _pathFiles;
-						pathType = _pathType;
-						if( !pxExternalPath || pathType != 'contents' ){
-							rlv();
-							return;
-						}
-						fs('px_command', pxExternalPath, {px_command: 'px2dthelper.get.all'}, function(result){
-							pageInfoAll = result.result;
-							rlv();
-						});
 					});
 					return;
 				}); })
@@ -548,40 +390,15 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 		}
 	}
 );
-// console.log(remoteFinder);
 remoteFinder.init('/', {}, function(){
 	console.log('ready.');
 });
 
-function parsePx2FilePathEndpoint( filepath, callback ){
-	// console.log('====== parsePx2FilePathEndpoint():', filepath);
-	callback = callback || function(){};
-	$.ajax({
-		type : 'get',
-		url : '?a=api.remote_finder.parse_px2_filepath',
-		headers: {
-		},
-		dataType: 'json',
-		data: {
-			'path': filepath
-		},
-		error: function(data){
-			console.error(data);
-		},
-		success: function(data){
-			// console.log('---- parsePx2FilePathEndpoint():', data);
-			callback(data.pxExternalPath, data.pathFiles, data.pathType);
-		}
-	});
-	return;
-}
-
 
 function fs(method, filename, options, callback){
-	// console.log('====== fs():', method, filename, options);
 	callback = callback || function(){};
 	$.ajax({
-		url : '?a=api.common_file_editor.gpi',
+		url : '?a=api.<?= htmlspecialchars( $project_id ?? '' ) ?>.common_file_editor.gpi',
 		headers: {
 		},
 		dataType: 'json',
@@ -598,7 +415,6 @@ function fs(method, filename, options, callback){
 			console.error(err);
 		},
 		success: function(data){
-			// console.log('-- fs():', data);
 			callback(data);
 		}
 	});

@@ -9,19 +9,15 @@ $project_info = $projects->get_project($project_id);
 		<tbody>
 			<tr>
 				<th>Name</th>
-				<td><a href="<?= htmlspecialchars($project_info->url ?? '') ?>" target="_blank"><?= htmlspecialchars( $project_info->name ?? '---' ) ?></a></td>
+				<td><b><?= htmlspecialchars( $project_info->name ?? '---' ) ?></b></td>
 			</tr>
 			<tr>
 				<th>URL</th>
-				<td><?= htmlspecialchars( $project_info->url ?? '---' ) ?></td>
+				<td><a href="<?= htmlspecialchars($project_info->url ?? '') ?>" target="_blank"><?= htmlspecialchars( $project_info->url ?? '---' ) ?></a></td>
 			</tr>
 			<tr>
-				<th>Git URL</th>
-				<td><?= htmlspecialchars( $project_info->git_url ?? '---' ) ?></td>
-			</tr>
-			<tr>
-				<th>Git User Name</th>
-				<td><?= htmlspecialchars( $project_info->git_username ?? '---' ) ?></td>
+				<th>realpath_base_dir</th>
+				<td><?= htmlspecialchars( $project_info->realpath_base_dir ?? '---' ) ?></td>
 			</tr>
 		</tbody>
 	</table>
