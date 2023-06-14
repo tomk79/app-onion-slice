@@ -66,34 +66,6 @@ class common_file_editor {
 		}elseif( $rencon->req()->get_param('method') == 'remove' ){
 			$fs->chmod_r( $realpath_filename, 0777 );
 			$rtn['result'] = $fs->rm( $realpath_filename );
-
-		}elseif( $rencon->req()->get_param('method') == 'px_command' ){
-			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
-			$px2proj = $pickles2->create_px2agent();
-			$rtn['result'] = $px2proj->query(
-				( strlen($filename ?? '') ? $filename : '/' ).'?PX='.urlencode($rencon->req()->get_param('px_command')),
-				array(
-					'output' => 'json'
-				)
-			);
-
-		}elseif( $rencon->req()->get_param('method') == 'initialize_data_dir' ){
-			$pickles2 = new \tomk79\onionSlice\helpers\pickles2($rencon);
-			$px2proj = $pickles2->create_px2agent();
-			$json = $px2proj->query(
-				( strlen($filename ?? '') ? $filename : '/' ).'?PX=px2dthelper.get.all',
-				array(
-					'output' => 'json'
-				)
-			);
-
-			$rtn['result'] = false;
-			if( $fs->mkdir_r( $json->realpath_data_dir ) ){
-				if( $fs->save_file( $json->realpath_data_dir.'data.json', '{}' ) ){
-					$rtn['result'] = true;
-				}
-			}
-
 		}
 
 		echo json_encode($rtn);

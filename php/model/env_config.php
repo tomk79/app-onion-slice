@@ -8,6 +8,8 @@ class env_config {
 	private $rencon;
 	private $realpath_env_config_json;
 
+	public $command_php;
+	public $command_git;
 	public $url_preview;
 	public $url_production;
 	public $git_url;
@@ -25,6 +27,8 @@ class env_config {
 		$crypt = new crypt( $this->rencon );
 
 		$data = $this->read();
+		$this->command_php = $data->command_php ?? null;
+		$this->command_git = $data->command_git ?? null;
 		$this->url_preview = $data->url_preview ?? null;
 		$this->url_production = $data->url_production ?? null;
 		$this->git_url = $data->git_url ?? null;
@@ -44,6 +48,8 @@ class env_config {
 			$data = dataDotPhp::read_json($this->realpath_env_config_json);
 		}
 
+		if( !isset($data->command_php) ){ $data->command_php = null; }
+		if( !isset($data->command_git) ){ $data->command_git = null; }
 		if( !isset($data->url_preview) ){ $data->url_preview = null; }
 		if( !isset($data->url_production) ){ $data->url_production = null; }
 		if( !isset($data->git_url) ){ $data->git_url = null; }
@@ -60,6 +66,8 @@ class env_config {
 		$crypt = new crypt( $this->rencon );
 
 		$data = (object) array();
+		$data->command_php = $this->command_php;
+		$data->command_git = $this->command_git;
 		$data->url_preview = $this->url_preview;
 		$data->url_production = $this->url_production;
 		$data->git_url = $this->git_url;

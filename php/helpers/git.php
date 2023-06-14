@@ -4,6 +4,7 @@ namespace tomk79\onionSlice\helpers;
 class git{
 
 	private $rencon;
+	private $env_config;
 	private $project_info;
 
 	/**
@@ -11,6 +12,7 @@ class git{
 	 */
 	public function __construct( $rencon, $project_info ){
 		$this->rencon = $rencon;
+		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 		$this->project_info = $project_info;
 	}
 
@@ -86,8 +88,10 @@ class git{
 		chdir($realpath_pj_git_root);
 
 
+		$realpath_git_command = (strlen($this->env_config->command_git ?? '') ? $this->env_config->command_git : ($this->rencon->conf()->commands->git ?? 'git'));
+
 		ob_start();
-		$proc = proc_open('git '.$cmd, array(
+		$proc = proc_open($realpath_git_command.' '.$cmd, array(
 			0 => array('pipe','r'),
 			1 => array('pipe','w'),
 			2 => array('pipe','w'),

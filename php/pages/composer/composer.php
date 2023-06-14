@@ -4,6 +4,7 @@ namespace tomk79\onionSlice\pages\composer;
 class composer {
 
 	private $rencon;
+	private $env_config;
 
 	private $projects;
 	private $project_id;
@@ -22,6 +23,7 @@ class composer {
 	 */
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
+		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 
 		$this->projects = new \tomk79\onionSlice\model\projects($rencon);
 		$this->project_id = $rencon->get_route_param('projectId');
@@ -173,7 +175,8 @@ window.addEventListener('load', function(e){
 			exit;
 		}
 
-		$rtn->command = $this->rencon->conf()->commands->php.' '.$path_composer.' '.$command;
+		$realpath_php_command = (strlen($this->env_config->command_php ?? '') ? $this->env_config->command_php : ($this->rencon->conf()->commands->php ?? 'php'));
+		$rtn->command = $realpath_php_command.' '.$path_composer.' '.$command;
 
 		chdir($base_dir);
 

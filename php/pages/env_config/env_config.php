@@ -5,12 +5,11 @@ class env_config {
 
 	private $rencon;
 	private $env_config;
-	private $pickles2;
 
 	/**
 	 * 処理の開始
 	 */
-	static public function start( $rencon ){
+	static public function index( $rencon ){
 		$ctrl = new self($rencon);
 		return $ctrl->route();
 	}
@@ -21,7 +20,6 @@ class env_config {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
-		$this->pickles2 = new \tomk79\onionSlice\helpers\pickles2( $this->rencon );
 	}
 
 
@@ -35,11 +33,13 @@ class env_config {
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
-			$this->rencon->req()->set_param('url-preview', $this->env_config->url_preview);
-			$this->rencon->req()->set_param('url-production', $this->env_config->url_production);
-			$this->rencon->req()->set_param('git-url', $this->env_config->git_url);
-			$this->rencon->req()->set_param('git-username', $this->env_config->git_username);
-			$this->rencon->req()->set_param('git-password', $this->env_config->git_password);
+			$this->rencon->req()->set_param('command-php', $this->env_config->command_php ?? null);
+			$this->rencon->req()->set_param('command-git', $this->env_config->command_git ?? null);
+			$this->rencon->req()->set_param('url-preview', $this->env_config->url_preview ?? null);
+			$this->rencon->req()->set_param('url-production', $this->env_config->url_production ?? null);
+			$this->rencon->req()->set_param('git-url', $this->env_config->git_url ?? null);
+			$this->rencon->req()->set_param('git-username', $this->env_config->git_username ?? null);
+			$this->rencon->req()->set_param('git-password', $this->env_config->git_password ?? null);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
@@ -55,19 +55,6 @@ class env_config {
 	 * 編集画面
 	 */
 	private function edit(){
-		$px2proj = $this->pickles2->create_px2agent();
-		$px2all = $px2proj->query(
-			'/?PX=px2dthelper.get.all',
-			array(
-				'output' => 'json'
-			)
-		);
-		$realpath_entry_script = $this->pickles2->get_entry_script();
-		$realpath_publish_dir = null;
-		if( strlen($px2all->config->path_publish_dir ?? '') ){
-			$realpath_publish_dir = $this->rencon->fs()->get_realpath('./'.$px2all->config->path_publish_dir, dirname($realpath_entry_script));
-		}
-
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -81,19 +68,32 @@ class env_config {
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-command-php">PHPコマンド</label></div>
+				<div class="px2-form-input-list__input">
+					<input type="text" id="input-command-php" name="input-command-php" value="<?= htmlspecialchars($this->rencon->req()->get_param('command-php') ?? '') ?>" class="px2-input px2-input--block" />
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-command-git">Gitコマンド</label></div>
+				<div class="px2-form-input-list__input">
+					<input type="text" id="input-command-git" name="input-command-git" value="<?= htmlspecialchars($this->rencon->req()->get_param('command-git') ?? '') ?>" class="px2-input px2-input--block" />
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<div class="px2-form-input-list">
+		<ul class="px2-form-input-list__ul">
+			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url-preview">プレビューURL</label></div>
 				<div class="px2-form-input-list__input">
 					<input type="text" id="input-url-preview" name="input-url-preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-preview') ?? '') ?>" class="px2-input px2-input--block" />
-					<p>次のパスに割り当ててください。</p>
-					<pre><code><?= htmlspecialchars( $px2all->realpath_docroot ?? '' ) ?></code></pre>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url-production">本番URL</label></div>
 				<div class="px2-form-input-list__input">
 					<input type="text" id="input-url-production" name="input-url-production" value="<?= htmlspecialchars($this->rencon->req()->get_param('url-production') ?? '') ?>" class="px2-input px2-input--block" />
-					<p>次のパスに割り当ててください。</p>
-					<pre><code><?= htmlspecialchars( $realpath_publish_dir ?? '' ) ?></code></pre>
 				</div>
 			</li>
 		</ul>
@@ -133,6 +133,8 @@ class env_config {
 	 * 保存処理を実行する
 	 */
 	private function save(){
+		$this->env_config->command_php = $this->rencon->req()->get_param('input-command-php');
+		$this->env_config->command_git = $this->rencon->req()->get_param('input-command-git');
 		$this->env_config->url_preview = $this->rencon->req()->get_param('input-url-preview');
 		$this->env_config->url_production = $this->rencon->req()->get_param('input-url-production');
 		$this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');

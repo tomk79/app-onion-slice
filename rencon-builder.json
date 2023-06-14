@@ -13,7 +13,7 @@
 		},
 		"env_config": {
 			"title": "環境設定",
-			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::start"
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"
 		},
 		"proj.{projectId?}": {
 			"title": "Dashboard",
