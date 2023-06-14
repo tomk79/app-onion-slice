@@ -160,6 +160,7 @@ window.addEventListener('load', function(e){
 		}
 
 		$path_composer = $this->rencon->fs()->get_realpath($this->rencon->conf()->realpath_private_data_dir.'commands/composer/composer.phar');
+
 		if( !is_file($path_composer) ){
 			$this->rencon->fs()->mkdir_r( dirname($path_composer) );
 			$this->rencon->fs()->save_file( $path_composer, $this->rencon->resources()->get('resources/composer.phar') );
@@ -175,13 +176,15 @@ window.addEventListener('load', function(e){
 			exit;
 		}
 
+		$path_composer_home = $this->rencon->conf()->realpath_private_data_dir.'_composer_home/';
+
 		$realpath_php_command = (strlen($this->env_config->command_php ?? '') ? $this->env_config->command_php : ($this->rencon->conf()->commands->php ?? 'php'));
-		$rtn->command = $realpath_php_command.' '.$path_composer.' '.$command;
+		$rtn->command = $realpath_php_command.' '.escapeshellarg($path_composer).' '.escapeshellarg($command);
 
 		chdir($base_dir);
 
 		ob_start();
-		$proc = proc_open($rtn->command, array(
+		$proc = proc_open('export COMPOSER_HOME='.$path_composer_home.'; '.$rtn->command, array(
 			0 => array('pipe','r'),
 			1 => array('pipe','w'),
 			2 => array('pipe','w'),
