@@ -10,7 +10,7 @@ $project_info = $projects->get_project($project_id);
 <html>
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="csrf-token" content="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 <title><?= htmlspecialchars( $app_info->name ?? '' ) ?> | <?= htmlspecialchars( $current_page_info->title ?? '' ) ?></title>
 <link rel="stylesheet" href="?res=theme.css" />

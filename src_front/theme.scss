@@ -6,6 +6,9 @@ html, body{
     width: 100%;
     height: 100%;
 }
+body,input,textarea,select,option,button{
+	font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif, system-ui;
+}
 body {
 	display: flex;
 	flex-direction: column;
@@ -37,15 +40,25 @@ img {
  * テーマ
  */
 .theme-header {
+	&__id {
+		text-align: center;
+		font-weight: bold;
+		font-size: 16px;
+		padding: 5px 20px;
+	}
 	&__global-menu {
 		ul {
 			display: flex;
+			padding: 0;
+			margin: 0;
+			overflow: auto;
 			li {
 				list-style-type: none;
 				a,
 				span {
 					display: block;
 					padding: 10px;
+					white-space: nowrap;
 				}
 			}
 		}
