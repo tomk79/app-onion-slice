@@ -195,7 +195,7 @@ window.contApp = new (function(){
 		}
 
 		$gitUtil = new \tomk79\onionSlice\helpers\git( $this->rencon, $this->project_info );
-		$gitUtil->set_remote_origin();
+		$gitUtil->set_remote_origin($this->project_info->remote);
 
 		$rtn = $gitUtil->git( $git_command_array );
 

@@ -22,7 +22,7 @@ class git{
 	public function get_remote_default_branch_name( $git_url = null ) {
 		$default = 'master';
 		if( !strlen( $git_url ?? '' ) ){
-			$git_url = $this->url_bind_confidentials();
+			$git_url = $this->url_bind_confidentials($git_url);
 		}
 		if( !strlen( $git_url ?? '' ) ){
 			return $default;
@@ -166,8 +166,8 @@ class git{
 	/**
 	 * origin をセットする
 	 */
-	public function set_remote_origin(){
-		$git_remote = $this->url_bind_confidentials();
+	public function set_remote_origin($git_url){
+		$git_remote = $this->url_bind_confidentials($git_url);
 		if( !strlen($git_remote ?? '') ){
 			return true;
 		}
@@ -191,13 +191,15 @@ class git{
 		$env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 
 		if( $env_config && !strlen($url ?? '') ){
-			$url = $env_config->git_url;
+			$url = $this->project_info->remote ?? null;
 		}
-		if( $env_config && !strlen($user_name ?? '') && strlen($env_config->git_username ?? '') ){
-			$user_name = $env_config->git_username;
+		if( $env_config && !strlen($user_name ?? '') && strlen($env_config->remotes->{$url}->username ?? '') ){
+			$user_name = $env_config->remotes->{$url}->username;
 		}
-		if( $env_config && !strlen($password ?? '') && strlen($env_config->git_password ?? '') ){
-			$password = $env_config->git_password;
+		if( $env_config && !strlen($password ?? '') && strlen($env_config->remotes->{$url}->password ?? '') ){
+			$password = $env_config->remotes->{$url}->password;
+			$crypt = new crypt($this->rencon);
+			$password = $crypt->decrypt($password);
 		}
 		if( !strlen($url ?? '') ){
 			return null;

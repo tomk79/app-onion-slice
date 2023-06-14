@@ -19,6 +19,10 @@ $project_info = $projects->get_project($project_id);
 				<th>realpath_base_dir</th>
 				<td><?= htmlspecialchars( $project_info->realpath_base_dir ?? '---' ) ?></td>
 			</tr>
+			<tr>
+				<th>remote</th>
+				<td><?= htmlspecialchars( $project_info->remote ?? '---' ) ?></td>
+			</tr>
 		</tbody>
 	</table>
 </div>
