@@ -8,13 +8,13 @@ class env_config {
 	private $rencon;
 	private $realpath_env_config_json;
 
-	public $command_php;
-	public $command_git;
-	public $url_preview;
-	public $url_production;
-	public $git_url;
-	public $git_username;
-	public $git_password;
+	public $commands;
+	public $remotes;
+	// public $url_preview;
+	// public $url_production;
+	// public $git_url;
+	// public $git_username;
+	// public $git_password;
 
 	/**
 	 * Constructor
@@ -27,13 +27,13 @@ class env_config {
 		$crypt = new crypt( $this->rencon );
 
 		$data = $this->read();
-		$this->command_php = $data->command_php ?? null;
-		$this->command_git = $data->command_git ?? null;
-		$this->url_preview = $data->url_preview ?? null;
-		$this->url_production = $data->url_production ?? null;
-		$this->git_url = $data->git_url ?? null;
-		$this->git_username = $data->git_username ?? null;
-		$this->git_password = (strlen($data->git_password ?? '') ? $crypt->decrypt($data->git_password) : null);
+		$this->commands = $data->commands ?? (object) array();
+		$this->remotes = $data->remotes ?? (object) array();
+		// $this->url_preview = $data->url_preview ?? null;
+		// $this->url_production = $data->url_production ?? null;
+		// $this->git_url = $data->git_url ?? null;
+		// $this->git_username = $data->git_username ?? null;
+		// $this->git_password = (strlen($data->git_password ?? '') ? $crypt->decrypt($data->git_password) : null);
 
 		return;
 	}
@@ -48,13 +48,10 @@ class env_config {
 			$data = dataDotPhp::read_json($this->realpath_env_config_json);
 		}
 
-		if( !isset($data->command_php) ){ $data->command_php = null; }
-		if( !isset($data->command_git) ){ $data->command_git = null; }
-		if( !isset($data->url_preview) ){ $data->url_preview = null; }
-		if( !isset($data->url_production) ){ $data->url_production = null; }
-		if( !isset($data->git_url) ){ $data->git_url = null; }
-		if( !isset($data->git_username) ){ $data->git_username = null; }
-		if( !isset($data->git_password) ){ $data->git_password = null; }
+		if( !isset($data->commands) ){ $data->commands = (object) array(); }
+		if( !isset($data->commands->php) ){ $data->commands->php = null; }
+		if( !isset($data->commands->git) ){ $data->commands->git = null; }
+		if( !isset($data->remotes) ){ $data->remotes = (object) array(); }
 
 		return $data;
 	}
@@ -66,13 +63,13 @@ class env_config {
 		$crypt = new crypt( $this->rencon );
 
 		$data = (object) array();
-		$data->command_php = $this->command_php;
-		$data->command_git = $this->command_git;
-		$data->url_preview = $this->url_preview;
-		$data->url_production = $this->url_production;
-		$data->git_url = $this->git_url;
-		$data->git_username = $this->git_username;
-		$data->git_password = $crypt->encrypt( $this->git_password );
+		$data->commands = $this->commands;
+		$data->remotes = $this->remotes;
+		// $data->url_preview = $this->url_preview;
+		// $data->url_production = $this->url_production;
+		// $data->git_url = $this->git_url;
+		// $data->git_username = $this->git_username;
+		// $data->git_password = $crypt->encrypt( $this->git_password );
 
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 

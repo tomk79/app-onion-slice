@@ -88,7 +88,7 @@ class git{
 		chdir($realpath_pj_git_root);
 
 
-		$realpath_git_command = (strlen($this->env_config->command_git ?? '') ? $this->env_config->command_git : ($this->rencon->conf()->commands->git ?? 'git'));
+		$realpath_git_command = (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
 
 		ob_start();
 		$proc = proc_open($realpath_git_command.' '.$cmd, array(

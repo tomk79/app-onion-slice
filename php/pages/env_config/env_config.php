@@ -33,13 +33,13 @@ class env_config {
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
-			$this->rencon->req()->set_param('command-php', $this->env_config->command_php ?? null);
-			$this->rencon->req()->set_param('command-git', $this->env_config->command_git ?? null);
-			$this->rencon->req()->set_param('url-preview', $this->env_config->url_preview ?? null);
-			$this->rencon->req()->set_param('url-production', $this->env_config->url_production ?? null);
-			$this->rencon->req()->set_param('git-url', $this->env_config->git_url ?? null);
-			$this->rencon->req()->set_param('git-username', $this->env_config->git_username ?? null);
-			$this->rencon->req()->set_param('git-password', $this->env_config->git_password ?? null);
+			$this->rencon->req()->set_param('command-php', $this->env_config->commands->php ?? null);
+			$this->rencon->req()->set_param('command-git', $this->env_config->commands->git ?? null);
+			// $this->rencon->req()->set_param('url-preview', $this->env_config->url_preview ?? null);
+			// $this->rencon->req()->set_param('url-production', $this->env_config->url_production ?? null);
+			// $this->rencon->req()->set_param('git-url', $this->env_config->git_url ?? null);
+			// $this->rencon->req()->set_param('git-username', $this->env_config->git_username ?? null);
+			// $this->rencon->req()->set_param('git-password', $this->env_config->git_password ?? null);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
@@ -82,7 +82,7 @@ class env_config {
 		</ul>
 	</div>
 
-	<div class="px2-form-input-list">
+	<!-- <div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url-preview">プレビューURL</label></div>
@@ -119,7 +119,7 @@ class env_config {
 				</div>
 			</li>
 		</ul>
-	</div>
+	</div> -->
 
 	<p class="px2-text-align-center"><button class="px2-btn px2-btn--primary">保存する</button></p>
 </form>
@@ -133,15 +133,15 @@ class env_config {
 	 * 保存処理を実行する
 	 */
 	private function save(){
-		$this->env_config->command_php = $this->rencon->req()->get_param('input-command-php');
-		$this->env_config->command_git = $this->rencon->req()->get_param('input-command-git');
-		$this->env_config->url_preview = $this->rencon->req()->get_param('input-url-preview');
-		$this->env_config->url_production = $this->rencon->req()->get_param('input-url-production');
-		$this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');
-		$this->env_config->git_username = $this->rencon->req()->get_param('input-git-username');
-		if( strlen($this->rencon->req()->get_param('input-git-password') ?? '') ){
-			$this->env_config->git_password = $this->rencon->req()->get_param('input-git-password');
-		}
+		$this->env_config->commands->php = $this->rencon->req()->get_param('input-command-php');
+		$this->env_config->commands->git = $this->rencon->req()->get_param('input-command-git');
+		// $this->env_config->url_preview = $this->rencon->req()->get_param('input-url-preview');
+		// $this->env_config->url_production = $this->rencon->req()->get_param('input-url-production');
+		// $this->env_config->git_url = $this->rencon->req()->get_param('input-git-url');
+		// $this->env_config->git_username = $this->rencon->req()->get_param('input-git-username');
+		// if( strlen($this->rencon->req()->get_param('input-git-password') ?? '') ){
+		// 	$this->env_config->git_password = $this->rencon->req()->get_param('input-git-password');
+		// }
 		$this->env_config->save();
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');

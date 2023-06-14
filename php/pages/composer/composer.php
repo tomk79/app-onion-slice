@@ -178,7 +178,7 @@ window.addEventListener('load', function(e){
 
 		$path_composer_home = $this->rencon->conf()->realpath_private_data_dir.'_composer_home/';
 
-		$realpath_php_command = (strlen($this->env_config->command_php ?? '') ? $this->env_config->command_php : ($this->rencon->conf()->commands->php ?? 'php'));
+		$realpath_php_command = (strlen($this->env_config->commands->php ?? '') ? $this->env_config->commands->php : ($this->rencon->conf()->commands->php ?? 'php'));
 		$rtn->command = $realpath_php_command.' '.escapeshellarg($path_composer).' '.escapeshellarg($command);
 
 		chdir($base_dir);
