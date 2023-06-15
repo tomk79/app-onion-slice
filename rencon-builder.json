@@ -39,9 +39,9 @@
 			"title": "編集",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
 		},
-		"env_config.proj.{projectId?}.edit": {
+		"env_config.remote.edit": {
 			"title": "編集",
-			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit_project"
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_edit"
 		},
 
 		"api.{projectId?}.remote_finder.gpi": {
