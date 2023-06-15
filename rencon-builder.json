@@ -11,10 +11,6 @@
 			"title": "Home",
 			"page": "app/pages/index.php"
 		},
-		"env_config": {
-			"title": "環境設定",
-			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"
-		},
 		"proj.{projectId?}": {
 			"title": "Dashboard",
 			"page": "app/pages/dashboard.php"
@@ -34,6 +30,18 @@
 		"proj.{projectId?}.common_file_editor": {
 			"title": "汎用ファイルエディタ",
 			"page": "app/pages/common_file_editor/index.php"
+		},
+		"env_config": {
+			"title": "環境設定",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"
+		},
+		"env_config.edit": {
+			"title": "編集",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
+		},
+		"env_config.proj.{projectId?}.edit": {
+			"title": "編集",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit_project"
 		},
 
 		"api.{projectId?}.remote_finder.gpi": {

@@ -7,11 +7,19 @@ class env_config {
 	private $env_config;
 
 	/**
-	 * 処理の開始
+	 * 開始開始
 	 */
 	static public function index( $rencon ){
 		$ctrl = new self($rencon);
-		return $ctrl->route();
+		return $ctrl->index_route();
+	}
+
+	/**
+	 * 編集画面
+	 */
+	static public function edit( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->edit_route();
 	}
 
 	/**
@@ -24,12 +32,41 @@ class env_config {
 
 
 	/**
-	 * ルーティング
+	 * 設定トップ画面: ルーティング
 	 */
-	private function route(){
+	private function index_route(){
+?>
+
+	<div class="px2-form-input-list">
+		<ul class="px2-form-input-list__ul">
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-command-php">PHPコマンド</label></div>
+				<div class="px2-form-input-list__input">
+					<?= htmlspecialchars($this->env_config->commands->php ?? '') ?>
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-command-git">Gitコマンド</label></div>
+				<div class="px2-form-input-list__input">
+					<?= htmlspecialchars($this->env_config->commands->git ?? '') ?>
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<p class="px2-text-align-center"><a href="?a=env_config.edit" class="px2-btn px2-btn--primary">編集する</a></p>
+
+<?php
+		return;
+	}
+
+	/**
+	 * 編集画面: ルーティング
+	 */
+	private function edit_route(){
 
 		if( $this->rencon->req()->get_param('m') == 'completed' ){
-			return $this->completed();
+			return $this->edit_view_completed();
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
@@ -43,18 +80,17 @@ class env_config {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
-			$this->save();
+			$this->edit_save();
 			exit;
 		}
 
-		return $this->edit();
+		return $this->edit_input();
 	}
 
-
 	/**
-	 * 編集画面
+	 * 編集画面: 入力画面
 	 */
-	private function edit(){
+	private function edit_input(){
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -130,9 +166,9 @@ class env_config {
 
 
 	/**
-	 * 保存処理を実行する
+	 * 編集画面: 保存処理を実行する
 	 */
-	private function save(){
+	private function edit_save(){
 		$this->env_config->commands->php = $this->rencon->req()->get_param('input-command-php');
 		$this->env_config->commands->git = $this->rencon->req()->get_param('input-command-git');
 		// $this->env_config->url_preview = $this->rencon->req()->get_param('input-url-preview');
@@ -150,13 +186,13 @@ class env_config {
 
 
 	/**
-	 * 完了画面
+	 * 編集画面: 完了画面
 	 */
-	private function completed(){
+	private function edit_view_completed(){
 ?>
 
 <p>保存しました。</p>
-<p><button class="px2-btn" onclick="window.location.href='?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>';">完了</button></p>
+<p><a href="?a=env_config" class="px2-btn px2-btn--primary">完了</a></p>
 
 <?php
 		return;
