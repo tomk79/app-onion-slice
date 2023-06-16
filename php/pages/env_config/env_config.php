@@ -99,8 +99,8 @@ class env_config {
 		}
 
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
-			$this->rencon->req()->set_param('command-php', $this->env_config->commands->php ?? null);
-			$this->rencon->req()->set_param('command-git', $this->env_config->commands->git ?? null);
+			$this->rencon->req()->set_param('input-command-php', $this->env_config->commands->php ?? null);
+			$this->rencon->req()->set_param('input-command-git', $this->env_config->commands->git ?? null);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
@@ -126,13 +126,13 @@ class env_config {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-command-php">PHPコマンド</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-command-php" name="input-command-php" value="<?= htmlspecialchars($this->rencon->req()->get_param('command-php') ?? '') ?>" class="px2-input px2-input--block" />
+					<input type="text" id="input-command-php" name="input-command-php" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-command-php') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-command-git">Gitコマンド</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-command-git" name="input-command-git" value="<?= htmlspecialchars($this->rencon->req()->get_param('command-git') ?? '') ?>" class="px2-input px2-input--block" />
+					<input type="text" id="input-command-git" name="input-command-git" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-command-git') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 		</ul>

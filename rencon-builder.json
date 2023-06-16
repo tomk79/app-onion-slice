@@ -8,12 +8,12 @@
 	],
 	"route": {
 		"": {
-			"title": "Home",
+			"title": "Dashboard",
 			"page": "app/pages/index.php"
 		},
 		"proj.{projectId?}": {
-			"title": "Dashboard",
-			"page": "app/pages/dashboard.php"
+			"title": "Project",
+			"page": "app/pages/project.php"
 		},
 		"proj.{projectId?}.composer": {
 			"title": "Composerを操作する",
@@ -31,16 +31,20 @@
 			"title": "汎用ファイルエディタ",
 			"page": "app/pages/common_file_editor/index.php"
 		},
+		"proj.{projectId?}.edit": {
+			"title": "プロジェクトを編集する",
+			"page": "tomk79\\onionSlice\\pages\\project\\project::edit"
+		},
 		"env_config": {
 			"title": "環境設定",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"
 		},
 		"env_config.edit": {
-			"title": "編集",
+			"title": "環境設定を編集する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
 		},
 		"env_config.remote.edit": {
-			"title": "編集",
+			"title": "リモート設定を編集する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_edit"
 		},
 

@@ -42,8 +42,9 @@ class projects {
 	 */
 	public function save(){
 
-		$data = (object) array();
-		$data->projects = $data->projects ?? new \stdClass();
+		$data = (object) array(
+			"projects" => $this->projects ?? new \stdClass(),
+		);
 
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 
