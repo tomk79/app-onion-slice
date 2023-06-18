@@ -45,21 +45,25 @@ class project {
 			return $this->create__completed();
 		}
 
+		$validationResult = $this->create__validate();
+
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
 		}
 
-		if( $this->rencon->req()->get_param('m') == 'save' ){
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->create__save();
 			exit;
 		}
 
-		return $this->create__input();
+		return $this->create__input($validationResult);
 	}
 
 	/**
 	 * 新規作成画面: 入力画面
 	 */
-	private function create__input(){
+	private function create__input($validationResult){
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -71,36 +75,42 @@ class project {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-id">プロジェクトID</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-id'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-id'}) ?></div><?php } ?>
 					<input type="text" id="input-id" name="input-id" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-id') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-name">プロジェクト名</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-name'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-name'}) ?></div><?php } ?>
 					<input type="text" id="input-name" name="input-name" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-name') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url">URL</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-url'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url'}) ?></div><?php } ?>
 					<input type="text" id="input-url" name="input-url" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-url_preview">Preview URL</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-url_preview'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url_preview'}) ?></div><?php } ?>
 					<input type="text" id="input-url_preview" name="input-url_preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url_preview') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-realpath_base_dir">Base Directory</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-realpath_base_dir'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-realpath_base_dir'}) ?></div><?php } ?>
 					<input type="text" id="input-realpath_base_dir" name="input-realpath_base_dir" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-realpath_base_dir') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-remote">Remote</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-remote'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-remote'}) ?></div><?php } ?>
 					<input type="text" id="input-remote" name="input-remote" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-remote') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
@@ -114,6 +124,30 @@ class project {
 		return;
 	}
 
+	/**
+	 * 新規作成画面: バリデーション
+	 */
+	private function create__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		if( !strlen($this->rencon->req()->get_param('input-id') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = 'IDは必須項目です。';
+		}elseif($this->projects->get_project( $this->rencon->req()->get_param('input-id') )){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = 'そのIDはすでに存在します。';
+		}
+
+		if( !strlen($this->rencon->req()->get_param('input-name') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-name'} = 'プロジェクト名は必須項目です。';
+		}
+
+		return $validationResult;
+	}
 
 	/**
 	 * 新規作成画面: 保存処理を実行する

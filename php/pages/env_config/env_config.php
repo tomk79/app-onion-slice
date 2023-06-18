@@ -197,21 +197,25 @@ class env_config {
 			return $this->remote_create__completed();
 		}
 
+		$validationResult = $this->remote_create__validate();
+
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
 		}
 
-		if( $this->rencon->req()->get_param('m') == 'save' ){
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->remote_create__save();
 			exit;
 		}
 
-		return $this->remote_create__input();
+		return $this->remote_create__input($validationResult);
 	}
 
 	/**
 	 * リモート情報新規作成画面: 入力画面
 	 */
-	private function remote_create__input(){
+	private function remote_create__input($validationResult){
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -225,30 +229,33 @@ class env_config {
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-command-php">Remote URI</label></div>
+				<div class="px2-form-input-list__label"><label for="input-remote_uri">リモートURI</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-remote_uri'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-remote_uri'}) ?></div><?php } ?>
 					<input type="text" id="input-remote_uri" name="input-remote_uri" value="<?= htmlspecialchars($this->rencon->req()->get_param('remote_uri') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-type">Type</label></div>
+				<div class="px2-form-input-list__label"><label for="input-type">タイプ</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-type" name="input-type" value="<?= htmlspecialchars($this->rencon->req()->get_param('type') ?? '') ?>" class="px2-input px2-input--block" />
+					<?php if( strlen($validationResult->errors->{'input-type'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-type'}) ?></div><?php } ?>
+					<select id="input-type" name="input-type" class="px2-input px2-input--block">
+						<option value="git" <?= ($this->rencon->req()->get_param('input-type') == 'git' ? 'selected="selected"' : '') ?>>git</option>
+					</select>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-username">User Name</label></div>
+				<div class="px2-form-input-list__label"><label for="input-username">ユーザー名</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-username'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-username'}) ?></div><?php } ?>
 					<input type="text" id="input-username" name="input-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('username') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-password">パスワード</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-password'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-password'}) ?></div><?php } ?>
 					<input type="password" id="input-password" name="input-password" value="" class="px2-input px2-input--block" />
-					<ul class="px2-note-list">
-						<li>変更する場合のみ入力してください。</li>
-					</ul>
 				</div>
 			</li>
 		</ul>
@@ -261,6 +268,27 @@ class env_config {
 		return;
 	}
 
+	/**
+	 * リモート情報新規作成画面: バリデーション
+	 */
+	private function remote_create__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		if( !strlen($this->rencon->req()->get_param('input-remote_uri') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-remote_uri'} = 'リモートURIは必須項目です。';
+		}
+
+		if( !strlen($this->rencon->req()->get_param('input-type') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-type'} = 'タイプは必須項目です。';
+		}
+
+		return $validationResult;
+	}
 
 	/**
 	 * リモート情報新規作成画面: 保存処理を実行する
@@ -310,8 +338,8 @@ class env_config {
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
 			$remote_uri = $this->rencon->req()->get_param('remote_uri');
 			$remote_info = $this->env_config->remotes->{$remote_uri};
-			$this->rencon->req()->set_param('type', $remote_info->type);
-			$this->rencon->req()->set_param('username', $remote_info->username);
+			$this->rencon->req()->set_param('input-type', $remote_info->type);
+			$this->rencon->req()->set_param('input-username', $remote_info->username);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' ){
@@ -340,21 +368,23 @@ class env_config {
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-command-php">Remote URI</label></div>
+				<div class="px2-form-input-list__label"><label for="input-command-php">リモートURI</label></div>
 				<div class="px2-form-input-list__input">
 					<?= htmlspecialchars( $this->rencon->req()->get_param('remote_uri') ) ?>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-type">Type</label></div>
+				<div class="px2-form-input-list__label"><label for="input-type">タイプ</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-type" name="input-type" value="<?= htmlspecialchars($this->rencon->req()->get_param('type') ?? '') ?>" class="px2-input px2-input--block" />
+					<select id="input-type" name="input-type" class="px2-input px2-input--block">
+						<option value="git" <?= ($this->rencon->req()->get_param('input-type') == 'git' ? 'selected="selected"' : '') ?>>git</option>
+					</select>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-username">User Name</label></div>
+				<div class="px2-form-input-list__label"><label for="input-username">ユーザー名</label></div>
 				<div class="px2-form-input-list__input">
-					<input type="text" id="input-username" name="input-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('username') ?? '') ?>" class="px2-input px2-input--block" />
+					<input type="text" id="input-username" name="input-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-username') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
