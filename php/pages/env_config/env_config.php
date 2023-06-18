@@ -80,14 +80,23 @@ class env_config {
 		<div class="px2-text-align-right"><a href="?a=env_config.remote.create" class="px2-btn px2-btn--primary">新規作成</a></div>
 	</div>
 	<div class="px2-p">
-		<table class="px2-table">
+		<table class="px2-table" style="width: 100%;">
+			<thead>
+				<tr>
+					<th>リモートURI</th>
+					<th>タイプ</th>
+					<th>ユーザー名</th>
+					<th></th>
+				</tr>
+			</thead>
 			<tbody>
 <?php
 		foreach($this->env_config->remotes as $remote_uri => $remote_info){
 			?><tr>
 				<td><?= htmlspecialchars($remote_uri) ?></td>
 				<td><?= htmlspecialchars($remote_info->type ?? '---') ?></td>
-				<td><a href="?a=env_config.remote.edit&remote_uri=<?= htmlspecialchars(urlencode($remote_uri)) ?>" class="px2-btn px2-btn--primary">編集</a></td>
+				<td><?= htmlspecialchars($remote_info->username ?? '---') ?></td>
+				<td class="px2-text-align-center"><a href="?a=env_config.remote.edit&remote_uri=<?= htmlspecialchars(urlencode($remote_uri)) ?>" class="px2-btn px2-btn--primary">編集</a></td>
 			</tr><?php
 		}
 ?>
@@ -111,23 +120,27 @@ class env_config {
 			return $this->edit__completed();
 		}
 
+		$validationResult = $this->edit__validate();
+
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
 			$this->rencon->req()->set_param('input-command-php', $this->env_config->commands->php ?? null);
 			$this->rencon->req()->set_param('input-command-git', $this->env_config->commands->git ?? null);
 		}
 
-		if( $this->rencon->req()->get_param('m') == 'save' ){
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->edit__save();
 			exit;
 		}
 
-		return $this->edit__input();
+		return $this->edit__input($validationResult);
 	}
 
 	/**
 	 * 編集画面: 入力画面
 	 */
-	private function edit__input(){
+	private function edit__input($validationResult){
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -139,12 +152,14 @@ class env_config {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-command-php">PHPコマンド</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-command-php'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-command-php'}) ?></div><?php } ?>
 					<input type="text" id="input-command-php" name="input-command-php" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-command-php') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-command-git">Gitコマンド</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-command-git'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-command-git'}) ?></div><?php } ?>
 					<input type="text" id="input-command-git" name="input-command-git" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-command-git') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
@@ -158,6 +173,17 @@ class env_config {
 		return;
 	}
 
+	/**
+	 * 編集画面: バリデーション
+	 */
+	private function edit__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		return $validationResult;
+	}
 
 	/**
 	 * 編集画面: 保存処理を実行する
@@ -170,7 +196,6 @@ class env_config {
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
 	}
-
 
 	/**
 	 * 編集画面: 完了画面
@@ -280,6 +305,9 @@ class env_config {
 		if( !strlen($this->rencon->req()->get_param('input-remote_uri') ?? '') ){
 			$validationResult->result = false;
 			$validationResult->errors->{'input-remote_uri'} = 'リモートURIは必須項目です。';
+		}elseif( ($this->env_config->remotes->{$this->rencon->req()->get_param('input-remote_uri')} ?? null) ){
+			$validationResult->result = false;
+			$validationResult->errors->{'remote_uri'} = 'このリモートURIはすでに定義されています。';
 		}
 
 		if( !strlen($this->rencon->req()->get_param('input-type') ?? '') ){
@@ -335,25 +363,29 @@ class env_config {
 			return $this->remote_edit__completed();
 		}
 
+		$validationResult = $this->remote_edit__validate();
+
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
 			$remote_uri = $this->rencon->req()->get_param('remote_uri');
 			$remote_info = $this->env_config->remotes->{$remote_uri};
 			$this->rencon->req()->set_param('input-type', $remote_info->type);
 			$this->rencon->req()->set_param('input-username', $remote_info->username);
 		}
 
-		if( $this->rencon->req()->get_param('m') == 'save' ){
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->remote_edit__save();
 			exit;
 		}
 
-		return $this->remote_edit__input();
+		return $this->remote_edit__input($validationResult);
 	}
 
 	/**
 	 * リモート情報編集画面: 入力画面
 	 */
-	private function remote_edit__input(){
+	private function remote_edit__input($validationResult){
 ?>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
@@ -370,12 +402,14 @@ class env_config {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-command-php">リモートURI</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'remote_uri'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'remote_uri'}) ?></div><?php } ?>
 					<?= htmlspecialchars( $this->rencon->req()->get_param('remote_uri') ) ?>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-type">タイプ</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-type'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-type'}) ?></div><?php } ?>
 					<select id="input-type" name="input-type" class="px2-input px2-input--block">
 						<option value="git" <?= ($this->rencon->req()->get_param('input-type') == 'git' ? 'selected="selected"' : '') ?>>git</option>
 					</select>
@@ -384,12 +418,14 @@ class env_config {
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-username">ユーザー名</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-username'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-username'}) ?></div><?php } ?>
 					<input type="text" id="input-username" name="input-username" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-username') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-password">パスワード</label></div>
 				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-password'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-password'}) ?></div><?php } ?>
 					<input type="password" id="input-password" name="input-password" value="" class="px2-input px2-input--block" />
 					<ul class="px2-note-list">
 						<li>変更する場合のみ入力してください。</li>
@@ -406,6 +442,30 @@ class env_config {
 		return;
 	}
 
+	/**
+	 * リモート情報新規作成画面: バリデーション
+	 */
+	private function remote_edit__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		if( !strlen($this->rencon->req()->get_param('remote_uri') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'remote_uri'} = 'リモートURIは必須項目です。';
+		}elseif( !($this->env_config->remotes->{$this->rencon->req()->get_param('remote_uri')} ?? null) ){
+			$validationResult->result = false;
+			$validationResult->errors->{'remote_uri'} = 'このリモートURIは未定義です。';
+		}
+
+		if( !strlen($this->rencon->req()->get_param('input-type') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-type'} = 'タイプは必須項目です。';
+		}
+
+		return $validationResult;
+	}
 
 	/**
 	 * リモート情報編集画面: 保存処理を実行する
