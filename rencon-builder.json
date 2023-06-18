@@ -11,8 +11,12 @@
 			"title": "Dashboard",
 			"page": "app/pages/index.php"
 		},
+		"proj_create": {
+			"title": "プロジェクトを新規作成する",
+			"page": "tomk79\\onionSlice\\pages\\project\\project::create"
+		},
 		"proj.{projectId?}": {
-			"title": "Project",
+			"title": "プロジェクト",
 			"page": "app/pages/project.php"
 		},
 		"proj.{projectId?}.composer": {
@@ -42,6 +46,10 @@
 		"env_config.edit": {
 			"title": "環境設定を編集する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
+		},
+		"env_config.remote.create": {
+			"title": "リモート設定を新規作成する",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_create"
 		},
 		"env_config.remote.edit": {
 			"title": "リモート設定を編集する",

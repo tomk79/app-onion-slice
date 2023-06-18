@@ -64,4 +64,11 @@ class projects {
 	public function get_project( $project_id ){
 		return $this->projects->{$project_id} ?? false;
 	}
+
+	/**
+	 * プロジェクト情報を更新する
+	 */
+	public function set_project( $project_id, $project ){
+		return $this->projects->{$project_id} = $project;
+	}
 }
