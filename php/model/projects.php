@@ -71,4 +71,15 @@ class projects {
 	public function set_project( $project_id, $project ){
 		return $this->projects->{$project_id} = $project;
 	}
+
+	/**
+	 * プロジェクト情報を削除する
+	 */
+	public function delete_project( $project_id ){
+		if( !isset($this->projects->{$project_id}) ){
+			return false;
+		}
+		unset($this->projects->{$project_id});
+		return true;
+	}
 }

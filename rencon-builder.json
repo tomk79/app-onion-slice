@@ -39,6 +39,10 @@
 			"title": "プロジェクトを編集する",
 			"page": "tomk79\\onionSlice\\pages\\project\\project::edit"
 		},
+		"proj.{projectId?}.delete": {
+			"title": "プロジェクトを削除する",
+			"page": "tomk79\\onionSlice\\pages\\project\\project::delete"
+		},
 		"env_config": {
 			"title": "環境設定",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"
@@ -54,6 +58,10 @@
 		"env_config.remote.edit": {
 			"title": "リモート設定を編集する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_edit"
+		},
+		"env_config.remote.delete": {
+			"title": "リモート設定を削除する",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_delete"
 		},
 
 		"api.{projectId?}.remote_finder.gpi": {

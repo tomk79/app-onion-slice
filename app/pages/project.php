@@ -33,3 +33,9 @@ $project_info = $projects->get_project($project_id);
 		<a href="?a=proj.<?= htmlspecialchars(urlencode($project_id)) ?>.edit" class="px2-btn px2-btn--primary">編集</a>
 	</p>
 </div>
+
+<div class="px2-p">
+	<p class="px2-text-align-center">
+		<a href="?a=proj.<?= htmlspecialchars(urlencode($project_id)) ?>.delete" class="px2-btn px2-btn--danger">削除</a>
+	</p>
+</div>

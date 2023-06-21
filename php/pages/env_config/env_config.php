@@ -38,6 +38,14 @@ class env_config {
 		return $ctrl->remote_edit__route();
 	}
 
+	/**
+	 * リモート情報削除画面
+	 */
+	static public function remote_delete( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->remote_delete__route();
+	}
+
 
 	/**
 	 * Constructor
@@ -87,6 +95,7 @@ class env_config {
 					<th>タイプ</th>
 					<th>ユーザー名</th>
 					<th></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -97,6 +106,7 @@ class env_config {
 				<td><?= htmlspecialchars($remote_info->type ?? '---') ?></td>
 				<td><?= htmlspecialchars($remote_info->username ?? '---') ?></td>
 				<td class="px2-text-align-center"><a href="?a=env_config.remote.edit&remote_uri=<?= htmlspecialchars(urlencode($remote_uri)) ?>" class="px2-btn px2-btn--primary">編集</a></td>
+				<td class="px2-text-align-center"><a href="?a=env_config.remote.delete&remote_uri=<?= htmlspecialchars(urlencode($remote_uri)) ?>" class="px2-btn px2-btn--danger">削除</a></td>
 			</tr><?php
 		}
 ?>
@@ -492,6 +502,99 @@ class env_config {
 ?>
 
 <p>保存しました。</p>
+<p><a href="?a=env_config" class="px2-btn px2-btn--primary">完了</a></p>
+
+<?php
+		return;
+	}
+
+	// --------------------------------------
+
+	/**
+	 * リモート情報削除画面: ルーティング
+	 */
+	private function remote_delete__route(){
+
+		if( $this->rencon->req()->get_param('m') == 'completed' ){
+			return $this->remote_delete__completed();
+		}
+
+		$validationResult = $this->remote_delete__validate();
+
+		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
+		}
+
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->remote_delete__save();
+			exit;
+		}
+
+		return $this->remote_delete__input($validationResult);
+	}
+
+	/**
+	 * リモート情報削除画面: 入力画面
+	 */
+	private function remote_delete__input($validationResult){
+?>
+
+<form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
+	<input type="hidden" name="m" value="save" />
+	<input type="hidden" name="remote_uri" value="<?= htmlspecialchars( $this->rencon->req()->get_param('remote_uri') ) ?>" />
+	<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
+
+	<p>この操作は取り消せません。</p>
+	<p>本当に削除しますか？</p>
+
+	<p class="px2-text-align-center"><button class="px2-btn px2-btn--danger">削除する</button></p>
+</form>
+
+<?php
+		return;
+	}
+
+	/**
+	 * リモート情報新規作成画面: バリデーション
+	 */
+	private function remote_delete__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		if( !strlen($this->rencon->req()->get_param('remote_uri') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'remote_uri'} = 'リモートURIは必須項目です。';
+		}elseif( !($this->env_config->remotes->{$this->rencon->req()->get_param('remote_uri')} ?? null) ){
+			$validationResult->result = false;
+			$validationResult->errors->{'remote_uri'} = 'このリモートURIは未定義です。';
+		}
+
+		return $validationResult;
+	}
+
+	/**
+	 * リモート情報削除画面: 保存処理を実行する
+	 */
+	private function remote_delete__save(){
+		$remote_uri = $this->rencon->req()->get_param('remote_uri');
+		unset($this->env_config->remotes->{$remote_uri});
+		$this->env_config->save();
+
+		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
+		exit;
+	}
+
+
+	/**
+	 * リモート情報削除画面: 完了画面
+	 */
+	private function remote_delete__completed(){
+?>
+
+<p>削除しました。</p>
 <p><a href="?a=env_config" class="px2-btn px2-btn--primary">完了</a></p>
 
 <?php

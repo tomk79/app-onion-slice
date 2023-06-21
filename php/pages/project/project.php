@@ -23,6 +23,14 @@ class project {
 		return $ctrl->edit__route();
 	}
 
+	/**
+	 * 削除画面
+	 */
+	static public function delete( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->delete__route();
+	}
+
 
 	/**
 	 * Constructor
@@ -327,6 +335,104 @@ class project {
 
 <p>保存しました。</p>
 <p><a href="?a=proj.<?= htmlspecialchars(urlencode($this->project_id)) ?>" class="px2-btn px2-btn--primary">完了</a></p>
+
+<?php
+		return;
+	}
+
+	// --------------------------------------
+
+	/**
+	 * 削除画面: ルーティング
+	 */
+	private function delete__route(){
+
+		if( $this->rencon->req()->get_param('m') == 'completed' ){
+			return $this->delete__completed();
+		}
+
+		$validationResult = $this->delete__validate();
+
+		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
+			$project = $this->projects->get_project($this->project_id);
+			$this->rencon->req()->set_param('input-name', $project->name ?? null);
+			$this->rencon->req()->set_param('input-url', $project->url ?? null);
+			$this->rencon->req()->set_param('input-url_admin', $project->url_admin ?? null);
+			$this->rencon->req()->set_param('input-realpath_base_dir', $project->realpath_base_dir ?? null);
+			$this->rencon->req()->set_param('input-remote', $project->remote ?? null);
+		}
+
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->delete__save();
+			exit;
+		}
+
+		return $this->delete__input($validationResult);
+	}
+
+	/**
+	 * 削除画面: 入力画面
+	 */
+	private function delete__input($validationResult){
+?>
+
+<form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
+	<input type="hidden" name="m" value="save" />
+	<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
+
+	<p>この操作は取り消せません。</p>
+	<p>本当に削除しますか？</p>
+
+	<p class="px2-text-align-center"><button class="px2-btn px2-btn--danger">削除する</button></p>
+</form>
+
+<?php
+		return;
+	}
+
+	/**
+	 * 削除画面: バリデーション
+	 */
+	private function delete__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		if( !strlen($this->project_id ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = 'IDは必須項目です。';
+		}elseif(!$this->projects->get_project( $this->project_id )){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = 'そのIDは存在しません。';
+		}
+
+		return $validationResult;
+	}
+
+
+	/**
+	 * 削除画面: 保存処理を実行する
+	 */
+	private function delete__save(){
+		$this->projects->delete_project($this->project_id);
+		$this->projects->save();
+
+		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
+		exit;
+	}
+
+
+	/**
+	 * 削除画面: 完了画面
+	 */
+	private function delete__completed(){
+?>
+
+<p>削除しました。</p>
+<p><a href="?a=" class="px2-btn px2-btn--primary">完了</a></p>
 
 <?php
 		return;
