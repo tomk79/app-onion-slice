@@ -18,7 +18,7 @@ $project_info = $projects->get_project($project_id);
 </head>
 <body>
 
-<?php if( $rencon->req()->get_param('a') == 'common_file_editor' ){ ?>
+<?php if( $rencon->req()->get_param('a') == 'proj.'.$project_id.'.common_file_editor' ){ ?>
 
 <style>
 .theme-wrap,
@@ -87,9 +87,10 @@ $project_info = $projects->get_project($project_id);
 <footer class="theme-footer">
 	<div class="theme-footer__menu">
 		<ul>
+			<li><a href="?a=">ダッシュボード</a></li>
 			<li><a href="?a=env_config">環境設定</a></li>
 <?php if( $rencon->auth()->is_login_required() && $rencon->user()->is_login() ) { ?>
-			<li><a href="?a=logout">Logout</a></li>
+			<li><a href="?a=logout">ログアウト</a></li>
 <?php } ?>
 		</ul>
 	</div>

@@ -81,7 +81,9 @@ class env_config {
 		</ul>
 	</div>
 
-	<p class="px2-text-align-center"><a href="?a=env_config.edit" class="px2-btn px2-btn--primary">編集する</a></p>
+	<p class="px2-text-align-right">
+		<a href="?a=env_config.edit" class="px2-btn px2-btn--primary">編集する</a>
+	</p>
 
 	<h2>リモート設定</h2>
 	<div class="px2-p">
