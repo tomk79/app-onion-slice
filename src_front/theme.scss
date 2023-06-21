@@ -45,13 +45,26 @@ img {
 		font-weight: bold;
 		font-size: 16px;
 		padding: 5px 20px;
+		background-color: #aabebd;
+		border-bottom: 1px solid #e6e6e6;
+		a, span {
+			color: #476160;
+			text-decoration: none;
+		}
+	}
+	&__project-name {
+		text-align: center;
+		font-weight: bold;
+		font-size: 18px;
+		margin: 15px auto;
 	}
 	&__global-menu {
 		ul {
 			display: flex;
 			padding: 0;
-			margin: 0;
+			margin: 0 auto;
 			overflow: auto;
+			max-width: 1024px;
 			li {
 				list-style-type: none;
 				a,
@@ -138,13 +151,30 @@ body.theme-hide-h1-container {
 
 
 // フッター
-.theme-footer{
+.theme-footer {
 	padding: 13px 10px;
-	margin: 0 auto;
+	margin: 0;
+	background-color: #eaeaea;
 	border-top: 1px solid #ccc;
-	&__inner{
+	&__menu {
 		max-width: 1024px;
 		margin: 0 auto;
 		text-align: center;
+		ul {
+			display: flex;
+			padding: 0;
+			margin: 0 auto;
+			overflow: auto;
+			max-width: 1024px;
+			li {
+				list-style-type: none;
+				a,
+				span {
+					display: block;
+					padding: 10px;
+					white-space: nowrap;
+				}
+			}
+		}
 	}
 }

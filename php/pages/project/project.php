@@ -94,10 +94,10 @@ class project {
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-url_preview">プレビューURL</label></div>
+				<div class="px2-form-input-list__label"><label for="input-url_admin">管理画面のURL</label></div>
 				<div class="px2-form-input-list__input">
-					<?php if( strlen($validationResult->errors->{'input-url_preview'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url_preview'}) ?></div><?php } ?>
-					<input type="text" id="input-url_preview" name="input-url_preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url_preview') ?? '') ?>" class="px2-input px2-input--block" />
+					<?php if( strlen($validationResult->errors->{'input-url_admin'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url_admin'}) ?></div><?php } ?>
+					<input type="text" id="input-url_admin" name="input-url_admin" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url_admin') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
@@ -157,7 +157,7 @@ class project {
 		$project = (object) array();
 		$project->name = $this->rencon->req()->get_param('input-name');
 		$project->url = $this->rencon->req()->get_param('input-url');
-		$project->url_preview = $this->rencon->req()->get_param('input-url_preview');
+		$project->url_admin = $this->rencon->req()->get_param('input-url_admin');
 		$project->realpath_base_dir = $this->rencon->req()->get_param('input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
 		$this->projects->set_project($this->rencon->req()->get_param('input-id'), $project);
@@ -175,7 +175,7 @@ class project {
 ?>
 
 <p>保存しました。</p>
-<p><a href="?a=proj.<?= htmlspecialchars(urlencode($this->project_id)) ?>" class="px2-btn px2-btn--primary">完了</a></p>
+<p><a href="?a=" class="px2-btn px2-btn--primary">完了</a></p>
 
 <?php
 		return;
@@ -202,7 +202,7 @@ class project {
 			$project = $this->projects->get_project($this->project_id);
 			$this->rencon->req()->set_param('input-name', $project->name ?? null);
 			$this->rencon->req()->set_param('input-url', $project->url ?? null);
-			$this->rencon->req()->set_param('input-url_preview', $project->url_preview ?? null);
+			$this->rencon->req()->set_param('input-url_admin', $project->url_admin ?? null);
 			$this->rencon->req()->set_param('input-realpath_base_dir', $project->realpath_base_dir ?? null);
 			$this->rencon->req()->set_param('input-remote', $project->remote ?? null);
 		}
@@ -242,10 +242,10 @@ class project {
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-url_preview">プレビューURL</label></div>
+				<div class="px2-form-input-list__label"><label for="input-url_admin">管理画面のURL</label></div>
 				<div class="px2-form-input-list__input">
-					<?php if( strlen($validationResult->errors->{'input-url_preview'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url_preview'}) ?></div><?php } ?>
-					<input type="text" id="input-url_preview" name="input-url_preview" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url_preview') ?? '') ?>" class="px2-input px2-input--block" />
+					<?php if( strlen($validationResult->errors->{'input-url_admin'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-url_admin'}) ?></div><?php } ?>
+					<input type="text" id="input-url_admin" name="input-url_admin" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-url_admin') ?? '') ?>" class="px2-input px2-input--block" />
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
@@ -309,7 +309,7 @@ class project {
 
 		$project->name = $this->rencon->req()->get_param('input-name');
 		$project->url = $this->rencon->req()->get_param('input-url');
-		$project->url_preview = $this->rencon->req()->get_param('input-url_preview');
+		$project->url_admin = $this->rencon->req()->get_param('input-url_admin');
 		$project->realpath_base_dir = $this->rencon->req()->get_param('input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
 		$this->projects->save();

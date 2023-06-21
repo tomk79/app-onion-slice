@@ -18,8 +18,7 @@ $project_info = $projects->get_project($project_id);
 </head>
 <body>
 
-<?php if( $rencon->req()->get_param('a') == 'contents_editor' || $rencon->req()->get_param('a') == 'common_file_editor' ){ ?>
-
+<?php if( $rencon->req()->get_param('a') == 'common_file_editor' ){ ?>
 
 <style>
 .theme-wrap,
@@ -39,21 +38,18 @@ $project_info = $projects->get_project($project_id);
 </div>
 
 
-
 <?php }else{ ?>
 
 <header class="theme-header">
 	<div class="theme-header__id">
-		<span><?= htmlspecialchars( $app_info->name ?? '' ) ?></span>
+		<a href="?a="><?= htmlspecialchars( $app_info->name ?? '' ) ?></a>
 	</div>
-	<div class="theme-header__global-menu">
-		<ul>
-			<li><a href="?a=">Dashboard</a></li>
-			<li><a href="?a=env_config">環境設定</a></li>
-<?php if( $rencon->auth()->is_login_required() && $rencon->user()->is_login() ) { ?>
-			<li><a href="?a=logout">Logout</a></li>
+<?php if( strlen($project_id ?? '') ) { ?>
+	<div class="theme-header__project-name">
+		<span><?= htmlspecialchars($project_info->name ?? '---') ?></span>
+	</div>
 <?php } ?>
-		</ul>
+	<div class="theme-header__global-menu">
 <?php if( $project_info ){ ?>
 		<ul>
 			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>">Project</a></li>
@@ -87,6 +83,17 @@ $project_info = $projects->get_project($project_id);
 
 	</div>
 </div>
+
+<footer class="theme-footer">
+	<div class="theme-footer__menu">
+		<ul>
+			<li><a href="?a=env_config">環境設定</a></li>
+<?php if( $rencon->auth()->is_login_required() && $rencon->user()->is_login() ) { ?>
+			<li><a href="?a=logout">Logout</a></li>
+<?php } ?>
+		</ul>
+	</div>
+</footer>
 
 
 <script>

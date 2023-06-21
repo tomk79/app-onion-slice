@@ -8,7 +8,7 @@
 	],
 	"route": {
 		"": {
-			"title": "Dashboard",
+			"title": "ダッシュボード",
 			"page": "app/pages/index.php"
 		},
 		"proj_create": {
