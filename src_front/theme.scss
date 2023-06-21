@@ -20,6 +20,14 @@ body {
 // 	margin: 0;
 // 	padding: 0;
 // }
+
+a:not(.px2-btn) {
+	color: #00005b;
+	&:hover {
+		color: #3434f7;
+		text-decoration: none;
+	}
+}
 img {
 	max-width: 100%;
 }
