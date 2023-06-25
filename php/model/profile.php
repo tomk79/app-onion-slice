@@ -37,6 +37,8 @@ class profile {
 		if( !isset($data->email) ){ $data->email = null; }
 		if( !isset($data->role) ){ $data->role = null; }
 
+        unset($data->pw);
+
 		return $data;
 	}
 
@@ -44,7 +46,11 @@ class profile {
 	 * データを保存する
 	 */
 	public function update( $data ){
-		$data = (object) $data;
+		$dataBefore = (object) array();
+		if( is_file( $this->realpath_profile_json ) ){
+			$dataBefore = dataDotPhp::read_json($this->realpath_profile_json);
+		}
+
 		if( !isset($data->name) ){ $data->name = ''; }
 		if( !isset($data->id) ){ $data->id = $this->login_user_id; }
 		if( !isset($data->pw) ){ $data->pw = null; }
@@ -54,6 +60,8 @@ class profile {
 
         if( strlen($data->pw ?? '') ){
             $data->pw = $this->rencon->auth()->password_hash( $data->pw );
+        }else{
+            $data->pw = $dataBefore->pw;
         }
 
 		$result = dataDotPhp::write_json($this->realpath_profile_json, $data);

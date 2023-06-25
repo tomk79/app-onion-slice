@@ -4,6 +4,7 @@ namespace tomk79\onionSlice\pages\git;
 class git {
 
 	private $rencon;
+	private $profile;
 
 	private $projects;
 	private $project_id;
@@ -22,6 +23,8 @@ class git {
 	 */
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
+
+		$this->profile = new \tomk79\onionSlice\model\profile( $this->rencon );
 
 		$this->projects = new \tomk79\onionSlice\model\projects($rencon);
 		$this->project_id = $rencon->get_route_param('projectId');
@@ -45,9 +48,8 @@ class git {
 	 * インデックスページ
 	 */
 	public function index(){
+		$profile = $this->profile->get();
 ?>
-
-
 <div class="cont-git"></div>
 
 
@@ -140,9 +142,10 @@ window.contApp = new (function(){
 			});
 
 		}, {
-			committer: {
-				name: "---",
-				email: "---"
+			"lang": <?= json_encode( $profile->lang ) ?>,
+			"committer": {
+				"name": <?= json_encode( $profile->name ) ?>,
+				"email": <?= json_encode( $profile->email ) ?>,
 			}
 		} );
 
