@@ -10,11 +10,6 @@ class env_config {
 
 	public $commands;
 	public $remotes;
-	// public $url_preview;
-	// public $url_production;
-	// public $git_url;
-	// public $git_username;
-	// public $git_password;
 
 	/**
 	 * Constructor
@@ -24,16 +19,9 @@ class env_config {
 
 		$this->realpath_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'env_config.json.php';
 
-		$crypt = new crypt( $this->rencon );
-
 		$data = $this->read();
 		$this->commands = $data->commands ?? (object) array();
 		$this->remotes = $data->remotes ?? (object) array();
-		// $this->url_preview = $data->url_preview ?? null;
-		// $this->url_production = $data->url_production ?? null;
-		// $this->git_url = $data->git_url ?? null;
-		// $this->git_username = $data->git_username ?? null;
-		// $this->git_password = (strlen($data->git_password ?? '') ? $crypt->decrypt($data->git_password) : null);
 
 		return;
 	}
@@ -65,11 +53,6 @@ class env_config {
 		$data = (object) array();
 		$data->commands = $this->commands;
 		$data->remotes = $this->remotes;
-		// $data->url_preview = $this->url_preview;
-		// $data->url_production = $this->url_production;
-		// $data->git_url = $this->git_url;
-		// $data->git_username = $this->git_username;
-		// $data->git_password = $crypt->encrypt( $this->git_password );
 
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 
