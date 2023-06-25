@@ -51,6 +51,10 @@
 			"title": "環境設定を編集する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
 		},
+		"env_config.profile.edit": {
+			"title": "プロフィールを編集する",
+			"page": "tomk79\\onionSlice\\pages\\env_config\\profile::edit"
+		},
 		"env_config.remote.create": {
 			"title": "リモート設定を新規作成する",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_create"

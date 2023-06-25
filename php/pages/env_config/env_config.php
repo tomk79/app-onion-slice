@@ -85,22 +85,30 @@ class env_config {
 		<a href="?a=env_config.edit" class="px2-btn px2-btn--primary">編集する</a>
 	</p>
 
+	<h2>アカウント</h2>
+	<div class="px2-linklist">
+		<ul>
+			<li><a href="?a=env_config.profile.edit">プロフィール設定</a></li>
+		</ul>
+	</div>
+
 	<h2>リモート設定</h2>
 	<div class="px2-p">
 		<div class="px2-text-align-right"><a href="?a=env_config.remote.create" class="px2-btn px2-btn--primary">新規作成</a></div>
 	</div>
 	<div class="px2-p">
-		<table class="px2-table" style="width: 100%;">
-			<thead>
-				<tr>
-					<th>リモートURI</th>
-					<th>タイプ</th>
-					<th>ユーザー名</th>
-					<th></th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
+		<div class="px2-responsive">
+			<table class="px2-table" style="width: 100%;">
+				<thead>
+					<tr>
+						<th>リモートURI</th>
+						<th>タイプ</th>
+						<th>ユーザー名</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
 <?php
 		foreach($this->env_config->remotes as $remote_uri => $remote_info){
 			?><tr>
@@ -112,8 +120,9 @@ class env_config {
 			</tr><?php
 		}
 ?>
-			</tbody>
-		</table>
+				</tbody>
+			</table>
+		</div>
 	</div>
 <?php
 

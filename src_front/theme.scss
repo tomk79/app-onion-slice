@@ -1,5 +1,4 @@
-@import "../node_modules/px2style/dist/px2style";
-
+@layer base {
 html, body{
     margin: 0;
     padding: 0;
@@ -31,6 +30,10 @@ a:not(.px2-btn) {
 img {
 	max-width: 100%;
 }
+}
+
+@import "../node_modules/px2style/dist/px2style";
+@import "../node_modules/px2style/dist/themes/default";
 
 /**
  * theme-frame
