@@ -27,7 +27,8 @@ class git{
 		if( !strlen( $git_url ?? '' ) ){
 			return $default;
 		}
-		$result = shell_exec('git ls-remote --symref '.escapeshellarg($git_url).' HEAD');
+		$realpath_git_command = (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
+		$result = shell_exec($realpath_git_command.' ls-remote --symref '.escapeshellarg($git_url).' HEAD');
 		if(!is_string($result) || !strlen($result ?? '')){
 			return $default;
 		}

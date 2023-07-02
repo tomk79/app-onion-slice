@@ -95,8 +95,7 @@ window.contApp = new (function(){
 	 */
 	function init(){
 		$cont = $('.cont-git').html('');
-		var method = 'post';
-		var apiUrl = "?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.git&m=git_cmd";
+		var apiUrl = "?a=proj.<?= urlencode($this->project_id ?? '') ?>.git&m=git_cmd";
 
 
 		// --------------------------------------
@@ -108,7 +107,7 @@ window.contApp = new (function(){
 			console.log('=-=-=-=-=-=-= GPI Request:', cmdAry, callback);
 
 			$.ajax({
-				"type" : method,
+				"type" : 'post',
 				"url" : apiUrl,
 				"headers": {
 				},
