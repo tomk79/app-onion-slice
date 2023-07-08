@@ -39,14 +39,14 @@ class git {
 		$this->crypt = new crypt( $this->rencon );
 		$this->project_info = $project_info;
 
-		if( isset($this->cloverConfig->history->git_remote) && strlen($this->cloverConfig->history->git_remote ?? '') ){
-			$this->git_remote = $this->cloverConfig->history->git_remote;
+		if( isset($this->project_info->remote) && strlen($this->project_info->remote ?? '') ){
+			$this->git_remote = $this->project_info->remote;
 		}
-		if( isset($this->cloverConfig->history->git_id) && !strlen($user_name ?? '') ){
-			$this->git_id = $this->cloverConfig->history->git_id;
+		if( isset($this->env_config->remotes->{$this->git_remote}->username) && strlen($this->env_config->remotes->{$this->git_remote}->username ?? '') ){
+			$this->git_id = $this->env_config->remotes->{$this->git_remote}->username;
 		}
-		if( isset($this->cloverConfig->history->git_pw) && strlen($this->crypt->decrypt($this->cloverConfig->history->git_pw ?? '')) && !strlen($password ?? '') ){
-			$this->git_pw = $this->crypt->decrypt($this->cloverConfig->history->git_pw);
+		if( isset($this->env_config->remotes->{$this->git_remote}->password) && strlen($this->crypt->decrypt($this->env_config->remotes->{$this->git_remote}->password ?? '')) ){
+			$this->git_pw = $this->env_config->remotes->{$this->git_remote}->password;
 		}
 	}
 
@@ -134,29 +134,6 @@ class git {
 		$rtn['exitcode'] = $res_cmd['exitcode'];
 		$rtn['stdout'] = $this->conceal_confidentials($res_cmd['stdout']);
 		$rtn['stderr'] = $this->conceal_confidentials($res_cmd['stderr']);
-
-		return $rtn;
-	}
-
-	/**
-	 * 状態を知る
-	 */
-	public function status(){
-		$rtn = array();
-		$rtn['result'] = true;
-		$rtn['message'] = 'OK';
-
-		$res_cmd = $this->exec_git_command(array(
-			'status',
-		));
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		$rtn['status'] = $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']);
 
 		return $rtn;
 	}
