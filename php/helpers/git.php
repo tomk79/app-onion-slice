@@ -12,8 +12,20 @@ class git {
 	/** 設定オブジェクト */
 	private $env_config;
 
+	/** Cryptオブジェクト */
+	private $crypt;
+
 	/** プロジェクト情報 */
 	private $project_info;
+
+	/** Git Remote: URL */
+	private $git_remote;
+
+	/** Git Remote: ID */
+	private $git_id;
+
+	/** Git Remote: PW */
+	private $git_pw;
 
 	/**
 	 * Constructor
@@ -24,7 +36,32 @@ class git {
 	public function __construct( $rencon, $project_info ){
 		$this->rencon = $rencon;
 		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
+		$this->crypt = new crypt( $this->rencon );
 		$this->project_info = $project_info;
+
+		if( isset($this->cloverConfig->history->git_remote) && strlen($this->cloverConfig->history->git_remote ?? '') ){
+			$this->git_remote = $this->cloverConfig->history->git_remote;
+		}
+		if( isset($this->cloverConfig->history->git_id) && !strlen($user_name ?? '') ){
+			$this->git_id = $this->cloverConfig->history->git_id;
+		}
+		if( isset($this->cloverConfig->history->git_pw) && strlen($this->crypt->decrypt($this->cloverConfig->history->git_pw ?? '')) && !strlen($password ?? '') ){
+			$this->git_pw = $this->crypt->decrypt($this->cloverConfig->history->git_pw);
+		}
+	}
+
+	/**
+	 * Gitのルートディレクトリを取得する
+	 */
+	private function realpath_git_root(){
+		return $this->project_info->realpath_base_dir;
+	}
+
+	/**
+	 * Gitコマンドのパスを取得する
+	 */
+	private function realpath_git_cmd(){
+		return (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
 	}
 
 	/**
@@ -38,7 +75,7 @@ class git {
 		if( !strlen( $git_url ?? '' ) ){
 			return $default;
 		}
-		$realpath_git_command = (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
+		$realpath_git_command = $this->realpath_git_cmd();
 		$result = shell_exec($realpath_git_command.' ls-remote --symref '.escapeshellarg($git_url).' HEAD');
 		if(!is_string($result) || !strlen($result ?? '')){
 			return $default;
@@ -124,116 +161,6 @@ class git {
 		return $rtn;
 	}
 
-	/**
-	 * コミットする
-	 */
-	public function commit(){
-		$rtn = array();
-		$rtn['result'] = true;
-		$rtn['message'] = 'OK';
-
-		$res_cmd = $this->exec_git_command(array(
-			'add',
-			'.',
-		));
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		$res_cmd = $this->exec_git_command(array(
-			'commit',
-			'-m',
-			'clover commit',
-		));
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		return $rtn;
-	}
-
-	/**
-	 * フェッチする
-	 */
-	public function fetch(){
-		$this->px->header('Content-type: text/json');
-
-		$rtn = array();
-		$rtn['result'] = true;
-		$rtn['message'] = 'OK';
-
-		$this->set_remote_origin();
-		$res_cmd = $this->exec_git_command(array(
-			'fetch',
-			'--prune',
-		));
-		$this->clear_remote_origin();
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		return $rtn;
-	}
-
-	/**
-	 * プルする
-	 */
-	public function pull(){
-		$this->px->header('Content-type: text/json');
-
-		$rtn = array();
-		$rtn['result'] = true;
-		$rtn['message'] = 'OK';
-
-		$this->set_remote_origin();
-		$res_cmd = $this->exec_git_command(array(
-			'pull',
-		));
-		$this->clear_remote_origin();
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		return $rtn;
-	}
-
-	/**
-	 * プッシュする
-	 */
-	public function push(){
-		$this->px->header('Content-type: text/json');
-
-		$rtn = array();
-		$rtn['result'] = true;
-		$rtn['message'] = 'OK';
-
-		$this->set_remote_origin();
-		$res_cmd = $this->exec_git_command(array(
-			'push',
-		));
-		$this->clear_remote_origin();
-		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
-		}
-
-		return $rtn;
-	}
-
 
 	/**
 	 * origin をセットする
@@ -260,7 +187,12 @@ class git {
 			return false;
 		}
 
-		$this->exec_git_command(array('remote', 'remove', 'origin'));
+		if( isset($this->git_remote) && strlen($this->git_remote ?? '') ){
+			$this->exec_git_command(array('remote', 'add', 'origin', $this->git_remote));
+			$this->exec_git_command(array('remote', 'set-url', 'origin', $this->git_remote));
+		}else{
+			$this->exec_git_command(array('remote', 'remove', 'origin'));
+		}
 		return true;
 	}
 
@@ -268,13 +200,12 @@ class git {
 	 * 有効なGit設定がされているか？
 	 */
 	private function has_valid_git_config(){
-		// if( !isset($this->cloverConfig->history->git_remote) || !strlen($this->cloverConfig->history->git_remote ?? '') ){
-		// 	return false;
-		// }
-		// $git_remote = $this->cloverConfig->history->git_remote;
-		// if( !preg_match( '/^(?:https?)\:\/\/(?:.+)\.git$/si', $git_remote ) ){
-		// 	return false;
-		// }
+		if( !isset($this->git_remote) || !strlen($this->git_remote ?? '') ){
+			return false;
+		}
+		if( !preg_match( '/^(?:https?)\:\/\/(?:.+)\.git$/si', $this->git_remote ) ){
+			return false;
+		}
 		return true;
 	}
 
@@ -282,18 +213,14 @@ class git {
 	 * URLに認証情報を埋め込む
 	 */
 	private function url_bind_confidentials($url = null, $user_name = null, $password = null){
-		$env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
-
-		if( $env_config && !strlen($url ?? '') ){
-			$url = $this->project_info->remote ?? null;
+		if( isset($this->git_remote) && !strlen($url ?? '') ){
+			$url = $this->git_remote;
 		}
-		if( $env_config && !strlen($user_name ?? '') && strlen($env_config->remotes->{$url}->username ?? '') ){
-			$user_name = $env_config->remotes->{$url}->username;
+		if( isset($this->git_id) && !strlen($user_name ?? '') ){
+			$user_name = $this->git_id;
 		}
-		if( $env_config && !strlen($password ?? '') && strlen($env_config->remotes->{$url}->password ?? '') ){
-			$password = $env_config->remotes->{$url}->password;
-			$crypt = new crypt($this->rencon);
-			$password = $crypt->decrypt($password);
+		if( isset($this->git_pw) && strlen($this->crypt->decrypt($this->git_pw ?? '')) && !strlen($password ?? '') ){
+			$password = $this->crypt->decrypt($this->git_pw);
 		}
 		if( !strlen($url ?? '') ){
 			return null;
@@ -335,13 +262,6 @@ class git {
 		$str = preg_replace('/((?:[a-zA-Z\-\_]+))\:\/\/([^\s\/\\\\]*?\:)([^\s\/\\\\]*)\@/si', '$1://$2********@', $str);
 
 		return $str;
-	}
-
-	/**
-	 * Gitのルートディレクトリを取得する
-	 */
-	private function realpath_git_root(){
-		return $this->project_info->realpath_base_dir;
 	}
 
 	/**
@@ -405,7 +325,7 @@ class git {
 			$git_sub_commands[$idx] = escapeshellarg($git_sub_commands_row);
 		}
 
-		$realpath_git_command = (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
+		$realpath_git_command = $this->realpath_git_cmd();
 		$cmd = $realpath_git_command.' '.implode(' ', $git_sub_commands);
 
 		// コマンドを実行
@@ -439,8 +359,10 @@ class git {
 		$rtn['exitcode'] = $stat['exitcode'];
 		$rtn['stdout'] = $io[1]; // stdout
 		if( isset($io[2]) && strlen( $io[2] ) ){
-			$rtn['result'] = false;
 			$rtn['stderr'] = $io[2]; // stderr
+		}
+		if( $rtn['exitcode'] ){
+			$rtn['result'] = false;
 		}
 
 		chdir($cd);

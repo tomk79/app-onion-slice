@@ -113,7 +113,7 @@ window.contApp = new (function(){
 				},
 				"dataType": 'json',
 				"data": {
-					"command_ary": cmdAry,
+					"command_ary": JSON.stringify(cmdAry),
 		            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 				},
 				"error": function(data){
@@ -129,7 +129,7 @@ window.contApp = new (function(){
 					let message = result;
 
 					try{
-						callback(message.return, message.stdout+message.stderr);
+						callback(message.exitcode, (message.stdout?message.stdout:'')+(message.stderr?message.stderr:''));
 						console.log(message.return, message.stdout+message.stderr);
 					}catch(e){
 						console.error(e);
@@ -175,7 +175,7 @@ window.contApp = new (function(){
 	 * git command
 	 */
 	public function git_cmd(){
-		$git_command_array = $this->rencon->req()->get_param('command_ary');
+		$git_command_array = json_decode( $this->rencon->req()->get_param('command_ary') );
 		$rtn = (object) array();
 
 		if( !$this->project_info ) {
