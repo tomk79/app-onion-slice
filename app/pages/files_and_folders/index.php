@@ -4,6 +4,10 @@ $project_id = $rencon->get_route_param('projectId');
 $project_info = $projects->get_project($project_id);
 ?>
 
+<?php if( !strlen($project_info->realpath_base_dir ?? '') || !is_dir($project_info->realpath_base_dir) ){ ?>
+	<p>ベースディレクトリが存在しないか、設定されていません。</p>
+<?php }else{ ?>
+
 <div id="cont-files-and-folders"></div>
 
 
@@ -500,3 +504,5 @@ function fs(method, filename, options, callback){
 	</div>
 </div>
 		</script>
+
+<?php } ?>

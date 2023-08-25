@@ -147,6 +147,9 @@ class project {
 		}elseif($this->projects->get_project( $this->rencon->req()->get_param('input-id') )){
 			$validationResult->result = false;
 			$validationResult->errors->{'input-id'} = 'そのIDはすでに存在します。';
+		}elseif(!preg_match( '/^[a-zA-Z0-9]([a-zA-Z0-9\-\_]*[a-zA-Z0-9])?$/', $this->rencon->req()->get_param('input-id') )){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = 'a-z, A-Z, 0-9 以外の文字を含めることはできません。 区切り文字として -, _ が使えます。';
 		}
 
 		if( !strlen($this->rencon->req()->get_param('input-name') ?? '') ){

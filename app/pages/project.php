@@ -21,7 +21,14 @@ $project_info = $projects->get_project($project_id);
 			</tr>
 			<tr>
 				<th>ベースディレクトリ</th>
-				<td><?= htmlspecialchars( $project_info->realpath_base_dir ?? '---' ) ?></td>
+				<td>
+					<?= htmlspecialchars( $project_info->realpath_base_dir ?? '---' ) ?>
+					<?php if( !strlen($project_info->realpath_base_dir ?? '') ){ ?>
+						<p>ベースディレクトリが設定されていません。</p>
+					<?php }elseif( !is_dir($project_info->realpath_base_dir) ){ ?>
+						<p>ベースディレクトリが存在しません。</p>
+					<?php } ?>
+				</td>
 			</tr>
 			<tr>
 				<th>リモートURI</th>

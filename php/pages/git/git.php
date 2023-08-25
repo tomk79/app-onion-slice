@@ -36,6 +36,11 @@ class git {
 	 * ルーティング
 	 */
 	private function route(){
+		if( !strlen($this->project_info->realpath_base_dir ?? '') || !is_dir($this->project_info->realpath_base_dir) ){
+			echo '<p>ベースディレクトリが存在しないか、設定されていません。</p>';
+			return;
+		}
+
 		if( $this->rencon->req()->get_param('m') == 'git_cmd' ){
 			return $this->git_cmd();
 		}

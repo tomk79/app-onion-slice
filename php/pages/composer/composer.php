@@ -35,6 +35,11 @@ class composer {
 	 * ルーティング
 	 */
 	private function route(){
+		if( !strlen($this->project_info->realpath_base_dir ?? '') || !is_dir($this->project_info->realpath_base_dir) ){
+			echo '<p>ベースディレクトリが存在しないか、設定されていません。</p>';
+			return;
+		}
+
 		if( $this->rencon->req()->get_param('m') == 'composer_cmd' ){
 			return $this->composer_cmd();
 		}
