@@ -42,8 +42,18 @@ class projects {
 	 */
 	public function save(){
 
+		$projects = (array) $this->projects ?? array();
+		uasort( $projects, function($a, $b){
+			if( strtolower($a->name) > strtolower($b->name) ){
+				return 1;
+			}elseif( strtolower($a->name) < strtolower($b->name) ){
+				return -1;
+			}
+			return 0;
+		} );
+
 		$data = (object) array(
-			"projects" => $this->projects ?? new \stdClass(),
+			"projects" => $projects,
 		);
 
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
