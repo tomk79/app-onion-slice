@@ -1,5 +1,5 @@
 {
-	"name": "onion-slice",
+	"name": "Onion Slice",
 	"app_id": "onion-slice",
 	"version": "0.0.1-alpha.1+dev",
 	"dist": "dist/onion-slice.php",
