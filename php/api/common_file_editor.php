@@ -11,8 +11,18 @@ class common_file_editor {
 		header('Content-type: text/json');
 
 		$fs = $rencon->fs();
-		$realpath_basedir = $rencon->conf()->path_project_root_dir;
+
+		$projects = new \tomk79\onionSlice\model\projects($rencon);
+		$project_id = $rencon->get_route_param('projectId');
+		$project_info = $projects->get_project($project_id);
+		$realpath_basedir = $project_info->realpath_base_dir;
+
 		$rtn = array();
+
+		if( $rencon->req()->get_method() != 'post' ){
+			echo json_encode(false);
+			exit();
+		}
 
 		if( !strlen($rencon->req()->get_param('filename') ?? '') ){
 			echo json_encode(false);
@@ -44,7 +54,7 @@ class common_file_editor {
 			}elseif( strlen($rencon->req()->get_param('bin') ?? '') ){
 				$bin = $rencon->req()->get_param('bin');
 			}
-			$rtn['result'] = $rencon->fs()->write_file( $realpath_filename, $bin );
+			$rtn['result'] = $rencon->fs()->save_file( $realpath_filename, $bin );
 
 		}elseif( $rencon->req()->get_param('method') == 'copy' ){
 			$realpath_copyto = $realpath_basedir.$fs->get_realpath('/'.$rencon->req()->get_param('to'));

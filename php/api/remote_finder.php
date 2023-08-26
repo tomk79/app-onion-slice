@@ -11,6 +11,14 @@ class remote_finder {
 		$project_id = $rencon->get_route_param('projectId');
 		$project_info = $projects->get_project($project_id);
 
+		if( $rencon->req()->get_method() != 'post' ){
+			header('Content-type: text/json');
+			$rtn->result = false;
+			$rtn->message = "Method not allowed.";
+			echo json_encode($rtn);
+			exit;
+		}
+
 		if( !$project_info ) {
 			header('Content-type: text/json');
 			$rtn->result = false;

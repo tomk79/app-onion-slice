@@ -5,6 +5,8 @@ $current_page_info = $this->get_current_page_info();
 $projects = new \tomk79\onionSlice\model\projects($rencon);
 $project_id = $rencon->get_route_param('projectId');
 $project_info = $projects->get_project($project_id);
+
+$action = $rencon->req()->get_param('a');
 ?>
 <!DOCTYPE html>
 <html>
@@ -18,7 +20,7 @@ $project_info = $projects->get_project($project_id);
 </head>
 <body>
 
-<?php if( $rencon->req()->get_param('a') == 'proj.'.$project_id.'.common_file_editor' ){ ?>
+<?php if( $action == 'proj.'.$project_id.'.common_file_editor' ){ ?>
 
 <style>
 .theme-wrap,
@@ -98,7 +100,7 @@ $project_info = $projects->get_project($project_id);
 
 
 <script>
-window.current = <?= var_export($rencon->req()->get_param('a'), true) ?> || 'home';
+window.current = <?= var_export($action, true) ?> || 'home';
 </script>
 
 <?php } ?>
