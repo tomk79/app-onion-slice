@@ -34,7 +34,7 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 				method : 'post',
 				data: {
 					'gpi_param': JSON.stringify(input),
-		            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		            'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 				},
 				success: function(data){
 					// px2style.closeLoading();
@@ -413,7 +413,7 @@ function fs(method, filename, options, callback){
 			'to': options.to,
 			'px_command': options.px_command,
 			'bin': options.bin,
-            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 		},
 		error: function(err){
 			console.error(err);

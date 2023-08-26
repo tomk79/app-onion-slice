@@ -29,7 +29,7 @@ $filename = $rencon->req()->get_param('filename');
 					data: {
 						'method': 'read',
 						'filename': filename,
-			            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+			            'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 					},
 				}).done(function(res) {
 					if( !res.result ){
@@ -49,7 +49,7 @@ $filename = $rencon->req()->get_param('filename');
 						'method': 'write',
 						'filename': filename,
 						'base64': base64,
-			            'ADMIN_USER_CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+			            'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
 					},
 				}).done(function(res) {
 					if( !res.result ){

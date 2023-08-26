@@ -67,7 +67,7 @@ class profile {
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
-	<input type="hidden" name="ADMIN_USER_CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
+	<input type="hidden" name="CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">

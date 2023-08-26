@@ -13,6 +13,7 @@
 		},
 		"proj_create": {
 			"title": "プロジェクトを新規作成する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\project\\project::create"
 		},
 		"proj.{projectId?}": {
@@ -21,10 +22,12 @@
 		},
 		"proj.{projectId?}.composer": {
 			"title": "Composerを操作する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\composer\\composer::start"
 		},
 		"proj.{projectId?}.git": {
 			"title": "Gitを操作する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\git\\git::start"
 		},
 		"proj.{projectId?}.files_and_folders": {
@@ -37,10 +40,12 @@
 		},
 		"proj.{projectId?}.edit": {
 			"title": "プロジェクトを編集する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\project\\project::edit"
 		},
 		"proj.{projectId?}.delete": {
 			"title": "プロジェクトを削除する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\project\\project::delete"
 		},
 		"env_config": {
@@ -49,35 +54,43 @@
 		},
 		"env_config.edit": {
 			"title": "環境設定を編集する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::edit"
 		},
 		"env_config.profile.edit": {
 			"title": "プロフィールを編集する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\profile::edit"
 		},
 		"env_config.remote.create": {
 			"title": "リモート設定を新規作成する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_create"
 		},
 		"env_config.remote.edit": {
 			"title": "リモート設定を編集する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_edit"
 		},
 		"env_config.remote.delete": {
 			"title": "リモート設定を削除する",
+			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_delete"
 		},
 
 		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
+			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::gpi"
 		},
 		"api.{projectId?}.remote_finder.parse_px2_filepath": {
 			"title": "api.parse_px2_filepath",
+			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::parse_px2_filepath"
 		},
 		"api.{projectId?}.common_file_editor.gpi": {
 			"title": "api.common_file_editor.gpi",
+			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\common_file_editor::gpi"
 		}
 	},
