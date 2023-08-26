@@ -41,6 +41,7 @@ class composer {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'composer_cmd' ){
+			$this->rencon->utils->api_post_only();
 			return $this->composer_cmd();
 		}
 

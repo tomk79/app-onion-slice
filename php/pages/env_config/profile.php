@@ -52,6 +52,7 @@ class profile {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->edit__save();
 			exit;
 		}

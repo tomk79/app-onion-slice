@@ -42,6 +42,7 @@ class git {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'git_cmd' ){
+			$this->rencon->utils->api_post_only();
 			return $this->git_cmd();
 		}
 

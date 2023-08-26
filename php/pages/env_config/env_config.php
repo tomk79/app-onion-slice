@@ -151,6 +151,7 @@ class env_config {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->edit__save();
 			exit;
 		}
@@ -251,6 +252,7 @@ class env_config {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->remote_create__save();
 			exit;
 		}
@@ -396,6 +398,7 @@ class env_config {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->remote_edit__save();
 			exit;
 		}
@@ -538,6 +541,7 @@ class env_config {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->remote_delete__save();
 			exit;
 		}

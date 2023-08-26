@@ -5,6 +5,7 @@
 	"dist": "dist/onion-slice.php",
 	"resources": "resources/",
 	"middleware": [
+		"tomk79\\onionSlice\\middleware\\boot::boot"
 	],
 	"route": {
 		"": {

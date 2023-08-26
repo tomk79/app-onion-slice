@@ -61,6 +61,7 @@ class project {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->create__save();
 			exit;
 		}
@@ -219,6 +220,7 @@ class project {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->edit__save();
 			exit;
 		}
@@ -368,6 +370,7 @@ class project {
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
 			$this->delete__save();
 			exit;
 		}
