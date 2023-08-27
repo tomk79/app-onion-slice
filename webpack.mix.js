@@ -59,9 +59,14 @@ mix
 
 
 	// --------------------------------------
-	// cloverCommon Script
+	// Theme Script
 	.js('src_front/theme.js', 'resources/')
 	.sass('src_front/theme.scss', 'resources/')
+
+	// --------------------------------------
+	// Directory Suggestion
+	.js('src_front/directory_suggestion/directory_suggestion.js', 'resources/directory_suggestion/')
+	.sass('src_front/directory_suggestion/directory_suggestion.scss', 'resources/directory_suggestion/')
 
 
 	// --------------------------------------

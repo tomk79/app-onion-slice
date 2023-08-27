@@ -1,0 +1,16 @@
+.directory-suggestion {
+    max-height: 50vh;
+    overflow: auto;
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    li {
+        list-style-type: none;
+        padding: 1px;
+    }
+    button {
+        display: block;
+        border: none;
+    }
+}

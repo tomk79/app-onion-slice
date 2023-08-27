@@ -79,6 +79,11 @@
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_delete"
 		},
 
+		"api.directory_suggestion": {
+			"title": "Directory Suggestion API",
+			"allow_methods": "post",
+			"page": "tomk79\\onionSlice\\api\\directory_suggestion::suggest"
+		},
 		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"allow_methods": "post",

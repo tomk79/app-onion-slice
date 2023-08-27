@@ -75,6 +75,9 @@ class project {
 	private function create__input($validationResult){
 ?>
 
+<link rel="stylesheet" href="?res=directory_suggestion/directory_suggestion.css" />
+<script src="?res=directory_suggestion/directory_suggestion.js"></script>
+
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
 	<input type="hidden" name="CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
@@ -128,6 +131,10 @@ class project {
 
 	<p class="px2-text-align-center"><button class="px2-btn px2-btn--primary">保存する</button></p>
 </form>
+
+<script>
+window.bindDirectorySuggestion('#input-realpath_base_dir');
+</script>
 
 <?php
 		return;
@@ -234,6 +241,9 @@ class project {
 	private function edit__input($validationResult){
 ?>
 
+<link rel="stylesheet" href="?res=directory_suggestion/directory_suggestion.css" />
+<script src="?res=directory_suggestion/directory_suggestion.js"></script>
+
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
 	<input type="hidden" name="CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
@@ -280,6 +290,9 @@ class project {
 
 	<p class="px2-text-align-center"><button class="px2-btn px2-btn--primary">保存する</button></p>
 </form>
+<script>
+window.bindDirectorySuggestion('#input-realpath_base_dir');
+</script>
 
 <?php
 		return;
