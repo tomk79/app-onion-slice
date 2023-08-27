@@ -89,6 +89,44 @@ class git {
 	}
 
 	/**
+	 * git remote から初期化する
+	 */
+	public function git_clone(){
+		$rtn = array();
+		$rtn['result'] = true;
+		$rtn['message'] = 'OK';
+
+		if( !strlen($this->project_info->remote ?? '') ){
+			$rtn['result'] = false;
+			$rtn['message'] = 'Project doesnt have remote.';
+			$rtn['stdout'] = null;
+			$rtn['stderr'] = null;
+			$rtn['exitcode'] = null;
+			return $rtn;
+		}
+
+		$git_command_array = array('clone', $this->url_bind_confidentials($this->project_info->remote), './');
+
+		// Gitコマンドを実行する
+		$this->set_remote_origin();
+		$res_cmd = $this->exec_git_command( $git_command_array );
+		$this->clear_remote_origin();
+
+		if( !$res_cmd['result'] ){
+			return array(
+				'result' => false,
+				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
+			);
+		}
+
+		$rtn['exitcode'] = $res_cmd['exitcode'];
+		$rtn['stdout'] = $this->conceal_confidentials($res_cmd['stdout']);
+		$rtn['stderr'] = $this->conceal_confidentials($res_cmd['stderr']);
+
+		return $rtn;
+	}
+
+	/**
 	 * Gitコマンドを直接実行する
 	 *
 	 * @param array $git_command_array Gitコマンドオプション
@@ -358,6 +396,7 @@ class git {
 
 		// 許可されたコマンド
 		switch( $git_sub_command[0] ?? null ){
+			case 'clone':
 			case 'config':
 			case 'status':
 			case 'branch':

@@ -69,15 +69,16 @@ class initialize_project {
 		$projects = new \tomk79\onionSlice\model\projects($rencon);
 		$project_id = $rencon->get_route_param('projectId');
 		$project_info = $projects->get_project($project_id);
+		$realpath_git_root = $project_info->realpath_base_dir;
 
-        if( !strlen($project_info->realpath_base_dir ?? '') ){
+        if( !strlen($realpath_git_root ?? '') ){
 			$rtn->result = false;
 			$rtn->message = "realpath_base_dir is not set.";
 			echo json_encode($rtn);
 			exit;
         }
 
-        if( !file_exists($project_info->realpath_base_dir) ){
+        if( !file_exists($realpath_git_root) ){
 			$rtn->result = false;
 			$rtn->message = "realpath_base_dir is not exists.";
 			echo json_encode($rtn);
@@ -91,7 +92,9 @@ class initialize_project {
 			exit;
         }
 
-		// TODO: git close を実装する
+		$gitHelper = new \tomk79\onionSlice\helpers\git($rencon, $project_info);
+		$result = $gitHelper->git_clone();
+		$rtn = (object) $result;
 
 		echo json_encode($rtn);
 		exit;
@@ -117,15 +120,16 @@ class initialize_project {
 		$projects = new \tomk79\onionSlice\model\projects($rencon);
 		$project_id = $rencon->get_route_param('projectId');
 		$project_info = $projects->get_project($project_id);
+		$realpath_git_root = $project_info->realpath_base_dir;
 
-        if( !strlen($project_info->realpath_base_dir ?? '') ){
+        if( !strlen($realpath_git_root ?? '') ){
 			$rtn->result = false;
 			$rtn->message = "realpath_base_dir is not set.";
 			echo json_encode($rtn);
 			exit;
         }
 
-        if( !file_exists($project_info->realpath_base_dir) ){
+        if( !file_exists($realpath_git_root) ){
 			$rtn->result = false;
 			$rtn->message = "realpath_base_dir is not exists.";
 			echo json_encode($rtn);

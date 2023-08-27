@@ -89,11 +89,15 @@ window.contInitializeWithPickles2 = function(){
 </script>
 
 <?php if( $projects->is_project_base_dir_empty($project_id) ){ ?>
+<div class="px2-notice">
 	<p>ベースディレクトリは空白です。</p>
-	<ul>
-		<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithGitRemote()">git remote で初期化</button></li>
-		<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithPickles2()">Pickles 2 で初期化</button></li>
-	</ul>
+	<div class="px2-linklist">
+		<ul class="px2-linklist__horizontal px2-linklist__horizontal--center">
+			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithGitRemote()">git remote で初期化</button></li>
+			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithPickles2()">Pickles 2 で初期化</button></li>
+		</ul>
+	</div>
+</div>
 <?php } ?>
 
 <div class="px2-p">
