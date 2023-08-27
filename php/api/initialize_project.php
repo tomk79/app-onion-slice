@@ -92,6 +92,7 @@ class initialize_project {
 			exit;
         }
 
+		// git clone を実装する
 		$gitHelper = new \tomk79\onionSlice\helpers\git($rencon, $project_info);
 		$result = $gitHelper->git_clone();
 		$rtn = (object) $result;
@@ -143,7 +144,9 @@ class initialize_project {
 			exit;
         }
 
-		// TODO: composer create-project を実装する
+		// composer create-project を実装する
+		$composerHelper = new \tomk79\onionSlice\helpers\composer( $rencon, $project_info );
+		$rtn = $composerHelper->composer( array('create-project', 'pickles2/pickles2', './') );
 
 		echo json_encode($rtn);
 		exit;

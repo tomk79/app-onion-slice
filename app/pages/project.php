@@ -13,6 +13,7 @@ window.contCreateEmptyBaseDir = function(){
 		return;
 	}
 	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	window.px2style.loading();
 	$.ajax({
 		"url": `?a=api.${projectId}.initialize_project.mk_empty_base_dir`,
 		"type": "post",
@@ -29,6 +30,7 @@ window.contCreateEmptyBaseDir = function(){
 	}).fail(function() {
 		alert('Errored');
 	}).always(function() {
+		window.px2style.closeLoading();
 		window.location.reload();
 	});
 }
@@ -40,6 +42,7 @@ window.contInitializeWithGitRemote = function(){
 		return;
 	}
 	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	window.px2style.loading();
 	$.ajax({
 		"url": `?a=api.${projectId}.initialize_project.initialize_with_git_remote`,
 		"type": "post",
@@ -56,6 +59,7 @@ window.contInitializeWithGitRemote = function(){
 	}).fail(function() {
 		alert('Errored');
 	}).always(function() {
+		window.px2style.closeLoading();
 		window.location.reload();
 	});
 }
@@ -67,6 +71,7 @@ window.contInitializeWithPickles2 = function(){
 		return;
 	}
 	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	window.px2style.loading();
 	$.ajax({
 		"url": `?a=api.${projectId}.initialize_project.initialize_with_pickles2`,
 		"type": "post",
@@ -83,6 +88,7 @@ window.contInitializeWithPickles2 = function(){
 	}).fail(function() {
 		alert('Errored');
 	}).always(function() {
+		window.px2style.closeLoading();
 		window.location.reload();
 	});
 }
