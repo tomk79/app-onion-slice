@@ -89,6 +89,16 @@
 			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\initialize_project::mk_empty_base_dir"
 		},
+		"api.{projectId?}.initialize_project.initialize_with_git_remote": {
+			"title": "Initialize with git remote",
+			"allow_methods": "post",
+			"page": "tomk79\\onionSlice\\api\\initialize_project::initialize_with_git_remote"
+		},
+		"api.{projectId?}.initialize_project.initialize_with_pickles2": {
+			"title": "Initialize with Pickles 2",
+			"allow_methods": "post",
+			"page": "tomk79\\onionSlice\\api\\initialize_project::initialize_with_pickles2"
+		},
 		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"allow_methods": "post",

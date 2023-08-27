@@ -5,6 +5,9 @@ $project_info = $projects->get_project($project_id);
 ?>
 
 <script>
+/**
+ * 空のディレクトリを作成する
+ */
 window.contCreateEmptyBaseDir = function(){
 	if( !confirm( 'ディレクトリを作成します。'+"\n"+<?= var_export($project_info->realpath_base_dir, true) ?>+"\n"+'よろしいですか？' ) ){
 		return;
@@ -19,7 +22,7 @@ window.contCreateEmptyBaseDir = function(){
 	}).done(function(res) {
 		if( !res.result ){
 			console.error('Error:', res);
-			alert('ディレクトリを作成は失敗しました。');
+			alert('ディレクトリの作成に失敗しました。');
 			return;
 		}
 		alert('ディレクトリを作成しました。');
@@ -29,7 +32,70 @@ window.contCreateEmptyBaseDir = function(){
 		window.location.reload();
 	});
 }
+/**
+ * git remove で初期化する
+ */
+window.contInitializeWithGitRemote = function(){
+	if( !confirm( 'git remote で初期化します。'+"\n"+'よろしいですか？' ) ){
+		return;
+	}
+	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	$.ajax({
+		"url": `?a=api.${projectId}.initialize_project.initialize_with_git_remote`,
+		"type": "post",
+		"data": {
+			'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		},
+	}).done(function(res) {
+		if( !res.result ){
+			console.error('Error:', res);
+			alert('初期化に失敗しました。');
+			return;
+		}
+		alert('初期化しました。');
+	}).fail(function() {
+		alert('Errored');
+	}).always(function() {
+		window.location.reload();
+	});
+}
+/**
+ * composer create-project pickles2/pickles2 で初期化する
+ */
+window.contInitializeWithPickles2 = function(){
+	if( !confirm( 'Pickles 2 で初期化します。'+"\n"+'よろしいですか？' ) ){
+		return;
+	}
+	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	$.ajax({
+		"url": `?a=api.${projectId}.initialize_project.initialize_with_pickles2`,
+		"type": "post",
+		"data": {
+			'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		},
+	}).done(function(res) {
+		if( !res.result ){
+			console.error('Error:', res);
+			alert('初期化に失敗しました。');
+			return;
+		}
+		alert('初期化しました。');
+	}).fail(function() {
+		alert('Errored');
+	}).always(function() {
+		window.location.reload();
+	});
+}
 </script>
+
+<?php if( $projects->is_project_base_dir_empty($project_id) ){ ?>
+	<p>ベースディレクトリは空白です。</p>
+	<ul>
+		<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithGitRemote()">git remote で初期化</button></li>
+		<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithPickles2()">Pickles 2 で初期化</button></li>
+	</ul>
+<?php } ?>
+
 <div class="px2-p">
 	<table class="px2-table px2-table--dl">
 		<tbody>

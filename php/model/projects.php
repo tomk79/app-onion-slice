@@ -83,6 +83,29 @@ class projects {
 	}
 
 	/**
+	 * プロジェクトのベースディレクトリは空ディレクトリか？
+	 */
+	public function is_project_base_dir_empty( $project_id ){
+		$project_info = $this->get_project( $project_id );
+		if( !$project_info ){
+			return false;
+		}
+		if( !strlen($project_info->realpath_base_dir ?? '') ){
+			return false;
+		}
+		if( !is_dir($project_info->realpath_base_dir) ){
+			return false;
+		}
+
+		$ls = $this->rencon->fs()->ls( $project_info->realpath_base_dir );
+		if( count($ls) ){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * プロジェクト情報を削除する
 	 */
 	public function delete_project( $project_id ){
