@@ -64,22 +64,19 @@ class env_config {
 	private function index__route(){
 ?>
 
-	<div class="px2-form-input-list">
-		<ul class="px2-form-input-list__ul">
-			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-command-php">PHPコマンド</label></div>
-				<div class="px2-form-input-list__input">
-					<?= htmlspecialchars($this->env_config->commands->php ?? '') ?>
-				</div>
-			</li>
-			<li class="px2-form-input-list__li">
-				<div class="px2-form-input-list__label"><label for="input-command-git">Gitコマンド</label></div>
-				<div class="px2-form-input-list__input">
-					<?= htmlspecialchars($this->env_config->commands->git ?? '') ?>
-				</div>
-			</li>
-		</ul>
-	</div>
+	<h2>コマンドのパス設定</h2>
+	<table class="px2-table px2-table--dl">
+		<tbody>
+			<tr>
+				<th>PHPコマンド</th>
+				<td><?= htmlspecialchars($this->env_config->commands->php ?? '') ?></td>
+			</tr>
+			<tr>
+				<th>Gitコマンド</th>
+				<td><?= htmlspecialchars($this->env_config->commands->git ?? '') ?></td>
+			</tr>
+		</tbody>
+	</table>
 
 	<p class="px2-text-align-right">
 		<a href="?a=env_config.edit" class="px2-btn px2-btn--primary">編集する</a>

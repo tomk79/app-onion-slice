@@ -4,6 +4,32 @@ $project_id = $rencon->get_route_param('projectId');
 $project_info = $projects->get_project($project_id);
 ?>
 
+<script>
+window.contCreateEmptyBaseDir = function(){
+	if( !confirm( 'ディレクトリを作成します。'+"\n"+<?= var_export($project_info->realpath_base_dir, true) ?>+"\n"+'よろしいですか？' ) ){
+		return;
+	}
+	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	$.ajax({
+		"url": `?a=api.${projectId}.initialize_project.mk_empty_base_dir`,
+		"type": "post",
+		"data": {
+			'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		},
+	}).done(function(res) {
+		if( !res.result ){
+			console.error('Error:', res);
+			alert('ディレクトリを作成は失敗しました。');
+			return;
+		}
+		alert('ディレクトリを作成しました。');
+	}).fail(function() {
+		alert('Errored');
+	}).always(function() {
+		window.location.reload();
+	});
+}
+</script>
 <div class="px2-p">
 	<table class="px2-table px2-table--dl">
 		<tbody>
@@ -26,7 +52,7 @@ $project_info = $projects->get_project($project_id);
 					<?php if( !strlen($project_info->realpath_base_dir ?? '') ){ ?>
 						<p>ベースディレクトリが設定されていません。</p>
 					<?php }elseif( !is_dir($project_info->realpath_base_dir) ){ ?>
-						<p>ベースディレクトリが存在しません。</p>
+						<p>ベースディレクトリが存在しません。 <button type="button" class="px2-btn px2-btn--primary" onclick="contCreateEmptyBaseDir()">作成する</button></p>
 					<?php } ?>
 				</td>
 			</tr>

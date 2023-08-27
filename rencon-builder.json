@@ -84,6 +84,11 @@
 			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\directory_suggestion::suggest"
 		},
+		"api.{projectId?}.initialize_project.mk_empty_base_dir": {
+			"title": "Make empty base directory",
+			"allow_methods": "post",
+			"page": "tomk79\\onionSlice\\api\\initialize_project::mk_empty_base_dir"
+		},
 		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"allow_methods": "post",
