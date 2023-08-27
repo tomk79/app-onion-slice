@@ -6,6 +6,7 @@ class project {
 	private $rencon;
 	private $projects;
 	private $project_id;
+	private $env_config;
 
 	/**
 	 * 新規作成画面
@@ -39,6 +40,7 @@ class project {
 		$this->rencon = $rencon;
 		$this->projects = new \tomk79\onionSlice\model\projects( $this->rencon );
 		$this->project_id = $rencon->get_route_param('projectId');
+		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
 	}
 
 
@@ -123,7 +125,12 @@ class project {
 				<div class="px2-form-input-list__label"><label for="input-remote">リモートURI</label></div>
 				<div class="px2-form-input-list__input">
 					<?php if( strlen($validationResult->errors->{'input-remote'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-remote'}) ?></div><?php } ?>
-					<input type="text" id="input-remote" name="input-remote" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-remote') ?? '') ?>" class="px2-input px2-input--block" />
+					<select id="input-remote" name="input-remote" class="px2-input px2-input--block">
+						<option value="">---</option>
+						<?php foreach($this->env_config->remotes as $uri_remote => $remote_info){ ?>
+						<option value="<?= htmlspecialchars($uri_remote) ?>" <?= ($this->rencon->req()->get_param('input-remote') == $uri_remote ? 'selected="selected"' : '') ?>><?= htmlspecialchars($uri_remote) ?></option>
+						<?php } ?>
+					</select>
 				</div>
 			</li>
 		</ul>
@@ -282,7 +289,12 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 				<div class="px2-form-input-list__label"><label for="input-remote">リモートURI</label></div>
 				<div class="px2-form-input-list__input">
 					<?php if( strlen($validationResult->errors->{'input-remote'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-remote'}) ?></div><?php } ?>
-					<input type="text" id="input-remote" name="input-remote" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-remote') ?? '') ?>" class="px2-input px2-input--block" />
+					<select id="input-remote" name="input-remote" class="px2-input px2-input--block">
+						<option value="">---</option>
+						<?php foreach($this->env_config->remotes as $uri_remote => $remote_info){ ?>
+						<option value="<?= htmlspecialchars($uri_remote) ?>" <?= ($this->rencon->req()->get_param('input-remote') == $uri_remote ? 'selected="selected"' : '') ?>><?= htmlspecialchars($uri_remote) ?></option>
+						<?php } ?>
+					</select>
 				</div>
 			</li>
 		</ul>
