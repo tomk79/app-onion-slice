@@ -39,10 +39,13 @@ class directory_suggestion {
 		if( is_dir($rtn->current_dir) ){
 			$ls = $rencon->fs()->ls($rtn->current_dir);
 			foreach($ls as $filename){
+				if( strlen($rtn->basename ?? '') && strpos($filename, $rtn->basename) !== 0 ){
+					continue;
+				}
 				$row_realpath = $rencon->fs()->get_realpath($rtn->current_dir.'/'.$filename);
 				array_push($rtn->suggestion, array(
 					"type" => (is_dir($row_realpath) ? 'directory' : ( is_file($row_realpath) ? 'file' : 'unknown' )),
-					"realpath" => $row_realpath,
+					"realpath" => $row_realpath.((is_dir($row_realpath) ? '/' : '')),
 				));
 			}
 		}

@@ -21,12 +21,14 @@ window.bindDirectorySuggestion = function( targetInputElement ){
 
                 var html = '';
                 res.suggestion.forEach((row)=>{
-                    html += `<li><button type="button" data-type="${row.type}" data-value="${row.realpath}">${row.realpath}</button></li>`;
+                    html += `<li><button type="button" data-type="${row.type}" data-value="${row.realpath}"${(row.type!='directory' ? 'disabled' : '')}>${row.realpath}</button></li>`;
                 });
                 $suggestBox.append(`<ul>${html}</ul>`);
                 $suggestBox.find( 'button' ).on('click', function(e){
                     var $button = $(this);
-                    $targetInputElement.val($button.attr('data-value'));
+                    $targetInputElement
+                        .val($button.attr('data-value'))
+                        .trigger('change');
                 });
             });
     });

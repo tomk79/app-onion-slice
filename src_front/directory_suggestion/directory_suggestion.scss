@@ -12,5 +12,16 @@
     button {
         display: block;
         border: none;
+        width: 100%;
+        text-align: left;
+        background-color: transparent;
+        color: #333;
+        &:hover {
+            background-color: #eee;
+        }
+        &:disabled {
+            color: #999;
+            background-color: #fff;
+        }
     }
 }
