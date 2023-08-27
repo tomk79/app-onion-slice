@@ -97,7 +97,10 @@ class profile {
 				<div class="px2-form-input-list__label"><label for="input-lang">言語</label></div>
 				<div class="px2-form-input-list__input">
 					<?php if( strlen($validationResult->errors->{'input-lang'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-lang'}) ?></div><?php } ?>
-					<input type="text" id="input-lang" name="input-lang" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-lang') ?? '') ?>" class="px2-input px2-input--block" />
+					<select id="input-lang" name="input-lang" class="px2-input">
+						<option value="ja" <?= $this->rencon->req()->get_param('input-lang') == 'ja' ? 'selected="selected"' : '' ?>>Japanese</option>
+						<option value="en" <?= $this->rencon->req()->get_param('input-lang') == 'en' ? 'selected="selected"' : '' ?>>English</option>
+					</select>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
