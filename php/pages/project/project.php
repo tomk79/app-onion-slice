@@ -60,6 +60,7 @@ class project {
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
 			$validationResult->result = true;
 			$validationResult->errors = new \stdClass();
+			$this->rencon->req()->set_param('input-realpath_base_dir', dirname(__DIR__) ?? null);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){

@@ -2,6 +2,7 @@
 $projects = new \tomk79\onionSlice\model\projects($rencon);
 $project_id = $rencon->get_route_param('projectId');
 $project_info = $projects->get_project($project_id);
+$project = $projects->get($project_id);
 ?>
 
 <script>
@@ -35,7 +36,7 @@ window.contCreateEmptyBaseDir = function(){
 	});
 }
 /**
- * git remove で初期化する
+ * git clone で初期化する
  */
 window.contInitializeWithGitRemote = function(){
 	if( !confirm( 'git remote で初期化します。'+"\n"+'よろしいですか？' ) ){
@@ -92,14 +93,45 @@ window.contInitializeWithPickles2 = function(){
 		window.location.reload();
 	});
 }
+/**
+ * git init する
+ */
+window.contGitInit = function(){
+	if( !confirm( 'git init します。'+"\n"+'よろしいですか？' ) ){
+		return;
+	}
+	var projectId = <?= var_export($project_id ?? null, true); ?>;
+	window.px2style.loading();
+	$.ajax({
+		"url": `?a=api.${projectId}.initialize_project.git_init`,
+		"type": "post",
+		"data": {
+			'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+		},
+	}).done(function(res) {
+		if( !res.result ){
+			console.error('Error:', res);
+			alert('初期化に失敗しました。');
+			return;
+		}
+		alert('初期化しました。');
+	}).fail(function() {
+		alert('Errored');
+	}).always(function() {
+		window.px2style.closeLoading();
+		window.location.reload();
+	});
+}
 </script>
 
-<?php if( $projects->is_project_base_dir_empty($project_id) ){ ?>
+<?php if( $project->is_project_base_dir_empty() ){ ?>
 <div class="px2-notice">
 	<p>ベースディレクトリは空白です。</p>
 	<div class="px2-linklist">
 		<ul class="px2-linklist__horizontal px2-linklist__horizontal--center">
-			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithGitRemote()">git remote で初期化</button></li>
+			<?php if( strlen($project_info->remote ?? '') ){ ?>
+			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithGitRemote()">git clone で初期化</button></li>
+			<?php } ?>
 			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contInitializeWithPickles2()">Pickles 2 で初期化</button></li>
 		</ul>
 	</div>
@@ -142,6 +174,17 @@ window.contInitializeWithPickles2 = function(){
 		<a href="?a=proj.<?= htmlspecialchars(urlencode($project_id)) ?>.edit" class="px2-btn px2-btn--primary">編集</a>
 	</p>
 </div>
+
+<?php if( !$project->is_project_base_dir_empty() && $project->base_dir_exists() && !$project->has_dot_git() ){ ?>
+<div class="px2-notice">
+	<p>gitローカルリポジトリが初期化されていません。</p>
+	<div class="px2-linklist">
+		<ul class="px2-linklist__horizontal px2-linklist__horizontal--center">
+			<li><button type="button" class="px2-btn px2-btn--primary" onclick="contGitInit()">git init する</button></li>
+		</ul>
+	</div>
+</div>
+<?php } ?>
 
 <div class="px2-p">
 	<p class="px2-text-align-center">

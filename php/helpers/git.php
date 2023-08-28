@@ -89,7 +89,7 @@ class git {
 	}
 
 	/**
-	 * git remote から初期化する
+	 * git clone で初期化する
 	 */
 	public function git_clone(){
 		$rtn = array();
@@ -106,6 +106,35 @@ class git {
 		}
 
 		$git_command_array = array('clone', $this->url_bind_confidentials($this->project_info->remote), './');
+
+		// Gitコマンドを実行する
+		$this->set_remote_origin();
+		$res_cmd = $this->exec_git_command( $git_command_array );
+		$this->clear_remote_origin();
+
+		if( !$res_cmd['result'] ){
+			return array(
+				'result' => false,
+				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
+			);
+		}
+
+		$rtn['exitcode'] = $res_cmd['exitcode'];
+		$rtn['stdout'] = $this->conceal_confidentials($res_cmd['stdout']);
+		$rtn['stderr'] = $this->conceal_confidentials($res_cmd['stderr']);
+
+		return $rtn;
+	}
+
+	/**
+	 * git init する
+	 */
+	public function git_init(){
+		$rtn = array();
+		$rtn['result'] = true;
+		$rtn['message'] = 'OK';
+
+		$git_command_array = array('init');
 
 		// Gitコマンドを実行する
 		$this->set_remote_origin();
@@ -396,7 +425,9 @@ class git {
 
 		// 許可されたコマンド
 		switch( $git_sub_command[0] ?? null ){
+			case 'init':
 			case 'clone':
+
 			case 'config':
 			case 'status':
 			case 'branch':

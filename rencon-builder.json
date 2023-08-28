@@ -99,6 +99,11 @@
 			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\initialize_project::initialize_with_pickles2"
 		},
+		"api.{projectId?}.initialize_project.git_init": {
+			"title": "Initialize Git",
+			"allow_methods": "post",
+			"page": "tomk79\\onionSlice\\api\\initialize_project::git_init"
+		},
 		"api.{projectId?}.remote_finder.gpi": {
 			"title": "Remote Finder: GPI",
 			"allow_methods": "post",
