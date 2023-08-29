@@ -22,20 +22,6 @@ $conf->realpath_private_data_dir = __DIR__.'/'.basename(__FILE__, '.php').'_file
 
 
 /* --------------------------------------
- * DB接続情報
- */
-$conf->databases = null;
-
-
-/* --------------------------------------
- * プロジェクトルートディレクトリのパス
- * 
- * Pickles 2 プロジェクトをインストールするパスを設定します。
- */
-$conf->path_project_root_dir = $conf->realpath_private_data_dir.'project/';
-
-
-/* --------------------------------------
  * コマンドのパス
  */
 $conf->commands = (object) array();
