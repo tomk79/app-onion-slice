@@ -3,7 +3,7 @@
 
 ## 更新履歴 - Change log
 
-### tomk79/app-onion-slice v0.1.0 (リリース日未定)
+### tomk79/app-onion-slice v0.1.0 (2023年8月29日)
 
 - Initial Release
 
