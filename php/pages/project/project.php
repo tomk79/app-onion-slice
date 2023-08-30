@@ -60,6 +60,7 @@ class project {
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
 			$validationResult->result = true;
 			$validationResult->errors = new \stdClass();
+			$this->rencon->req()->set_param('input-type', 'directory');
 			$this->rencon->req()->set_param('input-realpath_base_dir', dirname(__DIR__) ?? null);
 		}
 
@@ -80,6 +81,9 @@ class project {
 
 <link rel="stylesheet" href="?res=directory_suggestion/directory_suggestion.css" />
 <script src="?res=directory_suggestion/directory_suggestion.js"></script>
+
+<link rel="stylesheet" href="?res=project_form/project_form.css" />
+<script src="?res=project_form/project_form.js"></script>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
@@ -116,6 +120,14 @@ class project {
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-type">プロジェクトタイプ</label></div>
+				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-type'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-type'}) ?></div><?php } ?>
+					<label><input type="radio" id="input-type--directory" name="input-type" value="directory" <?= $this->rencon->req()->get_param('input-type') == 'directory' ? 'checked="checked"' : '' ?> class="px2-input px2-input--block" /> ディレクトリ</label>
+					<label><input type="radio" id="input-type--scheduler" name="input-type" value="scheduler" <?= $this->rencon->req()->get_param('input-type') == 'scheduler' ? 'checked="checked"' : '' ?> class="px2-input px2-input--block" /> スケジューラー</label>
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-realpath_base_dir">ベースディレクトリ</label></div>
 				<div class="px2-form-input-list__input">
 					<?php if( strlen($validationResult->errors->{'input-realpath_base_dir'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-realpath_base_dir'}) ?></div><?php } ?>
@@ -130,6 +142,18 @@ class project {
 						<option value="">---</option>
 						<?php foreach($this->env_config->remotes as $uri_remote => $remote_info){ ?>
 						<option value="<?= htmlspecialchars($uri_remote) ?>" <?= ($this->rencon->req()->get_param('input-remote') == $uri_remote ? 'selected="selected"' : '') ?>><?= htmlspecialchars($uri_remote) ?></option>
+						<?php } ?>
+					</select>
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-staging">ステージング</label></div>
+				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-staging'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-staging'}) ?></div><?php } ?>
+					<select id="input-staging" name="input-staging" class="px2-input px2-input--block">
+						<option value="">---</option>
+						<?php foreach($this->projects->get_projects() as $project_id => $project_info){ ?>
+						<option value="<?= htmlspecialchars($project_id) ?>" <?= ($this->rencon->req()->get_param('input-staging') == $project_id ? 'selected="selected"' : '') ?> <?= (($project_info->type??'directory')!='directory'||$project_id == $this->project_id ? 'disabled="disabled"' : '') ?>><?= htmlspecialchars($project_info->name) ?></option>
 						<?php } ?>
 					</select>
 				</div>
@@ -173,6 +197,11 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 			$validationResult->errors->{'input-name'} = 'プロジェクト名は必須項目です。';
 		}
 
+		if( !strlen($this->rencon->req()->get_param('input-name') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-type'} = 'プロジェクトタイプは必須項目です。';
+		}
+
 		return $validationResult;
 	}
 
@@ -185,8 +214,10 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 		$project->name = $this->rencon->req()->get_param('input-name');
 		$project->url = $this->rencon->req()->get_param('input-url');
 		$project->url_admin = $this->rencon->req()->get_param('input-url_admin');
+		$project->type = $this->rencon->req()->get_param('input-type');
 		$project->realpath_base_dir = $this->rencon->req()->get_param('input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
+		$project->staging = $this->rencon->req()->get_param('input-staging');
 		$this->projects->set_project($this->rencon->req()->get_param('input-id'), $project);
 		$this->projects->save();
 
@@ -230,6 +261,7 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 			$this->rencon->req()->set_param('input-name', $project->name ?? null);
 			$this->rencon->req()->set_param('input-url', $project->url ?? null);
 			$this->rencon->req()->set_param('input-url_admin', $project->url_admin ?? null);
+			$this->rencon->req()->set_param('input-type', $project->type ?? 'directory');
 			$this->rencon->req()->set_param('input-realpath_base_dir', $project->realpath_base_dir ?? null);
 			$this->rencon->req()->set_param('input-remote', $project->remote ?? null);
 		}
@@ -251,6 +283,9 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 
 <link rel="stylesheet" href="?res=directory_suggestion/directory_suggestion.css" />
 <script src="?res=directory_suggestion/directory_suggestion.js"></script>
+
+<link rel="stylesheet" href="?res=project_form/project_form.css" />
+<script src="?res=project_form/project_form.js"></script>
 
 <form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
 	<input type="hidden" name="m" value="save" />
@@ -280,6 +315,14 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-type">プロジェクトタイプ</label></div>
+				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-type'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-type'}) ?></div><?php } ?>
+					<label><input type="radio" id="input-type--directory" name="input-type" value="directory" <?= $this->rencon->req()->get_param('input-type') == 'directory' ? 'checked="checked"' : '' ?> class="px2-input px2-input--block" /> ディレクトリ</label>
+					<label><input type="radio" id="input-type--scheduler" name="input-type" value="scheduler" <?= $this->rencon->req()->get_param('input-type') == 'scheduler' ? 'checked="checked"' : '' ?> class="px2-input px2-input--block" /> スケジューラー</label>
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-realpath_base_dir">ベースディレクトリ</label></div>
 				<div class="px2-form-input-list__input">
 					<?php if( strlen($validationResult->errors->{'input-realpath_base_dir'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-realpath_base_dir'}) ?></div><?php } ?>
@@ -294,6 +337,18 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 						<option value="">---</option>
 						<?php foreach($this->env_config->remotes as $uri_remote => $remote_info){ ?>
 						<option value="<?= htmlspecialchars($uri_remote) ?>" <?= ($this->rencon->req()->get_param('input-remote') == $uri_remote ? 'selected="selected"' : '') ?>><?= htmlspecialchars($uri_remote) ?></option>
+						<?php } ?>
+					</select>
+				</div>
+			</li>
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-staging">ステージング</label></div>
+				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-staging'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-staging'}) ?></div><?php } ?>
+					<select id="input-staging" name="input-staging" class="px2-input px2-input--block">
+						<option value="">---</option>
+						<?php foreach($this->projects->get_projects() as $project_id => $project_info){ ?>
+						<option value="<?= htmlspecialchars($project_id) ?>" <?= ($this->rencon->req()->get_param('input-staging') == $project_id ? 'selected="selected"' : '') ?> <?= (($project_info->type??'directory')!='directory'||$project_id == $this->project_id ? 'disabled="disabled"' : '') ?>><?= htmlspecialchars($project_info->name) ?></option>
 						<?php } ?>
 					</select>
 				</div>
@@ -333,6 +388,11 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 			$validationResult->errors->{'input-name'} = 'プロジェクト名は必須項目です。';
 		}
 
+		if( !strlen($this->rencon->req()->get_param('input-name') ?? '') ){
+			$validationResult->result = false;
+			$validationResult->errors->{'input-type'} = 'プロジェクトタイプは必須項目です。';
+		}
+
 		return $validationResult;
 	}
 
@@ -349,8 +409,10 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 		$project->name = $this->rencon->req()->get_param('input-name');
 		$project->url = $this->rencon->req()->get_param('input-url');
 		$project->url_admin = $this->rencon->req()->get_param('input-url_admin');
+		$project->type = $this->rencon->req()->get_param('input-type');
 		$project->realpath_base_dir = $this->rencon->req()->get_param('input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
+		$project->staging = $this->rencon->req()->get_param('input-staging');
 		$this->projects->save();
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');

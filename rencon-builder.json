@@ -39,6 +39,10 @@
 			"title": "汎用ファイルエディタ",
 			"page": "app/pages/common_file_editor/index.php"
 		},
+		"proj.{projectId?}.scheduler": {
+			"title": "配信スケジュール",
+			"page": "app/pages/scheduler/index.php"
+		},
 		"proj.{projectId?}.edit": {
 			"title": "プロジェクトを編集する",
 			"allow_methods": ["get", "post"],

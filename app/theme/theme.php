@@ -55,9 +55,13 @@ $action = $rencon->req()->get_param('a');
 <?php if( $project_info ){ ?>
 		<ul>
 			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>">Project</a></li>
+			<?php if( $project_info->type == 'directory' ) { ?>
 			<?php if($this->rencon->utils->has_composer_json($project_id)) { ?><li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.composer">Composerを操作する</a></li><?php } ?>
 			<?php if($this->rencon->utils->has_dot_git($project_id)) { ?><li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.git">Gitを操作する</a></li><?php } ?>
 			<?php if($this->rencon->utils->base_dir_exists($project_id)) { ?><li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.files_and_folders">ファイルとフォルダ</a></li><?php } ?>
+			<?php }elseif( $project_info->type == 'scheduler' ){ ?>
+			<li><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.scheduler">配信スケジュール</a></li>
+			<?php } ?>
 		</ul>
 <?php } ?>
 	</div>

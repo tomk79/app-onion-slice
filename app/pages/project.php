@@ -147,12 +147,35 @@ window.contGitInit = function(){
 			</tr>
 			<tr>
 				<th>URL</th>
-				<td><a href="<?= htmlspecialchars($project_info->url ?? 'about:blank') ?>" target="_blank"><?= htmlspecialchars( $project_info->url ?? '---' ) ?></a></td>
+				<td>
+					<?php if( strlen($project_info->url ?? '') ){ ?>
+					<a href="<?= htmlspecialchars($project_info->url ?? 'about:blank') ?>" target="_blank"><?= htmlspecialchars( $project_info->url ?? '---' ) ?></a>
+					<?php }else{ ?>
+					---
+					<?php } ?>
+				</td>
 			</tr>
 			<tr>
 				<th>管理画面のURL</th>
-				<td><a href="<?= htmlspecialchars($project_info->url_admin ?? 'about:blank') ?>" target="_blank"><?= htmlspecialchars( $project_info->url_admin ?? '---' ) ?></a></td>
+				<td>
+					<?php if( strlen($project_info->url_admin ?? '') ){ ?>
+					<a href="<?= htmlspecialchars($project_info->url_admin ?? 'about:blank') ?>" target="_blank"><?= htmlspecialchars( $project_info->url_admin ?? '---' ) ?></a>
+					<?php }else{ ?>
+					---
+					<?php } ?>
+				</td>
 			</tr>
+			<tr>
+				<th>プロジェクトタイプ</th>
+				<td><?php
+					switch($project_info->type){
+						case 'directory': echo "ディレクトリ"; break;
+						case 'scheduler': echo "スケジューラー"; break;
+						default: echo "---"; break;
+					}
+				?></td>
+			</tr>
+			<?php if( $project_info->type == 'directory' ){ ?>
 			<tr>
 				<th>ベースディレクトリ</th>
 				<td>
@@ -168,6 +191,12 @@ window.contGitInit = function(){
 				<th>リモートURI</th>
 				<td><?= htmlspecialchars( $project_info->remote ?? '---' ) ?></td>
 			</tr>
+			<?php }elseif( $project_info->type == 'scheduler' ){ ?>
+			<tr>
+				<th>ステージング</th>
+				<td><?= htmlspecialchars( $project_info->staging ?? '---' ) ?></td>
+			</tr>
+			<?php } ?>
 		</tbody>
 	</table>
 	<p class="px2-text-align-right">

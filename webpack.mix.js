@@ -68,6 +68,11 @@ mix
 	.js('src_front/directory_suggestion/directory_suggestion.js', 'resources/directory_suggestion/')
 	.sass('src_front/directory_suggestion/directory_suggestion.scss', 'resources/directory_suggestion/')
 
+	// --------------------------------------
+	// Project form
+	.js('src_front/project_form/project_form.js', 'resources/project_form/')
+	.sass('src_front/project_form/project_form.scss', 'resources/project_form/')
+
 
 	// --------------------------------------
 	// Static Frontend Libraries

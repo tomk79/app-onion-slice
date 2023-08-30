@@ -72,14 +72,39 @@ class projects {
 	 * プロジェクト情報を取得する
 	 */
 	public function get_project( $project_id ){
-		return $this->projects->{$project_id} ?? false;
+		$project_info = $this->projects->{$project_id} ?? false;
+		if( !$project_info ){
+			return false;
+		}
+
+		$project_info = (object) $project_info;
+		if(!strlen($project_info->name ?? '')){ $project_info->name = '---'; }
+		if(!strlen($project_info->type ?? '')){ $project_info->type = 'directory'; }
+		if(!strlen($project_info->url ?? '')){ $project_info->url = null; }
+		if(!strlen($project_info->url_admin ?? '')){ $project_info->url_admin = null; }
+		if(!strlen($project_info->realpath_base_dir ?? '')){ $project_info->realpath_base_dir = null; }
+		if(!strlen($project_info->remote ?? '')){ $project_info->remote = null; }
+		if(!strlen($project_info->staging ?? '')){ $project_info->staging = null; }
+		return $project_info;
 	}
 
 	/**
 	 * プロジェクト情報を更新する
 	 */
-	public function set_project( $project_id, $project ){
-		return $this->projects->{$project_id} = $project;
+	public function set_project( $project_id, $project_info ){
+		if( !strlen($project_id ?? '') ){
+			return false;
+		}
+
+		$project_info = (object) $project_info;
+		if(!strlen($project_info->name ?? '')){ $project_info->name = '---'; }
+		if(!strlen($project_info->type ?? '')){ $project_info->type = 'directory'; }
+		if(!strlen($project_info->url ?? '')){ $project_info->url = null; }
+		if(!strlen($project_info->url_admin ?? '')){ $project_info->url_admin = null; }
+		if(!strlen($project_info->realpath_base_dir ?? '')){ $project_info->realpath_base_dir = null; }
+		if(!strlen($project_info->remote ?? '')){ $project_info->remote = null; }
+		if(!strlen($project_info->staging ?? '')){ $project_info->staging = null; }
+		return $this->projects->{$project_id} = $project_info;
 	}
 
 	/**
