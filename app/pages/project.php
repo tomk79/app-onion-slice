@@ -124,7 +124,7 @@ window.contGitInit = function(){
 }
 </script>
 
-<?php if( $project->is_project_base_dir_empty() ){ ?>
+<?php if( $project->is_project_base_dir_empty() && $project_info->type == 'directory' ){ ?>
 <div class="px2-notice">
 	<p>ベースディレクトリは空白です。</p>
 	<div class="px2-linklist">
@@ -204,7 +204,7 @@ window.contGitInit = function(){
 	</p>
 </div>
 
-<?php if( !$project->is_project_base_dir_empty() && $project->base_dir_exists() && !$project->has_dot_git() ){ ?>
+<?php if( !$project->is_project_base_dir_empty() && $project->base_dir_exists() && !$project->has_dot_git() && $project_info->type == 'directory' ){ ?>
 <div class="px2-notice">
 	<p>gitローカルリポジトリが初期化されていません。</p>
 	<div class="px2-linklist">

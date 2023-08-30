@@ -7,14 +7,16 @@ class project {
 	private $rencon;
 	private $project_id;
 	private $project_info;
+	private $realpath_project_data_dir;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct( $rencon, $project_id, $project_info ){
+	public function __construct( $rencon, $project_id, $project_info, $realpath_project_data_dir ){
 		$this->rencon = $rencon;
 		$this->project_id = $project_id;
 		$this->project_info = $project_info;
+		$this->realpath_project_data_dir = $realpath_project_data_dir;
 		return;
 	}
 
@@ -54,6 +56,19 @@ class project {
 	}
 
 	/**
+	 * プロジェクトデータディレクトリのパスを取得する
+	 */
+	public function get_realpath_project_data_dir(){
+		if( !strlen($this->realpath_project_data_dir ?? '') ){
+			return false;
+		}
+		if( !is_dir($this->realpath_project_data_dir) ){
+			$this->rencon->fs()->mkdir( $this->realpath_project_data_dir );
+		}
+		return $this->realpath_project_data_dir;
+	}
+
+	/**
 	 * スケジューラーオブジェクトを生成する
 	 */
 	public function scheduler(){
@@ -65,9 +80,9 @@ class project {
 	}
 
 	/**
-	 * プロジェクトのベースディレクトリは空ディレクトリか？
+	 * ベースディレクトリのパスを取得する
 	 */
-	public function is_project_base_dir_empty(){
+	public function realpath_base_dir(){
 		if( !$this->project_info ){
 			return false;
 		}
@@ -75,6 +90,20 @@ class project {
 			return false;
 		}
 		if( !is_dir($this->project_info->realpath_base_dir) ){
+			return false;
+		}
+
+		$rtn = $this->rencon->fs()->get_realpath( $this->project_info->realpath_base_dir );
+		$rtn = $this->rencon->fs()->normalize_path( $rtn );
+		return $rtn;
+	}
+
+	/**
+	 * プロジェクトのベースディレクトリは空ディレクトリか？
+	 */
+	public function is_project_base_dir_empty(){
+		$realpath_base_dir = $this->realpath_base_dir();
+		if( $realpath_base_dir === false ){
 			return false;
 		}
 
@@ -90,10 +119,8 @@ class project {
 	 * プロジェクトのベースディレクトリが存在するか？
 	 */
 	public function base_dir_exists(){
-		if( !strlen($this->project_info->realpath_base_dir ?? '') ){
-			return false;
-		}
-		if( !is_dir($this->project_info->realpath_base_dir ?? null) ){
+		$realpath_base_dir = $this->realpath_base_dir();
+		if( $realpath_base_dir === false ){
 			return false;
 		}
 		return true;
@@ -104,12 +131,11 @@ class project {
 	 * プロジェクトが composer.json を配置しているか？
 	 */
 	public function has_composer_json(){
-		if( !strlen($this->project_info->realpath_base_dir ?? '') ){
+		$realpath_base_dir = $this->realpath_base_dir();
+		if( $realpath_base_dir === false ){
 			return false;
 		}
-		if( !is_dir($this->project_info->realpath_base_dir ?? null) ){
-			return false;
-		}
+
 		if( !is_file($this->project_info->realpath_base_dir.'/composer.json') ){
 			return false;
 		}
@@ -120,12 +146,11 @@ class project {
 	 * プロジェクトが .git を配置しているか？
 	 */
 	public function has_dot_git(){
-		if( !strlen($this->project_info->realpath_base_dir ?? '') ){
+		$realpath_base_dir = $this->realpath_base_dir();
+		if( $realpath_base_dir === false ){
 			return false;
 		}
-		if( !is_dir($this->project_info->realpath_base_dir ?? null) ){
-			return false;
-		}
+
 		if( !file_exists($this->project_info->realpath_base_dir.'/.git') ){
 			return false;
 		}

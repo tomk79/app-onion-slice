@@ -6,6 +6,7 @@ class projects {
 
 	private $rencon;
 	private $realpath_env_config_json;
+	private $realpath_projects_dir;
 	private $projects;
 
 	/**
@@ -14,7 +15,13 @@ class projects {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 
-		$this->realpath_env_config_json = $this->rencon->conf()->realpath_private_data_dir.'projects.json.php';
+		$realpath_private_data_dir = $this->rencon->conf()->realpath_private_data_dir;
+		$this->realpath_env_config_json = $realpath_private_data_dir.'projects.json.php';
+		$this->realpath_projects_dir = $realpath_private_data_dir.'projects/';
+
+		if( strlen($realpath_private_data_dir ?? '') && is_dir($realpath_private_data_dir) && !is_dir($this->realpath_projects_dir) ){
+			$this->rencon->fs()->mkdir( $this->realpath_projects_dir );
+		}
 
 		$data = $this->read();
 		$this->projects = $data->projects ?? new \stdClass();
@@ -59,6 +66,19 @@ class projects {
 		$result = dataDotPhp::write_json($this->realpath_env_config_json, $data);
 
 		return $result;
+	}
+
+	/**
+	 * プロジェクトオブジェクトを取得する
+	 */
+	public function get($project_id){
+		$project_info = $this->get_project($project_id);
+		$realpath_project_data_dir = null;
+		if( strlen($this->realpath_projects_dir ?? '') && is_dir($this->realpath_projects_dir) ){
+			$realpath_project_data_dir = $this->realpath_projects_dir.urlencode($project_id).'/';
+		}
+		$project = new project($this->rencon, $project_id, $project_info, $realpath_project_data_dir);
+		return $project;
 	}
 
 	/**
@@ -108,15 +128,6 @@ class projects {
 	}
 
 	/**
-	 * プロジェクトオブジェクトを取得する
-	 */
-	public function get($project_id){
-		$project_info = $this->get_project($project_id);
-		$project = new project($this->rencon, $project_id, $project_info);
-		return $project;
-	}
-
-	/**
 	 * プロジェクト情報を削除する
 	 */
 	public function delete_project( $project_id ){
@@ -124,6 +135,9 @@ class projects {
 			return false;
 		}
 		unset($this->projects->{$project_id});
+		if( strlen($this->realpath_projects_dir ?? '') && is_dir($this->realpath_projects_dir.urlencode($project_id).'/') ){
+			$this->rencon->fs()->rm( $this->realpath_projects_dir.urlencode($project_id).'/' );
+		}
 		return true;
 	}
 }
