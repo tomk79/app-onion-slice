@@ -124,6 +124,8 @@
 			"page": "tomk79\\onionSlice\\api\\common_file_editor::gpi"
 		}
 	},
+	"api_route": {
+	},
 	"theme": "app/theme/theme.php",
 	"config_template": "app/config_template.php"
 }
