@@ -5,18 +5,64 @@ use renconFramework\dataDotPhp;
 class project {
 
 	private $rencon;
-	private $realpath_env_config_json;
+	private $project_id;
 	private $project_info;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct( $rencon, $project_info ){
+	public function __construct( $rencon, $project_id, $project_info ){
 		$this->rencon = $rencon;
+		$this->project_id = $project_id;
 		$this->project_info = $project_info;
 		return;
 	}
 
+	/**
+	 * 動的なプロパティを登録する
+	 */
+	public function __set( $name, $property ){
+		switch($name){
+			case 'name':
+			case 'type':
+			case 'url':
+			case 'url_admin':
+			case 'realpath_base_dir':
+			case 'remote':
+			case 'staging':
+				$this->project_info->{$name} = $property;
+				break;
+			default:
+				trigger_error($name.' is undefined key on $project.');
+				break;
+		}
+		return;
+	}
+
+	/**
+	 * 動的に追加されたプロパティを取り出す
+	 */
+	public function __get( $name ){
+		return $this->project_info->{$name} ?? null;
+	}
+
+	/**
+	 * プロジェクトIDを取得する
+	 */
+	public function get_project_id(){
+		return $this->project_id;
+	}
+
+	/**
+	 * スケジューラーオブジェクトを生成する
+	 */
+	public function scheduler(){
+		if( $this->type != 'scheduler' ){
+			return false;
+		}
+		$scheduler = new \tomk79\onionSlice\model\scheduler($this->rencon, $this->project_id);
+		return $scheduler;
+	}
 
 	/**
 	 * プロジェクトのベースディレクトリは空ディレクトリか？

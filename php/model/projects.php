@@ -112,7 +112,7 @@ class projects {
 	 */
 	public function get($project_id){
 		$project_info = $this->get_project($project_id);
-		$project = new project($this->rencon, $project_info);
+		$project = new project($this->rencon, $project_id, $project_info);
 		return $project;
 	}
 
