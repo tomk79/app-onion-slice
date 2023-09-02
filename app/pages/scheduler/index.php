@@ -6,7 +6,7 @@ $scheduler = $project->scheduler();
 ?>
 
 
-<p class="px2-text-align-right"><button type="button" class="px2-btn px2-btn--primary">新規配信予定</button></p>
+<p class="px2-text-align-right"><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler_create" class="px2-btn px2-btn--primary">新規配信予定</a></p>
 <?php
 $active_schedules = $scheduler->get_schedule_all();
 if( !count($active_schedules) ){

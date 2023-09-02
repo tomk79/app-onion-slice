@@ -26,6 +26,38 @@ class scheduler {
 	}
 
 	/**
+	 * 新しい配信予約を作成する
+	 */
+	public function create_schedule( $release_at, $revision ) {
+		if( is_int( $release_at ) || preg_match('/^[0-9]*$/', $release_at) ){
+			$date = new \DateTimeImmutable('@'.$release_at);
+		}else{
+			$date = new \DateTimeImmutable($release_at);
+		}
+		$dirname = $date->format('Y-m-d-H-i-s');
+
+		if( is_dir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname)) ){
+			return false;
+		}
+
+		if( !$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/') ){
+			return false;
+		}
+
+		$json = (object) array(
+			'revision' => $revision,
+		);
+		if( !$this->rencon->fs()->save_file(
+			$this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/schedule.json',
+			json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
+		) ){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * アクティブな配信スケジュールを全件取得する
 	 */
 	public function get_schedule_all(){

@@ -12,6 +12,7 @@
 			"title": "ダッシュボード",
 			"page": "app/pages/index.php"
 		},
+
 		"proj_create": {
 			"title": "プロジェクトを新規作成する",
 			"allow_methods": ["get", "post"],
@@ -19,8 +20,19 @@
 		},
 		"proj.{projectId?}": {
 			"title": "プロジェクト",
-			"page": "app/pages/project.php"
+			"page": "app/pages/project/index.php"
 		},
+		"proj.{projectId?}.edit": {
+			"title": "プロジェクトを編集する",
+			"allow_methods": ["get", "post"],
+			"page": "tomk79\\onionSlice\\pages\\project\\project::edit"
+		},
+		"proj.{projectId?}.delete": {
+			"title": "プロジェクトを削除する",
+			"allow_methods": ["get", "post"],
+			"page": "tomk79\\onionSlice\\pages\\project\\project::delete"
+		},
+
 		"proj.{projectId?}.composer": {
 			"title": "Composerを操作する",
 			"allow_methods": ["get", "post"],
@@ -43,16 +55,17 @@
 			"title": "配信スケジュール",
 			"page": "app/pages/scheduler/index.php"
 		},
-		"proj.{projectId?}.edit": {
-			"title": "プロジェクトを編集する",
+		"proj.{projectId?}.scheduler_create": {
+			"title": "新規配信スケジュールを作成",
 			"allow_methods": ["get", "post"],
-			"page": "tomk79\\onionSlice\\pages\\project\\project::edit"
+			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::create"
 		},
-		"proj.{projectId?}.delete": {
-			"title": "プロジェクトを削除する",
+		"proj.{projectId?}.scheduler.{scheduleId?}.delete": {
+			"title": "新規配信スケジュールをキャンセル",
 			"allow_methods": ["get", "post"],
-			"page": "tomk79\\onionSlice\\pages\\project\\project::delete"
+			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::delete"
 		},
+
 		"env_config": {
 			"title": "環境設定",
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::index"

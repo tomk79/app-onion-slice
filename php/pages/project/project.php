@@ -66,8 +66,7 @@ class project {
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->rencon->utils->api_post_only();
-			$this->create__save();
-			exit;
+			return $this->create__save();
 		}
 
 		return $this->create__input($validationResult);
@@ -219,7 +218,16 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
 		$project->staging = $this->rencon->req()->get_param('input-staging');
 		$this->projects->set_project($this->rencon->req()->get_param('input-id'), $project);
-		$this->projects->save();
+		$result = $this->projects->save();
+		if( !$result ){
+			$validationResult = (object) array(
+				'result' => true,
+				'errors' => (object) array(),
+			);
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = '保存に失敗しました。';
+			return $this->create__input($validationResult);
+		}
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
@@ -268,8 +276,7 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->rencon->utils->api_post_only();
-			$this->edit__save();
-			exit;
+			return $this->edit__save();
 		}
 
 		return $this->edit__input($validationResult);
@@ -413,7 +420,16 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 		$project->realpath_base_dir = $this->rencon->req()->get_param('input-realpath_base_dir');
 		$project->remote = $this->rencon->req()->get_param('input-remote');
 		$project->staging = $this->rencon->req()->get_param('input-staging');
-		$this->projects->save();
+		$result = $this->projects->save();
+		if( !$result ){
+			$validationResult = (object) array(
+				'result' => true,
+				'errors' => (object) array(),
+			);
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = '保存に失敗しました。';
+			return $this->edit__input($validationResult);
+		}
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
@@ -449,18 +465,11 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
 			$validationResult->result = true;
 			$validationResult->errors = new \stdClass();
-			$project = $this->projects->get_project($this->project_id);
-			$this->rencon->req()->set_param('input-name', $project->name ?? null);
-			$this->rencon->req()->set_param('input-url', $project->url ?? null);
-			$this->rencon->req()->set_param('input-url_admin', $project->url_admin ?? null);
-			$this->rencon->req()->set_param('input-realpath_base_dir', $project->realpath_base_dir ?? null);
-			$this->rencon->req()->set_param('input-remote', $project->remote ?? null);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
 			$this->rencon->utils->api_post_only();
-			$this->delete__save();
-			exit;
+			return $this->delete__save();
 		}
 
 		return $this->delete__input($validationResult);
@@ -512,7 +521,16 @@ window.bindDirectorySuggestion('#input-realpath_base_dir');
 	 */
 	private function delete__save(){
 		$this->projects->delete_project($this->project_id);
-		$this->projects->save();
+		$result = $this->projects->save();
+		if( !$result ){
+			$validationResult = (object) array(
+				'result' => true,
+				'errors' => (object) array(),
+			);
+			$validationResult->result = false;
+			$validationResult->errors->{'input-id'} = '保存に失敗しました。';
+			return $this->delete__input($validationResult);
+		}
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
