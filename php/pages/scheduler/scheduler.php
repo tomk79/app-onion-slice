@@ -64,8 +64,13 @@ class scheduler {
 			$validationResult->errors = new \stdClass();
 
 			$date = new \DateTimeImmutable(date('Y-m-d 10:00:00', time()+(24*60*60)));
-
 			$this->rencon->req()->set_param('input-release_at', $date->getTimestamp());
+
+			$project_info = $this->projects->get_project($this->project_id);
+			$staging_project_info = $this->projects->get_project( $project_info->staging );
+			$gitHelper = new \tomk79\onionSlice\helpers\git($this->rencon, $staging_project_info);
+			$current_revision = $gitHelper->get_current_revision();
+			$this->rencon->req()->set_param('input-revision', $current_revision);
 		}
 
 		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
@@ -91,6 +96,14 @@ class scheduler {
 
 	<div class="px2-form-input-list">
 		<ul class="px2-form-input-list__ul">
+			<li class="px2-form-input-list__li">
+				<div class="px2-form-input-list__label"><label for="input-revision">リビジョン</label></div>
+				<div class="px2-form-input-list__input">
+					<?php if( strlen($validationResult->errors->{'input-revision'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-revision'}) ?></div><?php } ?>
+					<input type="hidden" id="input-revision" name="input-revision" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-revision') ?? '') ?>" />
+					<?= htmlspecialchars($this->rencon->req()->get_param('input-revision') ?? '') ?>
+				</div>
+			</li>
 			<li class="px2-form-input-list__li">
 				<div class="px2-form-input-list__label"><label for="input-release_at">リリース予定日時</label></div>
 				<div class="px2-form-input-list__input">
@@ -147,7 +160,7 @@ class scheduler {
 	 */
 	private function create__save(){
 
-		$result = $this->scheduler->create_schedule( intval($this->rencon->req()->get_param('input-release_at')), 'xxxxx' ); // TODO: リビジョン番号を正しく伝える
+		$result = $this->scheduler->create_schedule( intval($this->rencon->req()->get_param('input-release_at')), $this->rencon->req()->get_param('input-revision') );
 		if( !$result ){
 			$validationResult = (object) array(
 				'result' => true,

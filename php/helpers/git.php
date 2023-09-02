@@ -64,6 +64,21 @@ class git {
 		return (strlen($this->env_config->commands->git ?? '') ? $this->env_config->commands->git : ($this->rencon->conf()->commands->git ?? 'git'));
 	}
 
+
+	/**
+	 * 現在のリビジョン(コミットID)を取得する
+	 */
+	public function get_current_revision(){
+		$result = $this->exec_git_command(array('log', '-n', '1', '--format=%H'));
+		if(!($result['result'] ?? false)){
+			return false;
+		}
+		if(!is_string($result['stdout']) || !strlen($result['stdout'] ?? '')){
+			return false;
+		}
+		return trim($result['stdout']);
+	}
+
 	/**
 	 * Gitリモートサーバーからデフォルトのブランチ名を取得する
 	 */
