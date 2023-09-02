@@ -20,6 +20,7 @@ if( !count($active_schedules) ){
             <td><?= htmlspecialchars($schedule_info->release_at) ?></td>
             <td><?= htmlspecialchars(strtotime($schedule_info->release_at)) ?></td>
             <td><?= htmlspecialchars(date('Y-m-d H:i:s (e)', strtotime($schedule_info->release_at))) ?></td>
+            <td><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.scheduler.<?= htmlspecialchars($schedule_id ?? '') ?>.detail" class="px2-btn px2-btn--primary">詳細</a></td>
         </tr>
         <?php
     }

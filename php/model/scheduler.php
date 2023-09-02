@@ -58,6 +58,23 @@ class scheduler {
 	}
 
 	/**
+	 * 配信予約をキャンセルする
+	 */
+	public function delete_schedule( $schedule_id ) {
+		$dirname = $schedule_id;
+
+		if( !is_dir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname)) ){
+			return false;
+		}
+
+		if( !$this->rencon->fs()->rm($this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/') ){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * アクティブな配信スケジュールを全件取得する
 	 */
 	public function get_schedule_all(){

@@ -60,6 +60,10 @@
 			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::create"
 		},
+		"proj.{projectId?}.scheduler.{scheduleId?}.detail": {
+			"title": "配信スケジュール詳細画面",
+			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::detail"
+		},
 		"proj.{projectId?}.scheduler.{scheduleId?}.delete": {
 			"title": "新規配信スケジュールをキャンセル",
 			"allow_methods": ["get", "post"],

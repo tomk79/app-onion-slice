@@ -7,6 +7,7 @@ class scheduler {
 	private $projects;
 	private $project_id;
 	private $scheduler;
+	private $schedule_id;
 
 	/**
 	 * 新規作成画面
@@ -14,6 +15,14 @@ class scheduler {
 	static public function create( $rencon ){
 		$ctrl = new self($rencon);
 		return $ctrl->create__route();
+	}
+
+	/**
+	 * 配信予約の詳細画面
+	 */
+	static public function detail( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->detail__route();
 	}
 
 	/**
@@ -33,6 +42,7 @@ class scheduler {
 		$this->projects = new \tomk79\onionSlice\model\projects( $this->rencon );
 		$this->project_id = $rencon->get_route_param('projectId');
 		$this->scheduler = new \tomk79\onionSlice\model\scheduler( $this->rencon, $this->project_id );
+		$this->schedule_id = $rencon->get_route_param('scheduleId');
 	}
 
 
@@ -171,6 +181,29 @@ class scheduler {
 	// --------------------------------------
 
 	/**
+	 * 詳細画面: ルーティング
+	 */
+	private function detail__route(){
+		return $this->detail__index();
+	}
+
+	/**
+	 * 詳細画面: 詳細画面
+	 */
+	private function detail__index(){
+?>
+
+<p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler" class="px2-btn">戻る</a></p>
+<p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler.<?= htmlspecialchars($this->schedule_id ?? '') ?>.delete" class="px2-btn px2-btn--danger">この配信予約をキャンセルする</a></p>
+
+<?php
+		return;
+	}
+
+
+	// --------------------------------------
+
+	/**
 	 * 削除画面: ルーティング
 	 */
 	private function delete__route(){
@@ -239,8 +272,7 @@ class scheduler {
 	 * 削除画面: 保存処理を実行する
 	 */
 	private function delete__save(){
-		$this->projects->delete_project($this->project_id);
-		$this->projects->save();
+		$result = $this->scheduler->delete_schedule( $this->schedule_id );
 
 		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed');
 		exit;
@@ -254,7 +286,7 @@ class scheduler {
 ?>
 
 <p>削除しました。</p>
-<p><a href="?a=" class="px2-btn px2-btn--primary">完了</a></p>
+<p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler" class="px2-btn px2-btn--primary">完了</a></p>
 
 <?php
 		return;
