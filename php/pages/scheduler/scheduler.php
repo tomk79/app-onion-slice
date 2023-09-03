@@ -63,7 +63,10 @@ class scheduler {
 			$validationResult->result = true;
 			$validationResult->errors = new \stdClass();
 
-			$date = new \DateTimeImmutable(date('Y-m-d 10:00:00', time()+(24*60*60)));
+			$date = new \DateTimeImmutable(
+				date('Y-m-d 10:00:00', time()+(24*60*60)),
+				new \DateTimeZone("UTC")
+			);
 			$this->rencon->req()->set_param('input-release_at', $date->getTimestamp());
 
 			$project_info = $this->projects->get_project($this->project_id);

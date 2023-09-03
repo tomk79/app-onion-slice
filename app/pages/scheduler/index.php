@@ -12,6 +12,7 @@ $active_schedules = $scheduler->get_schedule_all();
 if( !count($active_schedules) ){
     echo "<p>配信予定はありません。</p>";
 }else{
+    echo '<div class="px2-responsive">'."\n";
     echo '<table class="px2-table">'."\n";
     foreach( $active_schedules as $schedule_id => $schedule_info ){
         ?>
@@ -25,5 +26,6 @@ if( !count($active_schedules) ){
         <?php
     }
     echo '</table>'."\n";
+    echo '</div>'."\n";
 }
 ?>
