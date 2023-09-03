@@ -14,7 +14,13 @@ class mainTest extends PHPUnit\Framework\TestCase{
 	 * web-tomte 実行
 	 */
 	public function testWebTomte(){
-		$result = shell_exec('env ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz" php web-tomte/onion-slice--web-tomte.php');
+		$result = shell_exec('env'
+			.' ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz"'
+			.' ONITON_SLICE_URL="http://localhost:8088/onion-slice.php"'
+			.' ONITON_SLICE_PROJECT_ID="pickles2--production"'
+			.' php web-tomte/onion-slice--web-tomte.php');
+			// TODO: 環境に依存しないテストデータを用意する
+		var_dump($result);
 		$this->assertEquals( 1, 1 );
 	}
 

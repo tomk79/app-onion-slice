@@ -27,6 +27,8 @@ class scheduler {
 
 	/**
 	 * 新しい配信予約を作成する
+	 *
+	 * @param Integer|String $release_at リリース予定日時 (例: `1900008700`, `2023-12-31T10:00:00Z`)
 	 */
 	public function create_schedule( $release_at, $revision ) {
 		if( is_int( $release_at ) || preg_match('/^[0-9]*$/', $release_at) ){
@@ -47,10 +49,11 @@ class scheduler {
 		$json = (object) array(
 			'revision' => $revision,
 		);
-		if( !$this->rencon->fs()->save_file(
-			$this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/schedule.json',
-			json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
-		) ){
+		$result = dataDotPhp::write_json(
+			$this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/schedule.json.php',
+			$json
+		);
+		if( !$result ){
 			return false;
 		}
 
@@ -59,6 +62,8 @@ class scheduler {
 
 	/**
 	 * 配信予約をキャンセルする
+	 *
+	 * @param String $schedule_id スケジュールID (例: `2023-12-31-10-00-00`)
 	 */
 	public function delete_schedule( $schedule_id ) {
 		$dirname = $schedule_id;
@@ -86,7 +91,12 @@ class scheduler {
 				continue;
 			}
 			$schedule = (object) array();
+			$schedule->id = $dir;
 			$schedule->release_at = $this->parse_release_at($dir);
+
+			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'schedule/'.urlencode($dir).'/schedule.json.php');
+			$schedule->revision = $json->revision;
+
 			$rtn[$dir] = $schedule;
 		}
 		return $rtn;

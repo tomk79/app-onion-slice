@@ -33,6 +33,13 @@ class scheduler {
 	 */
 	public function get_schedule(){
 		$rtn = (object) array();
+
+		$schedule = $this->scheduler->get_schedule_all();
+
+		$rtn->result = true;
+		$rtn->message = "OK.";
+		$rtn->schedule = $schedule;
+
 		return $rtn;
 	}
 

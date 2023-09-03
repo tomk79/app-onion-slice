@@ -1,5 +1,30 @@
 <?php
 
-$onion_slice_api_token = $_SERVER['ONITON_SLICE_API_TOKEN'] ?? null;
+// --------------------------------------
+// 環境情報
+$onion_slice_env = (object) array(
+    "url" => $_SERVER['ONITON_SLICE_URL'] ?? null,
+    "api_token" => $_SERVER['ONITON_SLICE_API_TOKEN'] ?? null,
+    "project_id" => $_SERVER['ONITON_SLICE_PROJECT_ID'] ?? null,
+);
 
-var_dump($onion_slice_api_token);
+
+// --------------------------------------
+// 配信スケジュールを取得する
+$contents = file_get_contents(
+    $onion_slice_env->url.'?api=proj.'.urlencode($onion_slice_env->project_id).'.get_schedule',
+    false,
+    stream_context_create(array(
+        'http' => array(
+            'method'=> 'GET',
+            'header'=> implode("\r\n", array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'X-API-KEY: '.$onion_slice_env->api_token,
+            )),
+        ),
+    )));
+$schedule = json_decode($contents);
+
+var_dump($schedule);
+
+exit();
