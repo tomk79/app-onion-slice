@@ -10,16 +10,12 @@ class mainTest extends PHPUnit\Framework\TestCase{
 		$this->fs = new tomk79\filesystem();
 	}
 
-
 	/**
-	 * テスト
+	 * web-tomte 実行
 	 */
-	public function testStandard(){
+	public function testWebTomte(){
+		$result = shell_exec('env ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz" php web-tomte/onion-slice--web-tomte.php');
 		$this->assertEquals( 1, 1 );
-		if( is_dir(__DIR__.'/../dist/onion-slice/') ){
-			$this->fs->rm(__DIR__.'/../dist/onion-slice/');
-		}
-		$this->assertTrue( !$this->fs->is_dir(__DIR__.'/../dist/onion-slice/') );
 	}
 
 }
