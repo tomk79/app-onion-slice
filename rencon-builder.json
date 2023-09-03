@@ -142,6 +142,10 @@
 		}
 	},
 	"api_route": {
+		"proj.{projectId?}.get_schedule": {
+			"title": "配信スケジュールを取得する",
+			"page": "tomk79\\onionSlice\\api\\scheduler::api_get_schedule"
+		}
 	},
 	"theme": "app/theme/theme.php",
 	"config_template": "app/config_template.php"
