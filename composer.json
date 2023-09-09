@@ -12,17 +12,17 @@
     "scripts":{
         "build": [
             "npm run prod",
-            "php ./build/pre-build.php",
-            "php ./vendor/tomk79/rencon-builder/rencon-builder.phar"
+            "@php ./build/pre-build.php",
+            "@php ./vendor/tomk79/rencon-builder/rencon-builder.phar"
         ],
         "preview": [
             "open http://localhost:8088/onion-slice.php;"
         ],
         "start": [
-            "php -S localhost:8088 -t ./dist/;"
+            "@php -S localhost:8088 -t ./dist/;"
         ],
         "test": [
-            "php ./vendor/phpunit/phpunit/phpunit"
+            "@php ./vendor/phpunit/phpunit/phpunit"
         ]
     } ,
     "minimum-stability": "dev",

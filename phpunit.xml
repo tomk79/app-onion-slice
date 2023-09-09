@@ -1,7 +1,7 @@
 <phpunit>
 	<testsuites>
 		<testsuite name="default">
-			<!-- <file>./tests/resetTest.php</file> -->
+			<file>./tests/resetTest.php</file>
 			<file>./tests/mainTest.php</file>
 		</testsuite>
 	</testsuites>

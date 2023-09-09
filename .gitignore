@@ -13,6 +13,10 @@ mix-manifest.json
 dist/onion-slice/
 dist/onion-slice_files/
 
+tests/testdata/htdocs/
+tests/testdata/git-remote/
+tests/testdata/web-server/
+
 # other
 .DS_Store
 Thumbs.db
