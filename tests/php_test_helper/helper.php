@@ -43,4 +43,16 @@ class testHelper{
 		});
 		return;
 	}
+
+	/**
+	 * web-tomte を実行する
+	 */
+	static public function shell_exec_onionSlice__webTomte() {
+		$result = shell_exec('env'
+			.' ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz"'
+			.' ONITON_SLICE_URL="http://localhost:3000/onion-slice.php"'
+			.' ONITON_SLICE_PROJECT_ID="test--production"'
+			.' php web-tomte/onion-slice--web-tomte.php');
+		return $result;
+	}
 }
