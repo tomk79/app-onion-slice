@@ -26,6 +26,9 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		$this->fs->rm(__DIR__.'/testdata/web-server/');
 		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-server/') );
 
+		$this->fs->rm(__DIR__.'/testdata/web-tomte_data_dir/');
+		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-tomte_data_dir/') );
+
 		$this->fs->rm(__DIR__.'/testdata/memo.json');
 
 		clearstatcache();
@@ -46,6 +49,9 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 
 		$this->fs->mkdir_r(__DIR__.'/testdata/web-server/');
 		$this->assertTrue( is_dir(__DIR__.'/testdata/web-server/') );
+
+		$this->fs->mkdir_r(__DIR__.'/testdata/web-tomte_data_dir/');
+		$this->assertTrue( is_dir(__DIR__.'/testdata/web-tomte_data_dir/') );
 	}
 
 	/**
