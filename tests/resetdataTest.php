@@ -26,6 +26,8 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		$this->fs->rm(__DIR__.'/testdata/web-server/');
 		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-server/') );
 
+		$this->fs->rm(__DIR__.'/testdata/memo.json');
+
 		clearstatcache();
 		sleep(1);
 	}
@@ -70,6 +72,9 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 
 		// --------------------------------------
 		// gitリモートを作成
+		$memoJson = (object) array(
+			"commits" => array(),
+		);
 		$cd = realpath('.');
 		chdir(__DIR__.'/testdata/git-remote/');
 		exec('git init');
@@ -87,7 +92,29 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		exec('git add --all');
 		exec('git commit -m "Initial Commit."');
 
+		array_push($memoJson->commits, (object) array(
+			"revision" => trim(shell_exec('git log -n 1 --format=%H')),
+			"testHtmlContent" => file_get_contents(__DIR__.'/testdata/git-remote/test.html'),
+		));
+
+		for($i = 1; $i <= 10; $i ++){
+			ob_start(); ?>
+<p>TEST PAGE: v<?= $i ?></p>
+<?php
+			$this->fs->save_file(__DIR__.'/testdata/git-remote/test.html', ob_get_clean());
+
+			exec('git add --all');
+			exec('git commit -m "Commit v'.$i.'."');
+
+			array_push($memoJson->commits, (object) array(
+				"revision" => trim(shell_exec('git log -n 1 --format=%H')),
+				"testHtmlContent" => file_get_contents(__DIR__.'/testdata/git-remote/test.html'),
+			));
+		}
+
 		chdir($cd);
+
+		$this->fs->save_file(__DIR__.'/testdata/memo.json', json_encode($memoJson, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
 		sleep(1);
 	}

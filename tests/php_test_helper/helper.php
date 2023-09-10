@@ -55,4 +55,13 @@ class testHelper{
 			.' php web-tomte/onion-slice--web-tomte.php');
 		return $result;
 	}
+
+	/**
+	 * memo.json を読み込む
+	 */
+	static public function get_memo(){
+		$str_json = file_get_contents(__DIR__.'/../testdata/memo.json');
+		$json = json_decode($str_json);
+		return $json;
+	}
 }

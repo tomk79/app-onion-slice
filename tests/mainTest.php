@@ -17,23 +17,14 @@ class mainTest extends PHPUnit\Framework\TestCase{
 	 */
 	public function testWebTomte(){
 
-		// --------------------------------------
-		// git操作
-		$cd = realpath('.');
-		chdir(__DIR__.'/testdata/git-remote/');
-
-		$current_revision = shell_exec('git log -n 1 --format=%H');
-
-		chdir($cd);
-		// / git操作
-		// --------------------------------------
+		$memo = testHelper::get_memo();
 
 		// --------------------------------------
 		// 配信予約
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
 {
-    "revision": <?= json_encode($current_revision) ?>
+    "revision": <?= json_encode($memo->commits[0]->revision) ?>
 }
 <?php
 		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/2023-01-10-00-00-00/');
