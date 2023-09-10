@@ -11,7 +11,7 @@ $onion_slice_env = (object) array(
 
 // --------------------------------------
 // 配信スケジュールを取得する
-$contents = file_get_contents(
+$schedule_json = file_get_contents(
     $onion_slice_env->url.'?api=proj.'.urlencode($onion_slice_env->project_id).'.get_schedule',
     false,
     stream_context_create(array(
@@ -23,8 +23,8 @@ $contents = file_get_contents(
             )),
         ),
     )));
-$schedule = json_decode($contents);
+$schedule = json_decode($schedule_json);
 
-var_dump($schedule);
+var_dump($schedule_json);
 
 exit();

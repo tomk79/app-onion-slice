@@ -54,6 +54,23 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 	public function testCreateData(){
 
 		// --------------------------------------
+		// 管理ユーザーを作成する
+		$this->fs->mkdir_r(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/');
+		ob_start(); ?>
+<<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
+{
+    "name": "Admin User",
+    "id": "admin",
+    "pw": "------",
+    "lang": null,
+    "email": null,
+    "role": "admin"
+}
+<?php
+		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/admin.json.php', ob_get_clean());
+		$this->assertTrue( is_file(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/admin.json.php') );
+
+		// --------------------------------------
 		// APIキーを作成する
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
