@@ -1,18 +1,7 @@
 <?php
 require_once(__DIR__.'/../vendor/autoload.php');
 
-// --------------------------------------
-// 環境情報
-$onion_slice_env = (object) array(
-	"url" => $_SERVER['ONITON_SLICE_URL'] ?? null,
-	"realpath_data_dir" => $_SERVER['ONITON_SLICE_DATA_DIR'] ?? realpath(__DIR__).'/'.preg_replace('/\.[a-zA-Z0-9]*$/', '', basename(__FILE__)).'_files/',
-	"realpath_public_root_dir" => $_SERVER['ONITON_SLICE_PUBLIC_ROOT_DIR'] ?? null,
-	"git_remote" => $_SERVER['ONITON_SLICE_GIT_REMOTE'] ?? null,
-	"api_token" => $_SERVER['ONITON_SLICE_API_TOKEN'] ?? null,
-	"project_id" => $_SERVER['ONITON_SLICE_PROJECT_ID'] ?? null,
-);
-
-$app = new app($onion_slice_env);
+$app = new app();
 $app->run();
 exit();
 
@@ -23,13 +12,28 @@ exit();
 class app {
 
 	private $fs;
+	private $req;
 	private $onion_slice_env;
 
 	/**
 	 * Constructor
 	 */
-	public function __construct($onion_slice_env){
+	public function __construct(){
 		$this->fs = new \tomk79\filesystem();
+		$this->req = new \tomk79\request();
+
+		$realpath_onion_slice_env = $this->req->get_cli_option('--json');
+		if( !strlen($realpath_onion_slice_env ?? '') ){
+			trigger_error('Environment information JSON not provided.');
+			exit();
+		}
+		if( !is_file($realpath_onion_slice_env) || !is_readable($realpath_onion_slice_env) ){
+			trigger_error('Environment information JSON not exists or not readable.');
+			exit();
+		}
+		$onion_slice_env_json = file_get_contents($realpath_onion_slice_env);
+		$onion_slice_env = json_decode($onion_slice_env_json);
+
 		$this->onion_slice_env = $onion_slice_env;
 	}
 
@@ -40,11 +44,11 @@ class app {
 		clearstatcache();
 
 		if( !is_dir($this->onion_slice_env->realpath_data_dir) ){
-			trigger_error('Data directory is not exists.');
+			trigger_error('Data directory not exists.');
 			exit();
 		}
 		if( !is_writable($this->onion_slice_env->realpath_data_dir) ){
-			trigger_error('Data directory is not writable.');
+			trigger_error('Data directory not writable.');
 			exit();
 		}
 
@@ -91,7 +95,11 @@ class app {
 		$current_schedule_timestamp = 0;
 		$current_schedule_info = null;
 		foreach($schedule->schedule as $schedule_id => $schedule_info){
-			$timestamp_release_at = strtotime($schedule_info->release_at);
+			$release_at = new \DateTimeImmutable(
+				$schedule_info->release_at,
+				new \DateTimeZone("UTC")
+			);
+			$timestamp_release_at = $release_at->getTimestamp();
 			if( $timestamp_release_at > $now ){
 				// 配信予定時刻が未来な場合はスキップ
 				continue;

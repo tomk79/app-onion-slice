@@ -48,14 +48,19 @@ class testHelper{
 	 * web-tomte を実行する
 	 */
 	static public function shell_exec_onionSlice__webTomte() {
-		$result = shell_exec('env'
-			.' ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz"'
-			.' ONITON_SLICE_DATA_DIR='.json_encode(realpath(__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte_files/').'/', JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
-			.' ONITON_SLICE_PUBLIC_ROOT_DIR='.json_encode(realpath(__DIR__.'/../testdata/web-server/').'/root', JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
-			.' ONITON_SLICE_GIT_REMOTE='.json_encode(realpath(__DIR__.'/../testdata/git-remote/.git'), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
-			.' ONITON_SLICE_URL="http://localhost:3000/onion-slice.php"'
-			.' ONITON_SLICE_PROJECT_ID="test--production"'
-			.' '.__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte.phar');
+		$fs = new \tomk79\filesystem();
+
+		$onion_slice_env = (object) array(
+			"url" => 'http://localhost:3000/onion-slice.php',
+			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte_files/'),
+			"realpath_public_root_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-server/root'),
+			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),
+			"api_token" => "zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
+			"project_id" => 'test--production',
+		);
+		$fs->save_file(__DIR__.'/../testdata/onion_slice_env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
+
+		$result = shell_exec(__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte.phar --json '.escapeshellarg(__DIR__.'/../testdata/onion_slice_env.json'));
 		return $result;
 	}
 

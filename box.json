@@ -1,6 +1,7 @@
 {
     "directories": [
-        "vendor/tomk79/filesystem/php"
+        "vendor/tomk79/filesystem/php",
+        "vendor/tomk79/request/php"
     ],
     "main": "web-tomte/onion-slice--web-tomte.php",
     "output": "dist/onion-slice--web-tomte.phar",
