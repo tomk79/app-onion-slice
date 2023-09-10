@@ -13,7 +13,8 @@
         "build": [
             "npm run prod",
             "@php ./build/pre-build.php",
-            "rencon-builder.phar"
+            "rencon-builder.phar",
+            "box compile"
         ],
         "preview": [
             "open http://localhost:8088/onion-slice.php;"
@@ -40,7 +41,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "~9.5",
-        "tomk79/rencon-builder": "~0.2.0"
+        "tomk79/rencon-builder": "~0.2.0",
+        "humbug/box": "^4.0@dev"
     },
     "autoload": {
         "psr-4": {

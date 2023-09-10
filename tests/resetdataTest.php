@@ -27,9 +27,9 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		$this->fs->rm(__DIR__.'/testdata/web-server/');
 		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-server/') );
 
-		$this->fs->chmod_r(__DIR__.'/testdata/web-tomte_data_dir/' , 0777);
-		$this->fs->rm(__DIR__.'/testdata/web-tomte_data_dir/');
-		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-tomte_data_dir/') );
+		$this->fs->chmod_r(__DIR__.'/testdata/web-tomte/' , 0777);
+		$this->fs->rm(__DIR__.'/testdata/web-tomte/');
+		$this->assertFalse( $this->fs->is_dir(__DIR__.'/testdata/web-tomte/') );
 
 		$this->fs->rm(__DIR__.'/testdata/memo.json');
 
@@ -52,8 +52,9 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		$this->fs->mkdir_r(__DIR__.'/testdata/web-server/');
 		$this->assertTrue( is_dir(__DIR__.'/testdata/web-server/') );
 
-		$this->fs->mkdir_r(__DIR__.'/testdata/web-tomte_data_dir/');
-		$this->assertTrue( is_dir(__DIR__.'/testdata/web-tomte_data_dir/') );
+		$this->fs->mkdir_r(__DIR__.'/testdata/web-tomte/onion-slice--web-tomte_files/');
+		$this->fs->copy(__DIR__.'/../dist/onion-slice--web-tomte.phar', __DIR__.'/testdata/web-tomte/onion-slice--web-tomte.phar');
+		$this->assertTrue( is_dir(__DIR__.'/testdata/web-tomte/onion-slice--web-tomte_files/') );
 	}
 
 	/**

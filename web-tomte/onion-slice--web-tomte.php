@@ -1,4 +1,5 @@
 <?php
+require_once(__DIR__.'/../vendor/autoload.php');
 
 // --------------------------------------
 // 環境情報
@@ -21,12 +22,14 @@ exit();
  */
 class app {
 
+	private $fs;
 	private $onion_slice_env;
 
 	/**
 	 * Constructor
 	 */
 	public function __construct($onion_slice_env){
+		$this->fs = new \tomk79\filesystem();
 		$this->onion_slice_env = $onion_slice_env;
 	}
 
@@ -45,13 +48,8 @@ class app {
 			exit();
 		}
 
-		if( !is_dir($this->onion_slice_env->realpath_data_dir.'/standby/') ){
-			mkdir($this->onion_slice_env->realpath_data_dir.'/standby/');
-		}
-
-		if( !is_dir($this->onion_slice_env->realpath_data_dir.'/logs/') ){
-			mkdir($this->onion_slice_env->realpath_data_dir.'/logs/');
-		}
+		$this->fs->mkdir($this->onion_slice_env->realpath_data_dir.'/standby/');
+		$this->fs->mkdir($this->onion_slice_env->realpath_data_dir.'/logs/');
 
 
 		// --------------------------------------
@@ -62,11 +60,11 @@ class app {
 		// --------------------------------------
 		// 配信コンテンツをスタンバイする
 		foreach($schedule->schedule as $schedule_id => $schedule_info){
-			$realpath_basedir = $this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/';
-			if(!is_dir($realpath_basedir)){
-				mkdir($realpath_basedir);
-				clearstatcache();
-			}
+			$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/');
+
+			$this->fs->mkdir($realpath_basedir);
+			clearstatcache();
+
 			if(!is_dir($realpath_basedir)){
 				continue;
 			}
@@ -77,7 +75,7 @@ class app {
 			// git clone する
 			// TODO: 指定したリビジョンのみをシャローコピーする方法はないか？
 			$stdout = shell_exec('git clone '.escapeshellarg($this->onion_slice_env->git_remote).' ./');
-			$stdout = shell_exec('git checkout '.$schedule_info->revision.'');
+			$stdout = shell_exec('git checkout '.escapeshellarg($schedule_info->revision).'');
 
 			// TODO: ここでスタンバイ完了したことを報告する
 
@@ -105,8 +103,9 @@ class app {
 			}
 		}
 
-		$realpath_current_contents_basedir = $this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_info->id).'/';
+		$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_info->id).'/');
 		exec('ln -s '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_root_dir));
+
 
 		// --------------------------------------
 		// 不要になった古いコンテンツを削除する

@@ -12,11 +12,12 @@ mix-manifest.json
 # onion-slice
 dist/onion-slice/
 dist/onion-slice_files/
+dist/onion-slice--web-tomte_files/
 
 tests/testdata/htdocs/
 tests/testdata/git-remote/
 tests/testdata/web-server/
-tests/testdata/web-tomte_data_dir/
+tests/testdata/web-tomte/
 tests/testdata/memo.json
 
 # other
