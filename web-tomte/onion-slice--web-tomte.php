@@ -77,9 +77,10 @@ class app {
 			chdir($realpath_basedir);
 
 			// git clone する
-			// TODO: 指定したリビジョンのみをシャローコピーする方法はないか？
-			$stdout = shell_exec('git clone '.escapeshellarg($this->onion_slice_env->git_remote).' ./');
-			$stdout = shell_exec('git checkout '.escapeshellarg($schedule_info->revision).'');
+			// 指定したリビジョンのみをシャローコピーする。
+			$stdout = shell_exec('git init');
+			$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
+			$stdout = shell_exec('git reset --hard FETCH_HEAD');
 
 			// TODO: ここでスタンバイ完了したことを報告する
 
