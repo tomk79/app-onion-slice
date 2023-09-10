@@ -33,9 +33,9 @@ class mainTest extends PHPUnit\Framework\TestCase{
 		// --------------------------------------
 
 
-		$result = testHelper::shell_exec_onionSlice__webTomte();
-		var_dump($result);
-		$this->assertEquals( 1, 1 );
+		testHelper::shell_exec_onionSlice__webTomte();
+
+		$this->assertSame( $memo->commits[0]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/root/test.html') );
 	}
 
 }

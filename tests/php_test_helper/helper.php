@@ -51,6 +51,7 @@ class testHelper{
 		$result = shell_exec('env'
 			.' ONITON_SLICE_API_TOKEN="zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz"'
 			.' ONITON_SLICE_DATA_DIR='.json_encode(realpath(__DIR__.'/../testdata/web-tomte_data_dir/').'/', JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
+			.' ONITON_SLICE_PUBLIC_ROOT_DIR='.json_encode(realpath(__DIR__.'/../testdata/web-server/').'/root', JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
 			.' ONITON_SLICE_GIT_REMOTE='.json_encode(realpath(__DIR__.'/../testdata/git-remote/.git'), JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE)
 			.' ONITON_SLICE_URL="http://localhost:3000/onion-slice.php"'
 			.' ONITON_SLICE_PROJECT_ID="test--production"'

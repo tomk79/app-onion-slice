@@ -16,6 +16,7 @@ dist/onion-slice_files/
 tests/testdata/htdocs/
 tests/testdata/git-remote/
 tests/testdata/web-server/
+tests/testdata/web-tomte_data_dir/
 tests/testdata/memo.json
 
 # other
