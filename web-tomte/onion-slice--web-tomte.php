@@ -112,8 +112,12 @@ class app {
 			}
 		}
 
+		clearstatcache(true);
+
 		$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_info->id).'/');
-		exec('ln -s '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_root_dir));
+		exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production));
+
+		clearstatcache(true);
 
 
 		// --------------------------------------

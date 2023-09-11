@@ -32,9 +32,9 @@ class scheduler {
 	 */
 	public function create_schedule( $release_at, $revision ) {
 		if( is_int( $release_at ) || preg_match('/^[0-9]*$/', $release_at) ){
-			$date = new \DateTimeImmutable('@'.$release_at);
+			$date = new \DateTimeImmutable('@'.$release_at, new \DateTimeZone("UTC"));
 		}else{
-			$date = new \DateTimeImmutable($release_at);
+			$date = new \DateTimeImmutable($release_at, new \DateTimeZone("UTC"));
 		}
 		$dirname = $date->format('Y-m-d-H-i-s');
 

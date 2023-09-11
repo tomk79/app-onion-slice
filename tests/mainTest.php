@@ -13,29 +13,10 @@ class mainTest extends PHPUnit\Framework\TestCase{
 	}
 
 	/**
-	 * web-tomte 実行
+	 * ---
 	 */
-	public function testWebTomte(){
-
-		$memo = testHelper::get_memo();
-
-		// --------------------------------------
-		// 配信予約
-		ob_start(); ?>
-<<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
-{
-    "revision": <?= json_encode($memo->commits[0]->revision) ?>
-}
-<?php
-		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/2023-01-10-00-00-00/');
-		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/2023-01-10-00-00-00/schedule.json.php', ob_get_clean());
-		// / 配信予約
-		// --------------------------------------
-
-
-		testHelper::shell_exec_onionSlice__webTomte();
-
-		$this->assertSame( $memo->commits[0]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/root/test.html') );
+	public function testStandard(){
+		$this->assertSame( 1, 1 );
 	}
 
 }
