@@ -54,18 +54,20 @@ class testHelper{
 			"url" => 'http://localhost:3000/onion-slice.php',
 			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte_files/'),
 			"realpath_public_dir" => (object) array(
-				"production" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
+				"production" => (object) array(
+					"realpath" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
+				)
 			),
 			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),
 			"api_token" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
 			"project_id" => 'test--production',
 		);
-		$fs->save_file(__DIR__.'/../testdata/onion_slice_env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
+		$fs->save_file(__DIR__.'/../testdata/web-tomte/onion-slice--env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
 		$result = shell_exec(
 			// 'php '.__DIR__.'/../../web-tomte/onion-slice--web-tomte.php'
 			__DIR__.'/../testdata/web-tomte/onion-slice--web-tomte.phar'
-			.' --json '.escapeshellarg(__DIR__.'/../testdata/onion_slice_env.json')
+			.' --json '.escapeshellarg(__DIR__.'/../testdata/web-tomte/onion-slice--env.json')
 		);
 		return $result;
 	}

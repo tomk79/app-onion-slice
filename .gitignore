@@ -19,7 +19,6 @@ tests/testdata/git-remote/
 tests/testdata/web-server/
 tests/testdata/web-tomte/
 tests/testdata/memo.json
-tests/testdata/onion_slice_env.json
 
 # other
 .DS_Store
