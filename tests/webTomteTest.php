@@ -82,6 +82,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		testHelper::shell_exec_onionSlice__webTomte();
 
+		// v1 に更新されている。
 		clearstatcache(true);
 		$this->assertSame( $memo->commits[1]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/production/test.html') );
 
@@ -89,6 +90,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		testHelper::shell_exec_onionSlice__webTomte();
 
+		// まだ v2 のリリース時刻には達していない。
 		clearstatcache(true);
 		$this->assertSame( $memo->commits[1]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/production/test.html') );
 
@@ -96,6 +98,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		testHelper::shell_exec_onionSlice__webTomte();
 
+		// v2 がリリースされている。
 		clearstatcache(true);
 		$this->assertSame( $memo->commits[2]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/production/test.html') );
 

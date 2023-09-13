@@ -57,7 +57,7 @@ class testHelper{
 				"production" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
 			),
 			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),
-			"api_token" => "zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
+			"api_token" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
 			"project_id" => 'test--production',
 		);
 		$fs->save_file(__DIR__.'/../testdata/onion_slice_env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
