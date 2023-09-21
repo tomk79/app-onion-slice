@@ -24,8 +24,6 @@ class git {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 
-		$this->profile = new \tomk79\onionSlice\model\profile( $this->rencon );
-
 		$this->projects = new \tomk79\onionSlice\model\projects($rencon);
 		$this->project_id = $rencon->get_route_param('projectId');
 		$this->project_info = $this->projects->get_project($this->project_id);
@@ -54,7 +52,7 @@ class git {
 	 * インデックスページ
 	 */
 	public function index(){
-		$profile = $this->profile->get();
+		$profile = $this->rencon->auth()->get_login_user_info();
 ?>
 <div class="cont-git"></div>
 
