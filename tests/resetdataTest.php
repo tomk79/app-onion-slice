@@ -64,7 +64,7 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 
 		// --------------------------------------
 		// 管理ユーザーを作成する
-		$this->fs->mkdir_r(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/');
+		$this->fs->mkdir_r(__DIR__.'/testdata/htdocs/onion-slice_files/users/');
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
 {
@@ -76,8 +76,8 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
     "role": "admin"
 }
 <?php
-		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/admin.json.php', ob_get_clean());
-		$this->assertTrue( is_file(__DIR__.'/testdata/htdocs/onion-slice_files/admin_users/admin.json.php') );
+		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/users/admin.json.php', ob_get_clean());
+		$this->assertTrue( is_file(__DIR__.'/testdata/htdocs/onion-slice_files/users/admin.json.php') );
 
 		// --------------------------------------
 		// APIキーを作成する

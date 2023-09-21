@@ -15,7 +15,7 @@ class profile {
 		$this->rencon = $rencon;
 
 		$this->login_user_id = $this->rencon->user()->get_user_id();
-		$this->realpath_profile_json = $this->rencon->conf()->realpath_private_data_dir.'admin_users/'.urlencode($this->login_user_id).'.json.php';
+		$this->realpath_profile_json = $this->rencon->conf()->realpath_private_data_dir.'users/'.urlencode($this->login_user_id).'.json.php';
 
 		return;
 	}
