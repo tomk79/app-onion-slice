@@ -67,7 +67,7 @@ class testHelper{
 		$result = shell_exec(
 			// 'php '.__DIR__.'/../../web-front/onion-slice--web-front.php'
 			__DIR__.'/../testdata/web-front/onion-slice--web-front.phar'
-			.' --json '.escapeshellarg(__DIR__.'/../testdata/web-front/onion-slice--env.json')
+			.' --env '.escapeshellarg(__DIR__.'/../testdata/web-front/onion-slice--env.json')
 		);
 		return $result;
 	}

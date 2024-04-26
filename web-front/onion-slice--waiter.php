@@ -22,7 +22,7 @@ class app {
 		$this->fs = new \tomk79\filesystem();
 		$this->req = new \tomk79\request();
 
-		$realpath_onion_slice_env = $this->req->get_cli_option('--json');
+		$realpath_onion_slice_env = $this->req->get_cli_option('--env');
 		if( !strlen($realpath_onion_slice_env ?? '') ){
 			trigger_error('Environment information JSON not provided.');
 			exit();
