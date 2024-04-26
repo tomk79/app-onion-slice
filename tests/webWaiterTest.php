@@ -2,7 +2,7 @@
 /**
  * test
  */
-class webTomteTest extends PHPUnit\Framework\TestCase{
+class webWaiterTest extends PHPUnit\Framework\TestCase{
 	private $fs;
 
 	public function setUp() : void{
@@ -13,7 +13,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 	}
 
 	/**
-	 * web-tomte: 初回リリース
+	 * web-waiter: 初回リリース
 	 */
 	public function testInitialRelease(){
 
@@ -35,16 +35,16 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 		// --------------------------------------
 
 
-		testHelper::shell_exec_onionSlice__webTomte();
+		testHelper::shell_exec_onionSlice__webWaiter();
 
 		$this->assertSame( $memo->commits[0]->testHtmlContent, file_get_contents(__DIR__.'/testdata/web-server/production/test.html') );
 	}
 
 
 	/**
-	 * web-tomte: 2段階の配信予約
+	 * web-waiter: 2段階の配信予約
 	 */
-	public function testWebTomte(){
+	public function testWebWaiter(){
 
 		$memo = testHelper::get_memo();
 
@@ -80,7 +80,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		sleep(2);
 
-		testHelper::shell_exec_onionSlice__webTomte();
+		testHelper::shell_exec_onionSlice__webWaiter();
 
 		// v1 に更新されている。
 		clearstatcache(true);
@@ -88,7 +88,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		sleep(2);
 
-		testHelper::shell_exec_onionSlice__webTomte();
+		testHelper::shell_exec_onionSlice__webWaiter();
 
 		// まだ v2 のリリース時刻には達していない。
 		clearstatcache(true);
@@ -96,7 +96,7 @@ class webTomteTest extends PHPUnit\Framework\TestCase{
 
 		sleep(5);
 
-		testHelper::shell_exec_onionSlice__webTomte();
+		testHelper::shell_exec_onionSlice__webWaiter();
 
 		// v2 がリリースされている。
 		clearstatcache(true);
