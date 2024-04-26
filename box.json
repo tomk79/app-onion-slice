@@ -3,8 +3,8 @@
         "vendor/tomk79/filesystem/php",
         "vendor/tomk79/request/php"
     ],
-    "main": "web-tomte/onion-slice--web-tomte.php",
-    "output": "dist/onion-slice--web-tomte.phar",
+    "main": "web-front/onion-slice--waiter.php",
+    "output": "dist/onion-slice--waiter.phar",
     "chmod": "0755",
     "stub": true
 }

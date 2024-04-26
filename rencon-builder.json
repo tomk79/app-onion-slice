@@ -142,9 +142,13 @@
 		}
 	},
 	"api_route": {
-		"proj.{projectId?}.get_schedule": {
+		"proj.{projectId?}.get_scheduler_commands": {
 			"title": "配信スケジュールを取得する",
-			"page": "tomk79\\onionSlice\\api\\scheduler::api_get_schedule"
+			"page": "tomk79\\onionSlice\\api\\scheduler::api_get_scheduler_commands"
+		},
+		"proj.{projectId?}.report_waiter_operation": {
+			"title": "ウェイターから処理結果のレポートを受け付ける",
+			"page": "tomk79\\onionSlice\\api\\scheduler::api_report_waiter_operation"
 		}
 	},
 	"theme": "app/theme/theme.php",

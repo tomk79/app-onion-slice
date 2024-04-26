@@ -10,7 +10,24 @@ class scheduler {
 	private $schedule_id;
 
 	/**
+	 * API: スケジューラーのコマンドを取得する
+	 */
+	static public function api_get_scheduler_commands( $rencon ){
+		$ctrl = new self($rencon);
+		return null;
+	}
+
+	/**
+	 * API: ウェイターから処理結果のレポートを受け付ける
+	 */
+	static public function api_report_waiter_operation( $rencon ){
+		$ctrl = new self($rencon);
+		return null;
+	}
+
+	/**
 	 * API: スケジュールを取得する
+	 * TODO: Deprecated
 	 */
 	static public function api_get_schedule( $rencon ){
 		$ctrl = new self($rencon);
