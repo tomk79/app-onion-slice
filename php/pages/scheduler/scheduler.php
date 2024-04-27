@@ -8,6 +8,7 @@ class scheduler {
 	private $project_id;
 	private $scheduler;
 	private $schedule_id;
+	private $schedule_info;
 
 	/**
 	 * 新規作成画面
@@ -43,6 +44,7 @@ class scheduler {
 		$this->project_id = $rencon->get_route_param('projectId');
 		$this->scheduler = new \tomk79\onionSlice\model\scheduler( $this->rencon, $this->project_id );
 		$this->schedule_id = $rencon->get_route_param('scheduleId');
+		$this->schedule_info = $this->scheduler->get_schedule($this->schedule_id);
 	}
 
 
@@ -208,6 +210,22 @@ class scheduler {
 	 */
 	private function detail__index(){
 ?>
+<table class="px2-table">
+<tbody>
+	<tr>
+		<th>ID</th>
+		<td><?= htmlspecialchars($this->schedule_info->id ?? '---') ?></td>
+	</tr>
+	<tr>
+		<th>公開予定日時</th>
+		<td><?= htmlspecialchars($this->schedule_info->release_at ?? '---') ?></td>
+	</tr>
+	<tr>
+		<th>リビジョン</th>
+		<td><?= htmlspecialchars($this->schedule_info->revision ?? '---') ?></td>
+	</tr>
+</tbody>
+</table>
 
 <p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler" class="px2-btn">戻る</a></p>
 <p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler.<?= htmlspecialchars($this->schedule_id ?? '') ?>.delete" class="px2-btn px2-btn--danger">この配信予約をキャンセルする</a></p>

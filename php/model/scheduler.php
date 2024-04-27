@@ -40,6 +40,7 @@ class scheduler {
 		}else{
 			$date = new \DateTimeImmutable($release_at, new \DateTimeZone("UTC"));
 		}
+		$schedule_id = $date->format('Y-m-d-H-i-s');
 		$release_at = $date->format('c');
 
 		if( $current_schedule->{$release_at} ){
@@ -54,7 +55,8 @@ class scheduler {
 			return false;
 		}
 
-		$current_schedule->{$release_at} = (object) array(
+		$current_schedule->{$schedule_id} = (object) array(
+			'id' => $schedule_id,
 			'revision' => $revision,
 			'release_at' => $release_at,
 		);
@@ -65,7 +67,7 @@ class scheduler {
 		$json = (object) array(
 			'id' => uniqid(),
 			'type' => 'reserve',
-			'properties' => $current_schedule->{$release_at},
+			'properties' => $current_schedule->{$schedule_id},
 			'task_created_at' => $task_created_at,
 			'expected_results' => $current_schedule,
 		);
@@ -131,6 +133,14 @@ class scheduler {
 		$last_task = $all_tasks->{$last_key} ?? null;
 		$rtn = (object) $last_task->expected_results ?? null;
 		return $rtn;
+	}
+
+	/**
+	 * 配信スケジュール情報を取得する
+	 */
+	public function get_schedule($schedule_id){
+		$all_schedule = $this->get_schedule_all();
+		return $all_schedule->{$schedule_id} ?? null;
 	}
 
 	/**
