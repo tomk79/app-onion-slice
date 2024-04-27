@@ -10,17 +10,17 @@ class scheduler {
 	private $schedule_id;
 
 	/**
-	 * API: スケジューラーのコマンドを取得する
+	 * API: スケジューラーの配信タスクを取得する
 	 */
-	static public function api_get_scheduler_commands( $rencon ){
+	static public function api_get_scheduler_tasks( $rencon ){
 		$ctrl = new self($rencon);
 		return null;
 	}
 
 	/**
-	 * API: ウェイターから処理結果のレポートを受け付ける
+	 * API: ウェイターからタスクの処理結果のレポートを受け付ける
 	 */
-	static public function api_report_waiter_operation( $rencon ){
+	static public function api_report_scheduler_task( $rencon ){
 		$ctrl = new self($rencon);
 		return null;
 	}
