@@ -66,6 +66,11 @@ class app {
 
 
 		// --------------------------------------
+		// 配信する
+		$this->publish();
+
+
+		// --------------------------------------
 		// 配信スケジュールを取得する
 		$tasks = $this->api_get_scheduler_tasks();
 
@@ -80,6 +85,8 @@ class app {
 
 			switch($task_info->type){
 				case "reserve":
+					// --------------------------------------
+					// 配信予約の追加
 					$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($task_info->properties->id).'/');
 					$this->fs->mkdir($realpath_basedir);
 
@@ -102,18 +109,31 @@ class app {
 					break;
 
 				case "update":
+					// --------------------------------------
+					// 配信予約の更新
 					// TODO: 未実装
 					break;
 
 				case "cancel":
-					// TODO: 未実装
+					// --------------------------------------
+					// 配信予約のキャンセル
+					$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($task_info->properties->id).'/');
+					if(!is_dir($realpath_basedir)){
+						continue 2;
+					}
+					$this->fs->chmod_r($realpath_basedir, 0777, 0777);
+					$result = $this->fs->rm($realpath_basedir);
 					break;
 
 				case "asap":
+					// --------------------------------------
+					// 割り込み即時配信
 					// TODO: 未実装
 					break;
 
 				case "rollback":
+					// --------------------------------------
+					// 巻き戻し
 					// TODO: 未実装
 					break;
 			}
@@ -125,7 +145,48 @@ class app {
 
 		// --------------------------------------
 		// 配信する
+		$this->publish();
 
+
+		// --------------------------------------
+		// 不要になった古いコンテンツを削除する
+
+		// TODO: ここで、不要になった古いコンテンツを削除する
+
+		if( !$this->unlock('main') ){
+			trigger_error('Failed to unlock Application lock.');
+		}
+
+		exit();
+	}
+
+
+
+	/**
+	 * APIから配信タスク一覧を取得する
+	 */
+	private function api_get_scheduler_tasks(){
+		$schedule_json = file_get_contents(
+			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
+			false,
+			stream_context_create(array(
+				'http' => array(
+					'method'=> 'GET',
+					'header'=> implode("\r\n", array(
+						'Content-Type: application/x-www-form-urlencoded',
+						'X-API-KEY: '.$this->onion_slice_env->api_token,
+					)),
+				),
+			)));
+		$schedule = json_decode($schedule_json);
+		return $schedule;
+	}
+
+
+	/**
+	 * リリース予約フォルダを公開する
+	 */
+	private function publish(){
 		// 過去でかつ最新の配信スケジュールIDを特定する
 		$now = time();
 		$current_schedule_timestamp = 0;
@@ -164,41 +225,8 @@ class app {
 
 		clearstatcache(true);
 
-
-		// --------------------------------------
-		// 不要になった古いコンテンツを削除する
-
-		// TODO: ここで、不要になった古いコンテンツを削除する
-
-		if( !$this->unlock('main') ){
-			trigger_error('Failed to unlock Application lock.');
-		}
-
-		exit();
+		return;
 	}
-
-
-
-	/**
-	 * APIから配信タスク一覧を取得する
-	 */
-	private function api_get_scheduler_tasks(){
-		$schedule_json = file_get_contents(
-			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
-			false,
-			stream_context_create(array(
-				'http' => array(
-					'method'=> 'GET',
-					'header'=> implode("\r\n", array(
-						'Content-Type: application/x-www-form-urlencoded',
-						'X-API-KEY: '.$this->onion_slice_env->api_token,
-					)),
-				),
-			)));
-		$schedule = json_decode($schedule_json);
-		return $schedule;
-	}
-
 
 
 	// ----------------------------------------------------------------------------
