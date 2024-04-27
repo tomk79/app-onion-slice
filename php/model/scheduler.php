@@ -33,11 +33,17 @@ class scheduler {
 	public function create_schedule( $release_at, $revision ) {
 		$task_created_at = gmdate('c');
 		$dirname = gmdate('Y-m-d-H-i-s');
+		$current_schedule = $this->get_schedule_all() ?? (object) array();
 
 		if( is_int( $release_at ) || preg_match('/^[0-9]*$/', $release_at) ){
 			$date = new \DateTimeImmutable('@'.$release_at, new \DateTimeZone("UTC"));
 		}else{
 			$date = new \DateTimeImmutable($release_at, new \DateTimeZone("UTC"));
+		}
+		$release_at = $date->format('c');
+
+		if( $current_schedule->{$release_at} ){
+			return false;
 		}
 
 		if( is_dir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname)) ){
@@ -48,15 +54,20 @@ class scheduler {
 			return false;
 		}
 
+		$current_schedule->{$release_at} = (object) array(
+			'revision' => $revision,
+			'release_at' => $release_at,
+		);
+		$current_schedule = (array) $current_schedule;
+		ksort($current_schedule);
+		$current_schedule = (object) $current_schedule;
+
 		$json = (object) array(
 			'id' => uniqid(),
 			'type' => 'reserve',
-			'properties' => (object) array(
-				'revision' => $revision,
-				'release_date' => $date->format('c'),
-			),
+			'properties' => $current_schedule->{$release_at},
 			'task_created_at' => $task_created_at,
-			'expected_results' => array(),
+			'expected_results' => $current_schedule,
 		);
 		$result = dataDotPhp::write_json(
 			$this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/task.json.php',
@@ -89,25 +100,36 @@ class scheduler {
 	}
 
 	/**
+	 * アクティブな配信タスクを全件取得する
+	 */
+	public function get_task_all(){
+		$dirs = $this->rencon->fs()->ls($this->realpath_project_data_dir.'scheduler/');
+		$rtn = array();
+		foreach($dirs as $dirname){
+			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/task.json.php');
+			if( !$json ){
+				continue;
+			}
+			$rtn[$json->task_created_at] = $json;
+		}
+		return (object) $rtn;
+	}
+
+	/**
 	 * アクティブな配信スケジュールを全件取得する
 	 */
 	public function get_schedule_all(){
-		$rtn = array();
-		$dirs = $this->rencon->fs()->ls($this->realpath_project_data_dir.'scheduler/');
-		foreach( $dirs as $dir ){
-			if( $dir == '_archives' ){
-				// アーカイブ済みの予約は除外
-				continue;
-			}
-			$schedule = (object) array();
-			$schedule->id = $dir;
-			$schedule->release_at = $this->parse_release_at($dir);
-
-			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'scheduler/'.urlencode($dir).'/task.json.php');
-			$schedule->revision = $json->properties->revision ?? null;
-
-			$rtn[$dir] = $schedule;
+		$all_tasks = $this->get_task_all();
+		$keys = array_keys(get_object_vars($all_tasks));
+		if( !count($keys) ){
+			return (object) array();
 		}
+		$last_key = $keys[count($keys)-1] ?? '';
+		if( !$last_key ){
+			return (object) array();
+		}
+		$last_task = $all_tasks->{$last_key} ?? null;
+		$rtn = (object) $last_task->expected_results ?? null;
 		return $rtn;
 	}
 
