@@ -18,9 +18,9 @@ class scheduler {
 		$this->project = $projects->get( $project_id );
 
 		$this->realpath_project_data_dir = $this->project->get_realpath_project_data_dir();
-		if( is_string($this->realpath_project_data_dir) && is_dir($this->realpath_project_data_dir) && !is_dir($this->realpath_project_data_dir.'schedule/') ){
-			$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'schedule/');
-			$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'schedule/_archives/'); // 過去配信済みの予定を格納する
+		if( is_string($this->realpath_project_data_dir) && is_dir($this->realpath_project_data_dir) && !is_dir($this->realpath_project_data_dir.'scheduler/') ){
+			$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'scheduler/');
+			$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'scheduler/_archives/'); // 過去配信済みの予定を格納する
 		}
 		return;
 	}
@@ -31,26 +31,35 @@ class scheduler {
 	 * @param Integer|String $release_at リリース予定日時 (例: `1900008700`, `2023-12-31T10:00:00Z`)
 	 */
 	public function create_schedule( $release_at, $revision ) {
+		$task_created_at = gmdate('c');
+		$dirname = gmdate('Y-m-d-H-i-s');
+
 		if( is_int( $release_at ) || preg_match('/^[0-9]*$/', $release_at) ){
 			$date = new \DateTimeImmutable('@'.$release_at, new \DateTimeZone("UTC"));
 		}else{
 			$date = new \DateTimeImmutable($release_at, new \DateTimeZone("UTC"));
 		}
-		$dirname = $date->format('Y-m-d-H-i-s');
 
-		if( is_dir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname)) ){
+		if( is_dir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname)) ){
 			return false;
 		}
 
-		if( !$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/') ){
+		if( !$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/') ){
 			return false;
 		}
 
 		$json = (object) array(
-			'revision' => $revision,
+			'id' => uniqid(),
+			'type' => 'reserve',
+			'properties' => (object) array(
+				'revision' => $revision,
+				'release_date' => $date->format('c'),
+			),
+			'task_created_at' => $task_created_at,
+			'expected_results' => array(),
 		);
 		$result = dataDotPhp::write_json(
-			$this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/schedule.json.php',
+			$this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/task.json.php',
 			$json
 		);
 		if( !$result ){
@@ -68,11 +77,11 @@ class scheduler {
 	public function delete_schedule( $schedule_id ) {
 		$dirname = $schedule_id;
 
-		if( !is_dir($this->realpath_project_data_dir.'schedule/'.urlencode($dirname)) ){
+		if( !is_dir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname)) ){
 			return false;
 		}
 
-		if( !$this->rencon->fs()->rm($this->realpath_project_data_dir.'schedule/'.urlencode($dirname).'/') ){
+		if( !$this->rencon->fs()->rm($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/') ){
 			return false;
 		}
 
@@ -84,7 +93,7 @@ class scheduler {
 	 */
 	public function get_schedule_all(){
 		$rtn = array();
-		$dirs = $this->rencon->fs()->ls($this->realpath_project_data_dir.'schedule/');
+		$dirs = $this->rencon->fs()->ls($this->realpath_project_data_dir.'scheduler/');
 		foreach( $dirs as $dir ){
 			if( $dir == '_archives' ){
 				// アーカイブ済みの予約は除外
@@ -94,8 +103,8 @@ class scheduler {
 			$schedule->id = $dir;
 			$schedule->release_at = $this->parse_release_at($dir);
 
-			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'schedule/'.urlencode($dir).'/schedule.json.php');
-			$schedule->revision = $json->revision;
+			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'scheduler/'.urlencode($dir).'/task.json.php');
+			$schedule->revision = $json->properties->revision ?? null;
 
 			$rtn[$dir] = $schedule;
 		}

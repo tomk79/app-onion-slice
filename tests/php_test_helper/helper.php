@@ -52,7 +52,7 @@ class testHelper{
 
 		$onion_slice_env = (object) array(
 			"url" => 'http://localhost:3000/onion-slice.php',
-			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--web-front_files/'),
+			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--web-waiter_files/'),
 			"realpath_public_dir" => (object) array(
 				"production" => (object) array(
 					"realpath" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
@@ -65,8 +65,8 @@ class testHelper{
 		$fs->save_file(__DIR__.'/../testdata/web-front/onion-slice--env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));
 
 		$result = shell_exec(
-			// 'php '.__DIR__.'/../../web-front/onion-slice--web-front.php'
-			__DIR__.'/../testdata/web-front/onion-slice--web-front.phar'
+			// 'php '.__DIR__.'/../../web-front/onion-slice--web-waiter.php'
+			__DIR__.'/../testdata/web-front/onion-slice--web-waiter.phar'
 			.' --env '.escapeshellarg(__DIR__.'/../testdata/web-front/onion-slice--env.json')
 		);
 		return $result;
