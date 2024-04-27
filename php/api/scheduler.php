@@ -14,7 +14,7 @@ class scheduler {
 	 */
 	static public function api_get_scheduler_tasks( $rencon ){
 		$ctrl = new self($rencon);
-		return null;
+		return $ctrl->get_task_all();
 	}
 
 	/**
@@ -23,15 +23,6 @@ class scheduler {
 	static public function api_report_scheduler_task( $rencon ){
 		$ctrl = new self($rencon);
 		return null;
-	}
-
-	/**
-	 * API: スケジュールを取得する
-	 * TODO: Deprecated
-	 */
-	static public function api_get_schedule( $rencon ){
-		$ctrl = new self($rencon);
-		return $ctrl->get_schedule();
 	}
 
 	/**
@@ -46,16 +37,16 @@ class scheduler {
 	}
 
 	/**
-	 * スケジュールを取得する
+	 * タスクの一覧を取得する
 	 */
-	public function get_schedule(){
+	public function get_task_all(){
 		$rtn = (object) array();
 
-		$schedule = $this->scheduler->get_schedule_all();
+		$tasks = $this->scheduler->get_task_all();
 
 		$rtn->result = true;
 		$rtn->message = "OK.";
-		$rtn->schedule = $schedule;
+		$rtn->tasks = $tasks;
 
 		return $rtn;
 	}

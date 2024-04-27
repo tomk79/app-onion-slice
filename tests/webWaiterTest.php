@@ -26,11 +26,25 @@ class webWaiterTest extends PHPUnit\Framework\TestCase{
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
 {
-    "revision": <?= json_encode($memo->commits[0]->revision) ?>
+    "id": "662cd86bafef2",
+    "type": "reserve",
+    "properties": {
+        "id": "2024-04-29-10-00-00",
+        "revision": <?= json_encode($memo->commits[0]->revision) ?>,
+        "release_at": "2024-04-29T10:00:00+00:00"
+    },
+    "task_created_at": "2024-04-27T10:50:19+00:00",
+    "expected_results": {
+        "2024-04-29-10-00-00": {
+            "id": "2024-04-29-10-00-00",
+            "revision": <?= json_encode($memo->commits[0]->revision) ?>,
+            "release_at": "2024-04-29T10:00:00+00:00"
+        }
+    }
 }
 <?php
-		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/');
-		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/schedule.json.php', ob_get_clean());
+		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/');
+		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/task.json.php', ob_get_clean());
 		// / 配信予約
 		// --------------------------------------
 
@@ -55,11 +69,30 @@ class webWaiterTest extends PHPUnit\Framework\TestCase{
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
 {
-    "revision": <?= json_encode($memo->commits[1]->revision) ?>
+    "id": "662cd86bafef2",
+    "type": "reserve",
+    "properties": {
+        "id": "2024-04-29-10-00-00",
+        "revision": <?= json_encode($memo->commits[1]->revision) ?>,
+        "release_at": "2024-04-29T10:00:00+00:00"
+    },
+    "task_created_at": "2024-04-27T10:50:19+00:00",
+    "expected_results": {
+        "2024-04-29-10-00-00": {
+            "id": "2024-04-29-10-00-00",
+            "revision": <?= json_encode($memo->commits[0]->revision) ?>,
+            "release_at": "2024-04-29T10:00:00+00:00"
+        },
+        "2024-04-29-10-00-00": {
+            "id": <?= json_encode($dirname) ?>,
+            "revision": <?= json_encode($memo->commits[1]->revision) ?>,
+            "release_at": <?= json_encode($date->format('c')) ?>
+        }
+    }
 }
 <?php
-		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/');
-		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/schedule.json.php', ob_get_clean());
+		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/');
+		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/task.json.php', ob_get_clean());
 		// / 配信予約
 		// --------------------------------------
 
@@ -70,11 +103,35 @@ class webWaiterTest extends PHPUnit\Framework\TestCase{
 		ob_start(); ?>
 <<?= '?php' ?> header('HTTP/1.1 404 Not Found'); echo('404 Not Found');exit(); <?= '?' ?>>
 {
-    "revision": <?= json_encode($memo->commits[2]->revision) ?>
+    "id": "662cd86bafef2",
+    "type": "reserve",
+    "properties": {
+        "id": "2024-04-29-10-00-00",
+        "revision": <?= json_encode($memo->commits[2]->revision) ?>,
+        "release_at": "2024-04-29T10:00:00+00:00"
+    },
+    "task_created_at": "2024-04-27T10:50:19+00:00",
+    "expected_results": {
+        "2024-04-29-10-00-00": {
+            "id": "2024-04-29-10-00-00",
+            "revision": <?= json_encode($memo->commits[0]->revision) ?>,
+            "release_at": "2024-04-29T10:00:00+00:00"
+        },
+        "2024-04-29-10-00-00": {
+            "id": <?= json_encode($dirname) ?>,
+            "revision": <?= json_encode($memo->commits[1]->revision) ?>,
+            "release_at": <?= json_encode($date->format('c')) ?>
+        },
+        "2024-04-29-10-00-00": {
+            "id": <?= json_encode($dirname) ?>,
+            "revision": <?= json_encode($memo->commits[2]->revision) ?>,
+            "release_at": <?= json_encode($date->format('c')) ?>
+        }
+    }
 }
 <?php
-		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/');
-		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/'.urlencode($dirname).'/schedule.json.php', ob_get_clean());
+		$this->fs->mkdir(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/');
+		$this->fs->save_file(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/'.urlencode($dirname).'/task.json.php', ob_get_clean());
 		// / 配信予約
 		// --------------------------------------
 

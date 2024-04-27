@@ -67,35 +67,59 @@ class app {
 
 		// --------------------------------------
 		// 配信スケジュールを取得する
-		$schedule = $this->api_get_schedule();
+		$tasks = $this->api_get_scheduler_tasks();
 
 
 		// --------------------------------------
-		// 配信コンテンツをスタンバイする
-		foreach($schedule->schedule as $schedule_id => $schedule_info){
+		// 配信タスクを処理する
+		foreach($tasks->tasks as $task_created_at => $task_info){
 			$this->touch_lockfile('main');
 
-			$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/');
+			echo '-----------'."\n";
+			echo '- '.($task_info->id ?? '').' ('.($task_info->type ?? '').')'."\n";
 
-			$this->fs->mkdir($realpath_basedir);
-			clearstatcache();
+			switch($task_info->type){
+				case "reserve":
+					$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($task_info->properties->id).'/');
+					$this->fs->mkdir($realpath_basedir);
 
-			if(!is_dir($realpath_basedir)){
-				continue;
+					if(!is_dir($realpath_basedir)){
+						continue 2;
+					}
+
+					$cd = realpath('.');
+					chdir($realpath_basedir);
+
+					// git clone する
+					// 指定したリビジョンのみをシャローコピーする。
+					$stdout = shell_exec('git init');
+					$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($task_info->properties->revision).'');
+					$stdout = shell_exec('git reset --hard FETCH_HEAD');
+
+					// TODO: ここでタスクの処理結果を報告する
+
+					chdir($cd);
+					break;
+
+				case "update":
+					// TODO: 未実装
+					break;
+
+				case "cancel":
+					// TODO: 未実装
+					break;
+
+				case "asap":
+					// TODO: 未実装
+					break;
+
+				case "rollback":
+					// TODO: 未実装
+					break;
 			}
 
-			$cd = realpath('.');
-			chdir($realpath_basedir);
+			clearstatcache();
 
-			// git clone する
-			// 指定したリビジョンのみをシャローコピーする。
-			$stdout = shell_exec('git init');
-			$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
-			$stdout = shell_exec('git reset --hard FETCH_HEAD');
-
-			// TODO: ここでスタンバイ完了したことを報告する
-
-			chdir($cd);
 		}
 
 
@@ -105,10 +129,18 @@ class app {
 		// 過去でかつ最新の配信スケジュールIDを特定する
 		$now = time();
 		$current_schedule_timestamp = 0;
-		$current_schedule_info = null;
-		foreach($schedule->schedule as $schedule_id => $schedule_info){
+		$current_schedule_id = null;
+		$realpath_standby_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/');
+		$standbys = $this->fs->ls($realpath_standby_basedir);
+
+		foreach($standbys as $schedule_id){
+			$schedule_release_at = $this->parse_release_at($schedule_id);
+			if(!$schedule_release_at){
+				continue;
+			}
+
 			$release_at = new \DateTimeImmutable(
-				$schedule_info->release_at,
+				$schedule_release_at,
 				new \DateTimeZone("UTC")
 			);
 			$timestamp_release_at = $release_at->getTimestamp();
@@ -118,15 +150,17 @@ class app {
 			}
 			if( $timestamp_release_at > $current_schedule_timestamp ){
 				// これまでに見つけた配信済みコンテンツよりも未来の配信予定時刻なら、上書き
-				$current_schedule_info = $schedule_info;
+				$current_schedule_id = $schedule_id;
 				continue;
 			}
 		}
 
 		clearstatcache(true);
 
-		$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_info->id).'/');
-		exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production->realpath));
+		if( strlen($current_schedule_id ?? '') ){
+			$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_id).'/');
+			exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production->realpath));
+		}
 
 		clearstatcache(true);
 
@@ -146,11 +180,11 @@ class app {
 
 
 	/**
-	 * 配信スケジュールを取得する
+	 * APIから配信タスク一覧を取得する
 	 */
-	private function api_get_schedule(){
+	private function api_get_scheduler_tasks(){
 		$schedule_json = file_get_contents(
-			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_schedule',
+			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
 			false,
 			stream_context_create(array(
 				'http' => array(
@@ -266,5 +300,26 @@ class app {
 		}
 
 		return touch( $lockfilepath );
+	}
+
+
+
+	// ----------------------------------------------------------------------------
+	// Utils
+
+	/**
+	 * リリース予約のディレクトリ名をパースする
+	 */
+	private function parse_release_at( $dir ){
+		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir, $matched) ){
+			return false;
+		}
+		$y = $matched[1];
+		$m = $matched[2];
+		$d = $matched[3];
+		$h = $matched[4];
+		$i = $matched[5];
+		$s = $matched[6];
+		return $y.'-'.$m.'-'.$d.'T'.$h.':'.$i.':'.$s.'Z';
 	}
 }

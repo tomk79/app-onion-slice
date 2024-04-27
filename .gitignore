@@ -13,6 +13,8 @@ mix-manifest.json
 dist/onion-slice/
 dist/onion-slice_files/
 dist/onion-slice--waiter_files/
+dist/onion-slice--waiter-env.json
+dist/_production/
 
 tests/testdata/htdocs/
 tests/testdata/git-remote/

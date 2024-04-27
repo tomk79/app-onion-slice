@@ -95,7 +95,7 @@ class resetdataTest extends PHPUnit\Framework\TestCase{
 		// --------------------------------------
 		// プロジェクトを作成
 		// (スケジューラタイプのプロジェクト)
-		$this->fs->mkdir_r(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/schedule/_archives/');
+		$this->fs->mkdir_r(__DIR__.'/testdata/htdocs/onion-slice_files/projects/test--production/scheduler/_archives/');
 
 		// --------------------------------------
 		// gitリモートを作成
