@@ -43,7 +43,7 @@ class scheduler {
 		$schedule_id = $date->format('Y-m-d-H-i-s');
 		$release_at = $date->format('c');
 
-		if( $current_schedule->{$release_at} ){
+		if( isset($current_schedule->{$schedule_id}) ){
 			return false;
 		}
 
@@ -88,13 +88,42 @@ class scheduler {
 	 * @param String $schedule_id スケジュールID (例: `2023-12-31-10-00-00`)
 	 */
 	public function delete_schedule( $schedule_id ) {
-		$dirname = $schedule_id;
+		$task_created_at = gmdate('c');
+		$dirname = gmdate('Y-m-d-H-i-s');
+		$current_schedule = $this->get_schedule_all() ?? (object) array();
 
-		if( !is_dir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname)) ){
+		if( !isset($current_schedule->{$schedule_id}) ){
 			return false;
 		}
 
-		if( !$this->rencon->fs()->rm($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/') ){
+		if( is_dir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname)) ){
+			return false;
+		}
+
+		if( !$this->rencon->fs()->mkdir($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/') ){
+			return false;
+		}
+
+		unset($current_schedule->{$schedule_id});
+
+		$current_schedule = (array) $current_schedule;
+		ksort($current_schedule);
+		$current_schedule = (object) $current_schedule;
+
+		$json = (object) array(
+			'id' => uniqid(),
+			'type' => 'cancel',
+			'properties' => (object) array(
+				'id' => $schedule_id,
+			),
+			'task_created_at' => $task_created_at,
+			'expected_results' => $current_schedule,
+		);
+		$result = dataDotPhp::write_json(
+			$this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/task.json.php',
+			$json
+		);
+		if( !$result ){
 			return false;
 		}
 
