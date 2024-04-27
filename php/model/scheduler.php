@@ -176,7 +176,7 @@ class scheduler {
 	 * リリース予約のディレクトリ名をパースする
 	 */
 	private function parse_release_at( $dir ){
-		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir, $matched) ){
+		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir??'', $matched) ){
 			return false;
 		}
 		$y = $matched[1];

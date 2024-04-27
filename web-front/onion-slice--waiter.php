@@ -76,12 +76,28 @@ class app {
 
 
 		// --------------------------------------
+		// 状態情報を取得する
+		$status = $this->read_status();
+		if( !$status ){
+			$status = (object) array(
+				'last_task_created_at' => null,
+			);
+		}
+		$last_task_timestamp = $this->id2timestamp($status->last_task_created_at ?? null);
+
+		// --------------------------------------
 		// 配信タスクを処理する
 		foreach($tasks->tasks as $task_created_at => $task_info){
 			$this->touch_lockfile('main');
 
+			echo "\n";
 			echo '-----------'."\n";
 			echo '- '.($task_info->id ?? '').' ('.($task_info->type ?? '').')'."\n";
+
+			if( $this->id2timestamp($task_created_at) <= $last_task_timestamp ){
+				echo '  -> skipped.'."\n";
+				continue;
+			}
 
 			switch($task_info->type){
 				case "reserve":
@@ -140,6 +156,8 @@ class app {
 
 			clearstatcache();
 
+			$status->last_task_created_at = $task_created_at;
+			$this->save_status($status);
 		}
 
 
@@ -227,6 +245,28 @@ class app {
 
 		return;
 	}
+
+
+	/**
+	 * 状態情報を取得する
+	 */
+	private function read_status(){
+		if( !is_file($this->onion_slice_env->realpath_data_dir.'/logs/status.json') ){
+			return null;
+		}
+		$str_json = file_get_contents($this->onion_slice_env->realpath_data_dir.'/logs/status.json');
+		$status = json_decode($str_json);
+		return $status;
+	}
+
+	/**
+	 * 状態情報を保存する
+	 */
+	private function save_status($status){
+		$result = $this->fs->save_file($this->onion_slice_env->realpath_data_dir.'/logs/status.json', json_encode($status));
+		return $result;
+	}
+
 
 
 	// ----------------------------------------------------------------------------
@@ -339,7 +379,7 @@ class app {
 	 * リリース予約のディレクトリ名をパースする
 	 */
 	private function parse_release_at( $dir ){
-		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir, $matched) ){
+		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir??'', $matched) ){
 			return false;
 		}
 		$y = $matched[1];
@@ -349,5 +389,24 @@ class app {
 		$i = $matched[5];
 		$s = $matched[6];
 		return $y.'-'.$m.'-'.$d.'T'.$h.':'.$i.':'.$s.'Z';
+	}
+
+	/**
+	 * タスクID文字列をタイムスタンプに返還する
+	 */
+	private function id2timestamp( $dir ){
+		if( !is_string($dir) || !strlen($dir ?? '') ){
+			return null;
+		}
+		$datestr = $this->parse_release_at($dir);
+		if(!$datestr){
+			$datestr = $dir;
+		}
+		$date = new \DateTimeImmutable(
+			$datestr,
+			new \DateTimeZone("UTC")
+		);
+		$timestamp = $date->getTimestamp();
+		return $timestamp;
 	}
 }
