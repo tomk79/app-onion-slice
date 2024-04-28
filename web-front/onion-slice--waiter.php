@@ -133,11 +133,12 @@ class app {
 					$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($task_info->properties->revision).'');
 					$stdout = shell_exec('git reset --hard FETCH_HEAD');
 
-					// TODO: ここでタスクの処理結果を報告する
-
 					chdir($cd);
 
 					echo '  -> succeeded.'."\n";
+
+					// 配信タスクの処理結果を報告する
+					$this->api_send_report_scheduler_task($task_id, true, 'OK');
 					break;
 
 				case "update":
@@ -160,6 +161,9 @@ class app {
 					}else{
 						echo '  -> [ERROR] remove failed.'."\n";
 					}
+
+					// 配信タスクの処理結果を報告する
+					$this->api_send_report_scheduler_task($task_id, true, 'OK');
 					break;
 
 				case "asap":
@@ -240,10 +244,7 @@ class app {
 
 
 		// --------------------------------------
-		// 不要になった古いコンテンツを削除する
-
-		// TODO: ここで、不要になった古いコンテンツを削除する
-
+		// 終了
 		if( !$this->unlock('main') ){
 			trigger_error('Failed to unlock Application lock.');
 		}
@@ -263,7 +264,7 @@ class app {
 	 * APIから配信タスク一覧を取得する
 	 */
 	private function api_get_scheduler_tasks(){
-		$schedule_json = file_get_contents(
+		$json = file_get_contents(
 			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
 			false,
 			stream_context_create(array(
@@ -275,8 +276,34 @@ class app {
 					)),
 				),
 			)));
-		$schedule = json_decode($schedule_json);
-		return $schedule;
+		$rtn = json_decode($json);
+		return $rtn;
+	}
+
+
+	/**
+	 * APIに配信タスクの処理結果を報告する
+	 */
+	private function api_send_report_scheduler_task($task_id, $result, $message){
+		$json = file_get_contents(
+			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.report_scheduler_task',
+			false,
+			stream_context_create(array(
+				'http' => array(
+					'method'=> 'POST',
+					'header'=> implode("\r\n", array(
+						'Content-Type: application/x-www-form-urlencoded',
+						'X-API-KEY: '.$this->onion_slice_env->api_token,
+					)),
+					'content' => http_build_query(array(
+						'id' => $task_id ?? '',
+						'result' => ($result ? 1 : 0),
+						'message' => $message ?? '',
+					))),
+				),
+			));
+		$rtn = json_decode($json);
+		return $rtn;
 	}
 
 

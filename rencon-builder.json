@@ -156,6 +156,7 @@
 		},
 		"proj.{projectId?}.report_scheduler_task": {
 			"title": "ウェイターからタスクの処理結果のレポートを受け付ける",
+			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\scheduler::api_report_scheduler_task"
 		}
 	},

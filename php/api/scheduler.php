@@ -22,7 +22,7 @@ class scheduler {
 	 */
 	static public function api_report_scheduler_task( $rencon ){
 		$ctrl = new self($rencon);
-		return null;
+		return $ctrl->report_scheduler_task();
 	}
 
 	/**
@@ -37,7 +37,7 @@ class scheduler {
 	}
 
 	/**
-	 * タスクの一覧を取得する
+	 * 配信タスクの一覧を取得する
 	 */
 	public function get_task_all(){
 		$rtn = (object) array();
@@ -47,6 +47,22 @@ class scheduler {
 		$rtn->result = true;
 		$rtn->message = "OK.";
 		$rtn->tasks = $tasks;
+
+		return $rtn;
+	}
+
+	/**
+	 * 配信タスクの処理結果報告を受け付ける
+	 */
+	public function report_scheduler_task(){
+		$rtn = (object) array();
+
+		$rtn->result = true;
+		$rtn->message = "OK.";
+
+// ob_start();
+// var_dump($this->rencon->req()->get_param('id'));
+// error_log(ob_get_clean(),3,__DIR__.'/__dump.txt');
 
 		return $rtn;
 	}
