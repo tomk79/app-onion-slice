@@ -60,9 +60,11 @@ class scheduler {
 		$rtn->result = true;
 		$rtn->message = "OK.";
 
-// ob_start();
-// var_dump($this->rencon->req()->get_param('id'));
-// error_log(ob_get_clean(),3,__DIR__.'/__dump.txt');
+		$this->scheduler->log_task(
+			$this->rencon->req()->get_param('id'),
+			$this->rencon->req()->get_param('result'),
+			$this->rencon->req()->get_param('message')
+		);
 
 		return $rtn;
 	}

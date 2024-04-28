@@ -160,6 +160,30 @@ class scheduler {
 		return $tasks->{$task_id};
 	}
 
+	/**
+	 * 配信スケジュール情報を取得する
+	 * @return void
+	 */
+	public function log_task( $task_id, $result, $message ){
+		if(!strlen($task_id ?? '')){
+			return false;
+		}
+		$realpath_basedir = $this->realpath_project_data_dir.'scheduler/'.urlencode($task_id).'/';
+		if( !is_dir($realpath_basedir) ){
+			return false;
+		}
+		$realpath_log = $realpath_basedir.'/log.csv.php';
+		dataDotPhp::write_a($realpath_log, $this->rencon->fs()->mk_csv(array(array(
+			date('c'),
+			$_SERVER['REMOTE_ADDR'] ?? '',
+			$task_id,
+			$result,
+			$message,
+		))));
+		return;
+	}
+
+
 	// --------------------------------------
 	// スケジュール
 
