@@ -22,7 +22,11 @@ class scheduler {
 	 */
 	static public function api_report_scheduler_task( $rencon ){
 		$ctrl = new self($rencon);
-		return $ctrl->report_scheduler_task();
+		return $ctrl->report_scheduler_task(
+			$rencon->req()->get_param('id'),
+			$rencon->req()->get_param('result'),
+			$rencon->req()->get_param('message')
+		);
 	}
 
 	/**
@@ -38,7 +42,11 @@ class scheduler {
 	 */
 	static public function console_report_scheduler_task( $rencon ){
 		$ctrl = new self($rencon);
-		return json_encode($ctrl->report_scheduler_task());
+		return json_encode($ctrl->report_scheduler_task(
+			$rencon->req()->get_cli_option('--id'),
+			$rencon->req()->get_cli_option('--result'),
+			$rencon->req()->get_cli_option('--message')
+		));
 	}
 
 	/**
@@ -70,17 +78,13 @@ class scheduler {
 	/**
 	 * 配信タスクの処理結果報告を受け付ける
 	 */
-	public function report_scheduler_task(){
+	public function report_scheduler_task($task_id, $result, $message){
 		$rtn = (object) array();
 
 		$rtn->result = true;
 		$rtn->message = "OK.";
 
-		$this->scheduler->log_task(
-			$this->rencon->req()->get_param('id'),
-			$this->rencon->req()->get_param('result'),
-			$this->rencon->req()->get_param('message')
-		);
+		$this->scheduler->log_task($task_id, $result, $message);
 
 		return $rtn;
 	}

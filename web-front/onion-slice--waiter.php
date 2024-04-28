@@ -300,15 +300,13 @@ class app {
 	 * APIから配信タスク一覧を取得する
 	 */
 	private function api_get_scheduler_tasks(){
-		$json = file_get_contents(
-			$this->onion_slice_env->api_endpoint.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
-			false,
-			stream_context_create(array(
-				'http' => array(
-					'method'=> 'GET',
-					'header'=> implode("\r\n", $this->api_request_header),
-				),
-			)));
+		$json = $this->api_call(
+			'proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
+			array(
+			),
+			array(
+				'method' => 'GET',
+			));
 		$rtn = json_decode($json);
 		return $rtn;
 	}
@@ -318,22 +316,49 @@ class app {
 	 * APIに配信タスクの処理結果を報告する
 	 */
 	private function api_send_report_scheduler_task($task_id, $result, $message){
-		$json = file_get_contents(
-			$this->onion_slice_env->api_endpoint.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.report_scheduler_task',
-			false,
-			stream_context_create(array(
-				'http' => array(
-					'method'=> 'POST',
-					'header'=> implode("\r\n", $this->api_request_header),
-					'content' => http_build_query(array(
-						'id' => $task_id ?? '',
-						'result' => ($result ? 1 : 0),
-						'message' => $message ?? '',
-					))),
-				),
+		$json = $this->api_call(
+			'proj.'.urlencode($this->onion_slice_env->project_id).'.report_scheduler_task',
+			array(
+				'id' => $task_id ?? '',
+				'result' => ($result ? 1 : 0),
+				'message' => $message ?? '',
+			),
+			array(
+				'method' => 'POST',
 			));
 		$rtn = json_decode($json);
 		return $rtn;
+	}
+
+	/**
+	 * APIをコールする
+	 */
+	private function api_call($route, $params = array(), $options = array()){
+		$options = (object) $options;
+		$stdout = null;
+		if( !preg_match('/^https?\:\/\//i', $this->onion_slice_env->api_endpoint) && is_file($this->onion_slice_env->api_endpoint) ){
+			$cmd = array();
+			array_push($cmd, 'php');
+			array_push($cmd, escapeshellarg($this->onion_slice_env->api_endpoint));
+			foreach( $params as $key => $val ){
+				array_push($cmd, '--'.$key);
+				array_push($cmd, escapeshellarg($val));
+			}
+			array_push($cmd, escapeshellarg($route));
+			$stdout = shell_exec(implode(' ', $cmd));
+		}else{
+			$stdout = file_get_contents(
+				$this->onion_slice_env->api_endpoint.'?api='.urlencode($route),
+				false,
+				stream_context_create(array(
+					'http' => array(
+						'method'=> $options->method ?? 'POST',
+						'header'=> implode("\r\n", $this->api_request_header),
+						'content' => http_build_query($params)),
+					),
+				));
+		}
+		return $stdout;
 	}
 
 
