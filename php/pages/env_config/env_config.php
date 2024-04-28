@@ -89,9 +89,9 @@ class env_config {
 		</ul>
 	</div>
 
-	<h2>リモート設定</h2>
-	<div class="px2-p">
-		<div class="px2-text-align-right"><a href="?a=env_config.remote.create" class="px2-btn px2-btn--primary">新規作成</a></div>
+	<div class="px2-h2">
+		<div class="px2-h2__shoulder"><a href="?a=env_config.remote.create" class="px2-btn px2-btn--primary">新規作成</a></div>
+		<h2>リモート設定</h2>
 	</div>
 	<div class="px2-p">
 		<div class="px2-responsive">
