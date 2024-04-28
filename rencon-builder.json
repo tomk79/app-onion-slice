@@ -55,19 +55,27 @@
 			"title": "配信スケジュール",
 			"page": "app/pages/scheduler/index.php"
 		},
-		"proj.{projectId?}.scheduler_create": {
+		"proj.{projectId?}.scheduler.create": {
 			"title": "新規配信スケジュールを作成",
 			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::create"
 		},
 		"proj.{projectId?}.scheduler.{scheduleId?}.detail": {
-			"title": "配信スケジュール詳細画面",
+			"title": "配信スケジュール詳細",
 			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::detail"
 		},
 		"proj.{projectId?}.scheduler.{scheduleId?}.delete": {
 			"title": "新規配信スケジュールをキャンセル",
 			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::delete"
+		},
+		"proj.{projectId?}.scheduler.tasks": {
+			"title": "配信スケジュール履歴",
+			"page": "app/pages/scheduler/tasks.php"
+		},
+		"proj.{projectId?}.scheduler.tasks.{taskId?}.detail": {
+			"title": "配信スケジュール履歴詳細",
+			"page": "app/pages/scheduler/task_detail.php"
 		},
 
 		"env_config": {

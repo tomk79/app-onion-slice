@@ -25,6 +25,9 @@ class scheduler {
 		return;
 	}
 
+	// --------------------------------------
+	// 配信タスク
+
 	/**
 	 * 新しい配信予約を作成する
 	 *
@@ -65,7 +68,7 @@ class scheduler {
 		$current_schedule = (object) $current_schedule;
 
 		$json = (object) array(
-			'id' => uniqid(),
+			'uniqid' => uniqid(),
 			'type' => 'reserve',
 			'properties' => $current_schedule->{$schedule_id},
 			'task_created_at' => $task_created_at,
@@ -111,7 +114,7 @@ class scheduler {
 		$current_schedule = (object) $current_schedule;
 
 		$json = (object) array(
-			'id' => uniqid(),
+			'uniqid' => uniqid(),
 			'type' => 'cancel',
 			'properties' => (object) array(
 				'id' => $schedule_id,
@@ -141,10 +144,13 @@ class scheduler {
 			if( !$json ){
 				continue;
 			}
-			$rtn[$json->task_created_at] = $json;
+			$rtn[$dirname] = $json;
 		}
 		return (object) $rtn;
 	}
+
+	// --------------------------------------
+	// スケジュール
 
 	/**
 	 * アクティブな配信スケジュールを全件取得する
@@ -171,6 +177,10 @@ class scheduler {
 		$all_schedule = $this->get_schedule_all();
 		return $all_schedule->{$schedule_id} ?? null;
 	}
+
+
+	// --------------------------------------
+	// Utils
 
 	/**
 	 * リリース予約のディレクトリ名をパースする

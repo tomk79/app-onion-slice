@@ -6,14 +6,17 @@ $scheduler = $project->scheduler();
 ?>
 
 
-<p class="px2-text-align-right"><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler_create" class="px2-btn px2-btn--primary">新規配信予定</a></p>
+<ul class="px2-horizontal-list px2-horizontal-list--right">
+    <li><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler.tasks" class="px2-btn">履歴</a></li>
+    <li><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler.create" class="px2-btn px2-btn--primary">新規配信予定</a></li>
+</ul>
 <?php
 $active_schedules = $scheduler->get_schedule_all();
 if( !count(array_keys(get_object_vars($active_schedules))) ){
     echo "<p>配信予定はありません。</p>";
 }else{
     echo '<div class="px2-responsive">'."\n";
-    echo '<table class="px2-table">'."\n";
+    echo '<table class="px2-table" style="width:100%;">'."\n";
     ?>
     <thead>
     <tr>

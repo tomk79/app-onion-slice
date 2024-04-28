@@ -99,15 +99,15 @@ class app {
 		echo 'Executing tasks'."\n";
 		echo "\n";
 
-		$task_created_at = null;
+		$task_id = null;
 		$task_info = null;
-		foreach($tasks->tasks as $task_created_at => $task_info){
+		foreach($tasks->tasks as $task_id => $task_info){
 			$this->touch_lockfile('main');
 
 			echo '-----------'."\n";
-			echo ''.($task_info->id ?? '').' ('.($task_info->type ?? '').')'."\n";
+			echo 'Task '.($task_id ?? '').' ('.($task_info->type ?? '').')'."\n";
 
-			if( $this->id2timestamp($task_created_at) <= $last_task_timestamp ){
+			if( $this->id2timestamp($task_id) <= $last_task_timestamp ){
 				echo '  -> skipped.'."\n";
 				echo "\n";
 				continue;
@@ -177,7 +177,7 @@ class app {
 
 			clearstatcache();
 
-			$status->last_task_created_at = $task_created_at;
+			$status->last_task_created_at = $task_id;
 			$this->save_status($status);
 
 			echo "\n";
@@ -321,7 +321,7 @@ class app {
 		clearstatcache(true);
 
 		if( strlen($current_schedule_id ?? '') ){
-			echo 'Target directory: '.($current_schedule_id)."\n";
+			echo 'Target schedule: '.($current_schedule_id)."\n";
 
 			$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_id).'/');
 			exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production->realpath));
