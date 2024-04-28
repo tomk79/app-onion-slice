@@ -44,6 +44,10 @@ class app {
 	 * 処理を実行する
 	 */
 	public function run(){
+		echo '==========================='."\n";
+		echo '- Onion Slice - Web Waiter - Started'."\n";
+		echo "\n";
+
 		clearstatcache();
 
 		if( !is_dir($this->onion_slice_env->realpath_data_dir) ){
@@ -87,6 +91,8 @@ class app {
 
 		// --------------------------------------
 		// 配信タスクを処理する
+		$task_created_at = null;
+		$task_info = null;
 		foreach($tasks->tasks as $task_created_at => $task_info){
 			$this->touch_lockfile('main');
 
@@ -162,6 +168,40 @@ class app {
 
 
 		// --------------------------------------
+		// 処理結果の整合性をチェックする
+		if($task_info){
+
+			// 未展開のリリース予約を展開する
+			foreach($task_info->expected_results as $schedule_id => $schedule_info){
+				$realpath_release_reservation_dir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/');
+				if( !is_dir($realpath_release_reservation_dir) ){
+					$this->fs->mkdir($realpath_release_reservation_dir);
+				}
+
+				$cd = realpath('.');
+				chdir($realpath_release_reservation_dir);
+
+				// git clone する
+				// 指定したリビジョンのみをシャローコピーする。
+				$stdout = shell_exec('git init');
+				$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
+				$stdout = shell_exec('git reset --hard FETCH_HEAD');
+
+				chdir($cd);
+			}
+
+			// 削除されたはずののリリース予約を削除する
+			$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/');
+			$reserved_dirs = $this->fs->ls($realpath_basedir);
+			foreach($reserved_dirs as $reserved_dir){
+				if( !($task_info->expected_results->{$reserved_dir} ?? null) ){
+					$this->fs->chmod_r($realpath_basedir.$reserved_dir.'/', 0777, 0777);
+					$this->fs->rm($realpath_basedir.$reserved_dir.'/');
+				}
+			}
+		}
+
+		// --------------------------------------
 		// 配信する
 		$this->publish();
 
@@ -174,6 +214,11 @@ class app {
 		if( !$this->unlock('main') ){
 			trigger_error('Failed to unlock Application lock.');
 		}
+
+		echo "\n";
+		echo '==========================='."\n";
+		echo '- Onion Slice - Web Waiter - finished'."\n";
+		echo "\n";
 
 		exit();
 	}
