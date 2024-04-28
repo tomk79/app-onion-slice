@@ -301,7 +301,7 @@ class app {
 	 */
 	private function api_get_scheduler_tasks(){
 		$json = file_get_contents(
-			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
+			$this->onion_slice_env->api_endpoint.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.get_scheduler_tasks',
 			false,
 			stream_context_create(array(
 				'http' => array(
@@ -319,7 +319,7 @@ class app {
 	 */
 	private function api_send_report_scheduler_task($task_id, $result, $message){
 		$json = file_get_contents(
-			$this->onion_slice_env->url.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.report_scheduler_task',
+			$this->onion_slice_env->api_endpoint.'?api=proj.'.urlencode($this->onion_slice_env->project_id).'.report_scheduler_task',
 			false,
 			stream_context_create(array(
 				'http' => array(

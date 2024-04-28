@@ -51,7 +51,7 @@ class testHelper{
 		$fs = new \tomk79\filesystem();
 
 		$onion_slice_env = (object) array(
-			"url" => 'http://localhost:3000/onion-slice.php',
+			"api_endpoint" => 'http://localhost:3000/onion-slice.php',
 			"api_token" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
 			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--waiter_files/'),
 			"realpath_public_symlink" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
