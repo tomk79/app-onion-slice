@@ -121,6 +121,8 @@ class app {
 					$this->fs->mkdir($realpath_basedir);
 					if(!is_dir($realpath_basedir)){
 						echo '  -> [ERROR] making directory failed.'."\n";
+						// 配信タスクの処理結果を報告する
+						$this->api_send_report_scheduler_task($task_id, false, '[ERROR] making directory failed.');
 						continue 2;
 					}
 
@@ -138,7 +140,7 @@ class app {
 					echo '  -> succeeded.'."\n";
 
 					// 配信タスクの処理結果を報告する
-					$this->api_send_report_scheduler_task($task_id, true, 'OK');
+					$this->api_send_report_scheduler_task($task_id, true, 'Reservation successful.');
 					break;
 
 				case "update":
@@ -158,12 +160,13 @@ class app {
 					$result = $this->fs->rm($realpath_basedir);
 					if($result){
 						echo '  -> removed.'."\n";
+						// 配信タスクの処理結果を報告する
+						$this->api_send_report_scheduler_task($task_id, true, 'Success to remove '.$task_info->properties->id.'.');
 					}else{
 						echo '  -> [ERROR] remove failed.'."\n";
+						// 配信タスクの処理結果を報告する
+						$this->api_send_report_scheduler_task($task_id, false, 'Failed to remove '.$task_info->properties->id.'.');
 					}
-
-					// 配信タスクの処理結果を報告する
-					$this->api_send_report_scheduler_task($task_id, true, 'OK');
 					break;
 
 				case "asap":
