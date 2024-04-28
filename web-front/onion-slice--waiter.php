@@ -14,6 +14,7 @@ class app {
 	private $fs;
 	private $req;
 	private $onion_slice_env;
+	private $api_request_header = array();
 
 	/**
 	 * Constructor
@@ -35,6 +36,14 @@ class app {
 		$onion_slice_env = json_decode($onion_slice_env_json);
 
 		$this->onion_slice_env = $onion_slice_env;
+
+		$this->api_request_header = array(
+			'Content-Type: application/x-www-form-urlencoded',
+			'X-API-KEY: '.($this->onion_slice_env->api_token ?? ''),
+		);
+		if( ($this->onion_slice_env->auth->type ?? '') == 'basic' && strlen($this->onion_slice_env->auth->id ?? '') && strlen($this->onion_slice_env->auth->pw ?? '') ){
+			array_push($this->api_request_header, 'Authorization: Basic '.base64_encode($this->onion_slice_env->auth->id.':'.$this->onion_slice_env->auth->pw));
+		}
 	}
 
 	public function fs(){return $this->fs;}
@@ -297,10 +306,7 @@ class app {
 			stream_context_create(array(
 				'http' => array(
 					'method'=> 'GET',
-					'header'=> implode("\r\n", array(
-						'Content-Type: application/x-www-form-urlencoded',
-						'X-API-KEY: '.$this->onion_slice_env->api_token,
-					)),
+					'header'=> implode("\r\n", $this->api_request_header),
 				),
 			)));
 		$rtn = json_decode($json);
@@ -318,10 +324,7 @@ class app {
 			stream_context_create(array(
 				'http' => array(
 					'method'=> 'POST',
-					'header'=> implode("\r\n", array(
-						'Content-Type: application/x-www-form-urlencoded',
-						'X-API-KEY: '.$this->onion_slice_env->api_token,
-					)),
+					'header'=> implode("\r\n", $this->api_request_header),
 					'content' => http_build_query(array(
 						'id' => $task_id ?? '',
 						'result' => ($result ? 1 : 0),
