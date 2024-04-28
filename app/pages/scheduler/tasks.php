@@ -6,7 +6,7 @@ $scheduler = $project->scheduler();
 ?>
 
 
-<ul class="px2-horizontal-list px2-horizontal-list--right">
+<ul class="px2-horizontal-list">
     <li><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler" class="px2-btn">戻る</a></li>
 </ul>
 <?php

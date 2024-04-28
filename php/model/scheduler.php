@@ -149,6 +149,17 @@ class scheduler {
 		return (object) $rtn;
 	}
 
+	/**
+	 * 配信タスクを取得する
+	 */
+	public function get_task($task_id){
+		$tasks = $this->get_task_all();
+		if( !($tasks->{$task_id} ?? null) ){
+			return null;
+		}
+		return $tasks->{$task_id};
+	}
+
 	// --------------------------------------
 	// スケジュール
 

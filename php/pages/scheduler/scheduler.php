@@ -210,7 +210,21 @@ class scheduler {
 	 */
 	private function detail__index(){
 ?>
-<table class="px2-table">
+
+<ul class="px2-horizontal-list">
+	<li><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler" class="px2-btn">戻る</a></li>
+</ul>
+
+<?php
+if( !$this->schedule_info ){
+	?>
+	<p>存在しないスケジュールです。</p>
+	<?php
+	return;
+}
+?>
+
+<table class="px2-table px2-table--dl">
 <tbody>
 	<tr>
 		<th>ID</th>
@@ -227,8 +241,9 @@ class scheduler {
 </tbody>
 </table>
 
-<p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler" class="px2-btn">戻る</a></p>
-<p><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler.<?= htmlspecialchars($this->schedule_id ?? '') ?>.delete" class="px2-btn px2-btn--danger">この配信予約をキャンセルする</a></p>
+<ul class="px2-horizontal-list px2-horizontal-list--center">
+	<li><a href="?a=proj.<?= htmlspecialchars($this->project_id ?? '') ?>.scheduler.<?= htmlspecialchars($this->schedule_id ?? '') ?>.delete" class="px2-btn px2-btn--danger">この配信予約をキャンセルする</a></li>
+</ul>
 
 <?php
 		return;

@@ -3,42 +3,45 @@ $projects = new \tomk79\onionSlice\model\projects($rencon);
 $project_id = $rencon->get_route_param('projectId');
 $project = $projects->get($project_id);
 $scheduler = $project->scheduler();
+$task_id = $rencon->get_route_param('taskId');
+$task_info = $scheduler->get_task($task_id);
 ?>
 
 
-<ul class="px2-horizontal-list px2-horizontal-list--right">
-    <li><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler" class="px2-btn">戻る</a></li>
+<ul class="px2-horizontal-list">
+	<li><a href="?a=proj.<?= htmlspecialchars($project_id) ?>.scheduler.tasks" class="px2-btn">戻る</a></li>
 </ul>
+
 <?php
-$active_tasks = $scheduler->get_task_all();
-if( !count(array_keys(get_object_vars($active_tasks))) ){
-    echo "<p>配信タスクはありません。</p>";
-}else{
-    echo '<div class="px2-responsive">'."\n";
-    echo '<table class="px2-table" style="width:100%;">'."\n";
-    ?>
-    <thead>
-    <tr>
-        <th>タスクID</th>
-        <th>操作</th>
-        <th>リビジョン</th>
-        <th></th>
-    </tr>
-    </thead>
-    <?php
-    echo '<tbody>'."\n";
-    foreach( $active_tasks as $task_id => $task_info ){
-        ?>
-        <tr>
-            <td><?= htmlspecialchars($task_id) ?></td>
-            <td><?= htmlspecialchars($task_info->type ?? '---') ?></td>
-            <td><?= htmlspecialchars($task_info->properties->revision ?? '---') ?></td>
-            <td><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.scheduler_tasks.<?= htmlspecialchars($task_id ?? '') ?>.detail" class="px2-btn px2-btn--primary">詳細</a></td>
-        </tr>
-        <?php
-    }
-    echo '</tbody>'."\n";
-    echo '</table>'."\n";
-    echo '</div>'."\n";
+if( !$task_info ){
+	?>
+	<p>存在しないタスクです。</p>
+	<?php
+	return;
 }
 ?>
+
+<table class="px2-table px2-table--dl">
+	<tbody>
+		<tr>
+			<th>タスクID</th>
+			<td><?= htmlspecialchars($task_id ?? '---') ?></td>
+		</tr>
+		<tr>
+			<th>タスク発行日時</th>
+			<td><?= htmlspecialchars($task_info->task_created_at ?? '---') ?></td>
+		</tr>
+		<tr>
+			<th>タスクの種類</th>
+			<td><?= htmlspecialchars($task_info->type ?? '---') ?></td>
+		</tr>
+		<tr>
+			<th>スケジュール</th>
+			<td><?= htmlspecialchars($task_info->properties->id ?? '---') ?></td>
+		</tr>
+		<tr>
+			<th>リビジョン</th>
+			<td><?= htmlspecialchars($task_info->properties->revision ?? '---') ?></td>
+		</tr>
+	</tbody>
+</table>
