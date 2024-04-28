@@ -104,6 +104,8 @@ class app {
 		foreach($tasks->tasks as $task_id => $task_info){
 			$this->touch_lockfile('main');
 
+			set_time_limit(3*60*60);
+
 			echo '-----------'."\n";
 			echo 'Task '.($task_id ?? '').' ('.($task_info->type ?? '').')'."\n";
 
@@ -147,6 +149,10 @@ class app {
 					// --------------------------------------
 					// 配信予約の更新
 					// TODO: 未実装
+					echo '  -> [ERROR] remove failed.'."\n";
+
+					// 配信タスクの処理結果を報告する
+					$this->api_send_report_scheduler_task($task_id, false, 'Failed to update '.$task_info->properties->id.'.');
 					break;
 
 				case "cancel":
@@ -173,12 +179,20 @@ class app {
 					// --------------------------------------
 					// 割り込み即時配信
 					// TODO: 未実装
+					echo '  -> [ERROR] update failed.'."\n";
+
+					// 配信タスクの処理結果を報告する
+					$this->api_send_report_scheduler_task($task_id, false, 'Failed to update '.$task_info->properties->id.'.');
 					break;
 
 				case "rollback":
 					// --------------------------------------
 					// 巻き戻し
 					// TODO: 未実装
+					echo '  -> [ERROR] rollback failed.'."\n";
+
+					// 配信タスクの処理結果を報告する
+					$this->api_send_report_scheduler_task($task_id, false, 'Failed to rollback '.$task_info->properties->id.'.');
 					break;
 			}
 
@@ -189,8 +203,11 @@ class app {
 
 			echo "\n";
 		}
+
 		echo "\n";
 		echo "\n";
+
+		set_time_limit(30);
 
 
 		// --------------------------------------
@@ -204,6 +221,8 @@ class app {
 			// 未展開のリリース予約を展開する
 			echo 'reserved...'."\n";
 			foreach($task_info->expected_results as $schedule_id => $schedule_info){
+				set_time_limit(3*60*60);
+
 				$realpath_release_reservation_dir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/');
 				if( !is_dir($realpath_release_reservation_dir) ){
 					$this->fs->mkdir($realpath_release_reservation_dir);
@@ -230,6 +249,8 @@ class app {
 			$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/');
 			$reserved_dirs = $this->fs->ls($realpath_basedir);
 			foreach($reserved_dirs as $reserved_dir){
+				set_time_limit(60);
+
 				if( !($task_info->expected_results->{$reserved_dir} ?? null) ){
 					$this->fs->chmod_r($realpath_basedir.$reserved_dir.'/', 0777, 0777);
 					$this->fs->rm($realpath_basedir.$reserved_dir.'/');
@@ -240,6 +261,9 @@ class app {
 			echo ''."\n";
 			echo "\n";
 		}
+
+		set_time_limit(30);
+
 
 		// --------------------------------------
 		// 配信する
