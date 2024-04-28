@@ -44,7 +44,7 @@ class app {
 	 * 処理を実行する
 	 */
 	public function run(){
-		echo '==========================='."\n";
+		echo '======================================='."\n";
 		echo '- Onion Slice - Web Waiter - Started'."\n";
 		echo "\n";
 
@@ -63,15 +63,19 @@ class app {
 		$this->fs->mkdir($this->onion_slice_env->realpath_data_dir.'/logs/');
 		$this->fs->mkdir($this->onion_slice_env->realpath_data_dir.'/app_lock/');
 
+		// 配信する
+		// NOTE: 前のプロセスが スタックしている または 進行中 の場合でも、配信処理が滞るのは望ましくないので、
+		// lock() の前にも実行しておく。
+		$this->publish();
+
+
+		// --------------------------------------
+		// 処理を開始
+		// 排他ロックを開始する
 		if( !$this->lock('main') ){
 			trigger_error('Application locked. Other process is progress...');
 			exit();
 		}
-
-
-		// --------------------------------------
-		// 配信する
-		$this->publish();
 
 
 		// --------------------------------------
@@ -91,17 +95,21 @@ class app {
 
 		// --------------------------------------
 		// 配信タスクを処理する
+		echo '==========================='."\n";
+		echo 'Executing tasks'."\n";
+		echo "\n";
+
 		$task_created_at = null;
 		$task_info = null;
 		foreach($tasks->tasks as $task_created_at => $task_info){
 			$this->touch_lockfile('main');
 
-			echo "\n";
 			echo '-----------'."\n";
-			echo '- '.($task_info->id ?? '').' ('.($task_info->type ?? '').')'."\n";
+			echo ''.($task_info->id ?? '').' ('.($task_info->type ?? '').')'."\n";
 
 			if( $this->id2timestamp($task_created_at) <= $last_task_timestamp ){
 				echo '  -> skipped.'."\n";
+				echo "\n";
 				continue;
 			}
 
@@ -111,8 +119,8 @@ class app {
 					// 配信予約の追加
 					$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($task_info->properties->id).'/');
 					$this->fs->mkdir($realpath_basedir);
-
 					if(!is_dir($realpath_basedir)){
+						echo '  -> [ERROR] making directory failed.'."\n";
 						continue 2;
 					}
 
@@ -128,6 +136,8 @@ class app {
 					// TODO: ここでタスクの処理結果を報告する
 
 					chdir($cd);
+
+					echo '  -> succeeded.'."\n";
 					break;
 
 				case "update":
@@ -145,6 +155,11 @@ class app {
 					}
 					$this->fs->chmod_r($realpath_basedir, 0777, 0777);
 					$result = $this->fs->rm($realpath_basedir);
+					if($result){
+						echo '  -> removed.'."\n";
+					}else{
+						echo '  -> [ERROR] remove failed.'."\n";
+					}
 					break;
 
 				case "asap":
@@ -164,14 +179,23 @@ class app {
 
 			$status->last_task_created_at = $task_created_at;
 			$this->save_status($status);
+
+			echo "\n";
 		}
+		echo "\n";
+		echo "\n";
 
 
 		// --------------------------------------
 		// 処理結果の整合性をチェックする
 		if($task_info){
 
+			echo '==========================='."\n";
+			echo 'Checking expected'."\n";
+			echo "\n";
+
 			// 未展開のリリース予約を展開する
+			echo 'reserved...'."\n";
 			foreach($task_info->expected_results as $schedule_id => $schedule_info){
 				$realpath_release_reservation_dir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($schedule_id).'/');
 				if( !is_dir($realpath_release_reservation_dir) ){
@@ -181,16 +205,21 @@ class app {
 				$cd = realpath('.');
 				chdir($realpath_release_reservation_dir);
 
-				// git clone する
-				// 指定したリビジョンのみをシャローコピーする。
-				$stdout = shell_exec('git init');
-				$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
-				$stdout = shell_exec('git reset --hard FETCH_HEAD');
-
+				// 現在のリビジョン番号を確認する
+				$stdout = shell_exec('git show -s --format=%H');
+				$current_revision = trim($stdout ?? '');
+				if( $schedule_info->revision !== $current_revision ){
+					// 期待されるリビジョンではない場合、git clone する。
+					// 指定したリビジョンのみをシャローコピーする。
+					$stdout = shell_exec('git init');
+					$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
+					$stdout = shell_exec('git reset --hard FETCH_HEAD');
+				}
 				chdir($cd);
 			}
 
 			// 削除されたはずののリリース予約を削除する
+			echo 'removed...'."\n";
 			$realpath_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/');
 			$reserved_dirs = $this->fs->ls($realpath_basedir);
 			foreach($reserved_dirs as $reserved_dir){
@@ -199,6 +228,10 @@ class app {
 					$this->fs->rm($realpath_basedir.$reserved_dir.'/');
 				}
 			}
+
+			echo '  -> OK.'."\n";
+			echo ''."\n";
+			echo "\n";
 		}
 
 		// --------------------------------------
@@ -216,7 +249,8 @@ class app {
 		}
 
 		echo "\n";
-		echo '==========================='."\n";
+		echo "\n";
+		echo '======================================='."\n";
 		echo '- Onion Slice - Web Waiter - finished'."\n";
 		echo "\n";
 
@@ -250,6 +284,11 @@ class app {
 	 * リリース予約フォルダを公開する
 	 */
 	private function publish(){
+
+		echo '==========================='."\n";
+		echo 'Publishing reserved directory'."\n";
+		echo "\n";
+
 		// 過去でかつ最新の配信スケジュールIDを特定する
 		$now = time();
 		$current_schedule_timestamp = 0;
@@ -282,11 +321,17 @@ class app {
 		clearstatcache(true);
 
 		if( strlen($current_schedule_id ?? '') ){
+			echo 'Target directory: '.($current_schedule_id)."\n";
+
 			$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_id).'/');
 			exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production->realpath));
 		}
 
 		clearstatcache(true);
+
+		echo '  -> OK.'."\n";
+		echo "\n";
+		echo "\n";
 
 		return;
 	}
