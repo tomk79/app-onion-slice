@@ -160,6 +160,16 @@
 			"page": "tomk79\\onionSlice\\api\\scheduler::api_report_scheduler_task"
 		}
 	},
+	"console_route": {
+		"proj.{projectId?}.get_scheduler_tasks": {
+			"title": "スケジューラーの配信タスクを取得する",
+			"page": "tomk79\\onionSlice\\api\\scheduler::console_get_scheduler_tasks"
+		},
+		"proj.{projectId?}.report_scheduler_task": {
+			"title": "ウェイターからタスクの処理結果のレポートを受け付ける",
+			"page": "tomk79\\onionSlice\\api\\scheduler::console_report_scheduler_task"
+		}
+	},
 	"theme": "app/theme/theme.php",
 	"config_template": "app/config_template.php"
 }

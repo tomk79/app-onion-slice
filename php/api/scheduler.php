@@ -26,6 +26,22 @@ class scheduler {
 	}
 
 	/**
+	 * Console: スケジューラーの配信タスクを取得する
+	 */
+	static public function console_get_scheduler_tasks( $rencon ){
+		$ctrl = new self($rencon);
+		return json_encode($ctrl->get_task_all());
+	}
+
+	/**
+	 * Console: ウェイターからタスクの処理結果のレポートを受け付ける
+	 */
+	static public function console_report_scheduler_task( $rencon ){
+		$ctrl = new self($rencon);
+		return json_encode($ctrl->report_scheduler_task());
+	}
+
+	/**
 	 * Constructor
 	 */
 	public function __construct( $rencon ){
