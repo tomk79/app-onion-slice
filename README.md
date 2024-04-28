@@ -1,6 +1,41 @@
 # Onion Slice
 
 
+## セットアップ - Setup
+
+1. `dist/` ディレクトリ内に置かれている `onion-slice.php` を、管理用のウェブサーバーの任意のディレクトリにアップロードする。
+2. ウェブブラウザで、アップロードした `onion-slice.php` にアクセスし、初期設定画面を開く。
+3. 画面の指示に従って初期設定する。
+
+
+### スケジュール更新機能のセットアップ
+
+Onion Slice には、スケジュール更新機能が付属しています。
+この機能を利用するには、ウェブフロントサーバーに、 `onion-slice--waiter.phar` をセットアップします。
+
+1. `dist/` ディレクトリ内に置かれている `onion-slice--waiter.phar` を、ウェブフロントサーバーの任意のディレクトリ(非公開ディレクトリ)にアップロードする。
+2. 任意の非公開ディレクトリに、環境設定ファイル(JSON)を作成する。
+
+```json
+{
+    "url": "http://192.168.0.12:8080/onion-slice.php",
+    "api_token": "xxxxxxxxx",
+    "api_basic_auth": "basic_auth_id:yourpassword",
+    "realpath_data_dir": "/path/to/onion-slice--waiter_files/",
+    "realpath_public_symlink": "/path/to/var/www/htdocs",
+    "git_remote": "https://git-remote.com/example/example.git",
+    "project_id": "xxxxxxxxxxxxxxxxx"
+}
+```
+
+3. `crontab` に、次のようにコマンドを登録する。
+
+```bash
+* * * * * /path/to/onion-slice--waiter.phar --env /path/to/env.json
+```
+
+
+
 ## 更新履歴 - Change log
 
 ### tomk79/app-onion-slice v0.2.0 (リリース日未定)

@@ -52,14 +52,10 @@ class testHelper{
 
 		$onion_slice_env = (object) array(
 			"url" => 'http://localhost:3000/onion-slice.php',
-			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--waiter_files/'),
-			"realpath_public_dir" => (object) array(
-				"production" => (object) array(
-					"realpath" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
-				)
-			),
-			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),
 			"api_token" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
+			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--waiter_files/'),
+			"realpath_public_symlink" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
+			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),
 			"project_id" => 'test--production',
 		);
 		$fs->save_file(__DIR__.'/../testdata/web-front/onion-slice--env.json', json_encode($onion_slice_env, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE));

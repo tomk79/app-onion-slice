@@ -41,8 +41,8 @@ class app {
 			'Content-Type: application/x-www-form-urlencoded',
 			'X-API-KEY: '.($this->onion_slice_env->api_token ?? ''),
 		);
-		if( ($this->onion_slice_env->auth->type ?? '') == 'basic' && strlen($this->onion_slice_env->auth->id ?? '') && strlen($this->onion_slice_env->auth->pw ?? '') ){
-			array_push($this->api_request_header, 'Authorization: Basic '.base64_encode($this->onion_slice_env->auth->id.':'.$this->onion_slice_env->auth->pw));
+		if( strlen($this->onion_slice_env->api_basic_auth ?? '') ){
+			array_push($this->api_request_header, 'Authorization: Basic '.base64_encode($this->onion_slice_env->api_basic_auth));
 		}
 	}
 
@@ -381,7 +381,7 @@ class app {
 			echo 'Target schedule: '.($current_schedule_id)."\n";
 
 			$realpath_current_contents_basedir = $this->fs->get_realpath($this->onion_slice_env->realpath_data_dir.'/standby/'.urlencode($current_schedule_id).'/');
-			exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_dir->production->realpath));
+			exec('ln -nfs '.escapeshellarg($realpath_current_contents_basedir).' '.escapeshellarg($this->onion_slice_env->realpath_public_symlink));
 		}
 
 		clearstatcache(true);
