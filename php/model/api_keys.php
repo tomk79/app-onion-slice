@@ -41,6 +41,9 @@ class api_keys {
 		);
 
 		$api_keys = dataDotPhp::read_json($this->realpath_api_keys_json);
+		if( !$api_keys ){
+			$api_keys = (object) array();
+		}
 		$api_keys->{$api_key_initial10} = $new_api_key_info;
 		$result = dataDotPhp::write_json($this->realpath_api_keys_json, $api_keys);
 		if( !$result ){
