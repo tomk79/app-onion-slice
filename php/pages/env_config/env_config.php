@@ -5,6 +5,7 @@ class env_config {
 
 	private $rencon;
 	private $env_config;
+	private $api_keys;
 
 	/**
 	 * 開始開始
@@ -46,6 +47,22 @@ class env_config {
 		return $ctrl->remote_delete__route();
 	}
 
+	/**
+	 * APIキー作成API
+	 */
+	static public function api_key_create( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->api_key_create__route();
+	}
+
+	/**
+	 * APIキー削除画面
+	 */
+	static public function api_key_delete( $rencon ){
+		$ctrl = new self($rencon);
+		return $ctrl->api_key_delete__route();
+	}
+
 
 	/**
 	 * Constructor
@@ -53,6 +70,7 @@ class env_config {
 	public function __construct( $rencon ){
 		$this->rencon = $rencon;
 		$this->env_config = new \tomk79\onionSlice\model\env_config( $this->rencon );
+		$this->api_keys = new \tomk79\onionSlice\model\api_keys( $this->rencon );
 	}
 
 
@@ -62,6 +80,14 @@ class env_config {
 	 * 設定トップ画面: ルーティング
 	 */
 	private function index__route(){
+		$api_keys = $this->api_keys->get_api_keys();
+		return $this->index__startpage($api_keys);
+	}
+
+	/**
+	 * 設定トップ画面: スタートページ
+	 */
+	private function index__startpage($api_keys){
 ?>
 
 	<h2>コマンドのパス設定</h2>
@@ -121,6 +147,59 @@ class env_config {
 			</table>
 		</div>
 	</div>
+	<div class="px2-h2">
+		<div class="px2-h2__shoulder"><a href="?a=env_config.api_keys.create" class="px2-btn px2-btn--primary" id="cont-btn-create-api-key">新規作成</a></div>
+		<h2>APIキー</h2>
+	</div>
+	<div class="px2-p">
+		<div class="px2-responsive">
+			<table class="px2-table" style="width: 100%;">
+				<thead>
+					<tr>
+						<th>APIキー</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+<?php
+		foreach($api_keys as $api_key){
+			?><tr>
+				<td><?= htmlspecialchars(str_pad($api_key ?? '', 32, '*', STR_PAD_RIGHT)) ?></td>
+				<td class="px2-text-align-center"><a href="?a=env_config.api_keys.<?= htmlspecialchars(urlencode($api_key)) ?>.delete" class="px2-btn px2-btn--danger">削除</a></td>
+			</tr><?php
+		}
+?>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<script>
+		$('#cont-btn-create-api-key').on('click', function(event){
+			event.preventDefault();
+
+			$.ajax({
+				"url": '?a=env_config.api_keys.create',
+				"type": "post",
+				"data": {
+					'CSRF_TOKEN': $('meta[name="csrf-token"]').attr('content'),
+				},
+			}).done((result)=>{
+				px2style.modal({
+					title: '新しいAPIキー',
+					body: `<div>
+						<p>APIキー: <code>${result.key}</code></p>
+					</div>`,
+					onclose: ()=>{
+						window.location.reload();
+					}
+				});
+			})
+			.fail((err)=>{
+				console.error(err);
+				alert('APIキーの作成に失敗しました。');
+			});
+		});
+	</script>
 <?php
 
 		return;
@@ -613,4 +692,40 @@ class env_config {
 		return;
 	}
 
+
+	// --------------------------------------
+
+	/**
+	 * APIキー作成API: ルーティング
+	 */
+	public function api_key_create__route(){
+		return $this->api_key_create__json_api();
+	}
+	public function api_key_create__json_api(){
+		$api_key = $this->api_keys->create_new_api_key();
+
+		header('Content-type: text/json');
+		echo json_encode(array(
+			'result' => !!$api_key,
+			'message' => ($api_key ? 'OK' : 'Failed'),
+			'key' => $api_key,
+		));
+		exit;
+	}
+
+	// --------------------------------------
+
+	/**
+	 * APIキー削除画面: ルーティング
+	 */
+	public function api_key_delete__route(){
+		return $this->api_key_delete__index();
+	}
+
+	/**
+	 * APIキー削除画面: ルーティング
+	 */
+	public function api_key_delete__index(){
+		return '';
+	}
 }

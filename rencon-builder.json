@@ -107,6 +107,16 @@
 			"allow_methods": ["get", "post"],
 			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::remote_delete"
 		},
+		"env_config.api_keys.create": {
+			"title": "新規APIキー作成",
+			"allow_methods": ["post"],
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::api_key_create"
+		},
+		"env_config.api_keys.{apiKeyId?}.delete": {
+			"title": "APIキー削除",
+			"allow_methods": ["get", "post"],
+			"page": "tomk79\\onionSlice\\pages\\env_config\\env_config::api_key_delete"
+		},
 
 		"api.directory_suggestion": {
 			"title": "Directory Suggestion API",
