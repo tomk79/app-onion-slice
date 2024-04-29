@@ -368,7 +368,7 @@ class app {
 
 		// composer install する
 		if( is_file('./composer.json') ){
-			$stdout .= shell_exec($this->get_cmd('composer').' install');
+			$stdout .= shell_exec($this->get_cmd('php').' '.$this->get_cmd('composer').' install');
 		}
 
 		chdir($cd);
