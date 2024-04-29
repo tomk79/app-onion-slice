@@ -21,6 +21,9 @@ class api_keys {
 	 */
 	public function get_api_keys(){
 		$api_keys = dataDotPhp::read_json($this->realpath_api_keys_json);
+		if( !$api_keys ){
+			return array();
+		}
 		return array_keys( get_object_vars($api_keys) );
 	}
 
