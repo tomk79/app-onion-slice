@@ -316,7 +316,7 @@ class app {
 		$stdout = null;
 		if( !preg_match('/^https?\:\/\//i', $this->onion_slice_env->api_endpoint) && is_file($this->onion_slice_env->api_endpoint) ){
 			$cmd = array();
-			array_push($cmd, 'php');
+			array_push($cmd, $this->get_cmd('php'));
 			array_push($cmd, escapeshellarg($this->onion_slice_env->api_endpoint));
 			foreach( $params as $key => $val ){
 				array_push($cmd, '--'.$key);
@@ -353,7 +353,7 @@ class app {
 		if( file_exists('./.git') ){
 			// すでにいずれかのバージョンで展開済みの場合
 			// 現在のリビジョン番号を確認する
-			$current_revision = shell_exec('git show -s --format=%H');
+			$current_revision = shell_exec($this->get_cmd('git').' show -s --format=%H');
 			$current_revision = trim($current_revision ?? '');
 		}
 
@@ -361,14 +361,14 @@ class app {
 			// 期待するリビジョンが展開されていない場合
 			// git clone する
 			// 指定したリビジョンのみをシャローコピーする。
-			$stdout .= shell_exec('git init');
-			$stdout .= shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($revision).'');
-			$stdout .= shell_exec('git reset --hard FETCH_HEAD');
+			$stdout .= shell_exec($this->get_cmd('git').' init');
+			$stdout .= shell_exec($this->get_cmd('git').' fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($revision).'');
+			$stdout .= shell_exec($this->get_cmd('git').' reset --hard FETCH_HEAD');
 		}
 
 		// composer install する
 		if( is_file('./composer.json') ){
-			$stdout .= shell_exec('composer install');
+			$stdout .= shell_exec($this->get_cmd('composer').' install');
 		}
 
 		chdir($cd);
@@ -559,6 +559,13 @@ class app {
 
 	// ----------------------------------------------------------------------------
 	// Utils
+
+	/**
+	 * コマンドのパスを取得する
+	 */
+	private function get_cmd($cmd){
+		return $this->onion_slice_env->commands->{$cmd} ?? $cmd;
+	}
 
 	/**
 	 * リリース予約のディレクトリ名をパースする

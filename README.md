@@ -24,7 +24,12 @@ Onion Slice には、スケジュール更新機能が付属しています。
     "realpath_data_dir": "/path/to/onion-slice--waiter_files/",
     "realpath_public_symlink": "/path/to/var/www/htdocs",
     "git_remote": "https://git-remote.com/example/example.git",
-    "project_id": "xxxxxxxxxxxxxxxxx"
+    "project_id": "xxxxxxxxxxxxxxxxx",
+    "commands": {
+        "php": "/opt/homebrew/bin/php",
+        "php": "/usr/local/bin/composer" ,
+        "git": "/usr/bin/git"
+    }
 }
 ```
 
