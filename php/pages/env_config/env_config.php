@@ -636,6 +636,7 @@ class env_config {
 	<input type="hidden" name="remote_uri" value="<?= htmlspecialchars( $this->rencon->req()->get_param('remote_uri') ) ?>" />
 	<input type="hidden" name="CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
 
+	<p>リモート情報 <code><?= htmlspecialchars( $this->rencon->req()->get_param('remote_uri') ) ?></code> を削除します。</p>
 	<p>この操作は取り消せません。</p>
 	<p>本当に削除しますか？</p>
 
@@ -678,7 +679,6 @@ class env_config {
 		exit;
 	}
 
-
 	/**
 	 * リモート情報削除画面: 完了画面
 	 */
@@ -719,13 +719,82 @@ class env_config {
 	 * APIキー削除画面: ルーティング
 	 */
 	public function api_key_delete__route(){
-		return $this->api_key_delete__index();
+
+		if( $this->rencon->req()->get_param('m') == 'completed' ){
+			return $this->api_key_delete__completed();
+		}
+
+		$validationResult = $this->api_key_delete__validate();
+
+		if( !strlen($this->rencon->req()->get_param('m') ?? '') ){
+			$validationResult->result = true;
+			$validationResult->errors = new \stdClass();
+		}
+
+		if( $this->rencon->req()->get_param('m') == 'save' && $validationResult->result ){
+			$this->rencon->utils->api_post_only();
+			$this->api_key_delete__save();
+			exit;
+		}
+
+		return $this->api_key_delete__input($validationResult);
+		return $this->api_key_delete__input();
 	}
 
 	/**
 	 * APIキー削除画面: ルーティング
 	 */
-	public function api_key_delete__index(){
-		return '';
+	public function api_key_delete__input($validationResult){
+?>
+
+<form action="?a=<?= htmlspecialchars($this->rencon->req()->get_param('a') ?? '') ?>" method="post">
+	<input type="hidden" name="m" value="save" />
+	<input type="hidden" name="CSRF_TOKEN" value="<?= htmlspecialchars($this->rencon->auth()->get_csrf_token()) ?>" />
+
+	<p>APIキー <code><?= htmlspecialchars( str_pad($this->rencon->get_route_param('apiKeyId') ?? '', 32, '*', STR_PAD_RIGHT) ) ?></code> を削除します。</p>
+	<p>この操作は取り消せません。</p>
+	<p>本当に削除しますか？</p>
+
+	<p class="px2-text-align-center"><button class="px2-btn px2-btn--danger">削除する</button></p>
+</form>
+
+<?php
+		return;
+	}
+
+	/**
+	 * APIキー削除画面: バリデーション
+	 */
+	private function api_key_delete__validate(){
+		$validationResult = (object) array(
+			'result' => true,
+			'errors' => (object) array(),
+		);
+
+		return $validationResult;
+	}
+
+	/**
+	 * APIキー削除画面: 保存処理を実行する
+	 */
+	private function api_key_delete__save(){
+		$api_key_initial10 = $this->rencon->get_route_param('apiKeyId');
+		$result = $this->api_keys->delete_api_key($api_key_initial10);
+
+		header("Location: ?a=".htmlspecialchars($this->rencon->req()->get_param('a') ?? '').'&m=completed&result='.urlencode($result ? '1' : '0'));
+		exit;
+	}
+
+	/**
+	 * APIキー削除画面: 完了画面
+	 */
+	private function api_key_delete__completed(){
+?>
+
+<p>削除しました。</p>
+<p><a href="?a=env_config" class="px2-btn px2-btn--primary">完了</a></p>
+
+<?php
+		return;
 	}
 }
