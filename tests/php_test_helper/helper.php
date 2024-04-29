@@ -52,7 +52,7 @@ class testHelper{
 
 		$onion_slice_env = (object) array(
 			"api_endpoint" => 'http://localhost:3000/onion-slice.php',
-			"api_token" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
+			"api_key" => "12345zzzzzzzzzzz-zzzzzzzzz-zzzzzzzzz",
 			"realpath_data_dir" => $fs->get_realpath(__DIR__.'/../testdata/web-front/onion-slice--waiter_files/'),
 			"realpath_public_symlink" => $fs->get_realpath(__DIR__.'/../testdata/web-server/').'production',
 			"git_remote" => $fs->get_realpath(__DIR__.'/../testdata/git-remote/.git'),

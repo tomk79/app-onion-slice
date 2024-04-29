@@ -19,7 +19,7 @@ Onion Slice には、スケジュール更新機能が付属しています。
 ```json
 {
     "api_endpoint": "http://192.168.0.12:8080/onion-slice.php",
-    "api_token": "xxxxxxxxx",
+    "api_key": "xxxxxxxxx",
     "api_basic_auth": "basic_auth_id:yourpassword",
     "realpath_data_dir": "/path/to/onion-slice--waiter_files/",
     "realpath_public_symlink": "/path/to/var/www/htdocs",

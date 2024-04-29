@@ -39,7 +39,7 @@ class app {
 
 		$this->api_request_header = array(
 			'Content-Type: application/x-www-form-urlencoded',
-			'X-API-KEY: '.($this->onion_slice_env->api_token ?? ''),
+			'X-API-KEY: '.($this->onion_slice_env->api_key ?? ''),
 		);
 		if( strlen($this->onion_slice_env->api_basic_auth ?? '') ){
 			array_push($this->api_request_header, 'Authorization: Basic '.base64_encode($this->onion_slice_env->api_basic_auth));
