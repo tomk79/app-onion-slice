@@ -137,16 +137,7 @@ class app {
 						continue 2;
 					}
 
-					$cd = realpath('.');
-					chdir($realpath_basedir);
-
-					// git clone する
-					// 指定したリビジョンのみをシャローコピーする。
-					$stdout = shell_exec('git init');
-					$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($task_info->properties->revision).'');
-					$stdout = shell_exec('git reset --hard FETCH_HEAD');
-
-					chdir($cd);
+					$this->deploy($realpath_basedir, $task_info->properties->revision);
 
 					echo '  -> succeeded.'."\n";
 
@@ -237,20 +228,7 @@ class app {
 					$this->fs->mkdir($realpath_release_reservation_dir);
 				}
 
-				$cd = realpath('.');
-				chdir($realpath_release_reservation_dir);
-
-				// 現在のリビジョン番号を確認する
-				$stdout = shell_exec('git show -s --format=%H');
-				$current_revision = trim($stdout ?? '');
-				if( $schedule_info->revision !== $current_revision ){
-					// 期待されるリビジョンではない場合、git clone する。
-					// 指定したリビジョンのみをシャローコピーする。
-					$stdout = shell_exec('git init');
-					$stdout = shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($schedule_info->revision).'');
-					$stdout = shell_exec('git reset --hard FETCH_HEAD');
-				}
-				chdir($cd);
+				$this->deploy($realpath_release_reservation_dir, $schedule_info->revision);
 			}
 
 			// 削除されたはずののリリース予約を削除する
@@ -361,6 +339,41 @@ class app {
 		return $stdout;
 	}
 
+
+	/**
+	 * コード一式をデプロイする
+	 */
+	private function deploy($realpath_basedir, $revision){
+		$cd = realpath('.');
+		chdir($realpath_basedir);
+
+		$current_revision = null;
+		$stdout = '';
+
+		if( file_exists('./.git') ){
+			// すでにいずれかのバージョンで展開済みの場合
+			// 現在のリビジョン番号を確認する
+			$current_revision = shell_exec('git show -s --format=%H');
+			$current_revision = trim($current_revision ?? '');
+		}
+
+		if( !$current_revision || $revision !== $current_revision ){
+			// 期待するリビジョンが展開されていない場合
+			// git clone する
+			// 指定したリビジョンのみをシャローコピーする。
+			$stdout .= shell_exec('git init');
+			$stdout .= shell_exec('git fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($revision).'');
+			$stdout .= shell_exec('git reset --hard FETCH_HEAD');
+		}
+
+		// composer install する
+		if( is_file('./composer.json') ){
+			$stdout .= shell_exec('composer install');
+		}
+
+		chdir($cd);
+		return true;
+	}
 
 	/**
 	 * リリース予約フォルダを公開する

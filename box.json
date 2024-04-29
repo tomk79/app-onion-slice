@@ -3,7 +3,7 @@
         "vendor/tomk79/filesystem/php",
         "vendor/tomk79/request/php"
     ],
-    "main": "web-front/onion-slice--waiter.php",
+    "main": "src_waiter/onion-slice--waiter.php",
     "output": "dist/onion-slice--waiter.phar",
     "chmod": "0755",
     "stub": true
