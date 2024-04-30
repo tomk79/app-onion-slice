@@ -43,7 +43,7 @@ Onion Slice には、スケジュール更新機能が付属しています。
 
 ## 更新履歴 - Change log
 
-### tomk79/app-onion-slice v0.2.0 (リリース日未定)
+### tomk79/app-onion-slice v0.2.0 (2024年4月30日)
 
 - スケジュール配信機能を追加。
 - APIキーの管理機能を追加。
