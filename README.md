@@ -25,6 +25,11 @@ Onion Slice には、スケジュール更新機能が付属しています。
     "realpath_public_symlink": "/path/to/var/www/htdocs",
     "git_remote": "https://git-remote.com/example/example.git",
     "project_id": "xxxxxxxxxxxxxxxxx",
+    "scripts": {
+        "post-deploy-cmd": [
+            "anycommand"
+        ]
+    },
     "commands": {
         "php": "/opt/homebrew/bin/php",
         "php": "/usr/local/bin/composer" ,
@@ -42,6 +47,11 @@ Onion Slice には、スケジュール更新機能が付属しています。
 
 
 ## 更新履歴 - Change log
+
+### tomk79/app-onion-slice v0.2.1 (リリース日未定)
+
+- `onion-slice--waiter.phar` の設定に `scripts.post-deploy-cmd` を追加。
+- `onion-slice--waiter.phar` にPHPコマンドのパスが設定されていないときに、実行中のPHPからコマンドのパスを取得するようになった。
 
 ### tomk79/app-onion-slice v0.2.0 (2024年4月30日)
 

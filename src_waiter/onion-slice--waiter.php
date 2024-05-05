@@ -35,7 +35,7 @@ class app {
 		$onion_slice_env_json = file_get_contents($realpath_onion_slice_env);
 		$onion_slice_env = json_decode($onion_slice_env_json);
 
-		$this->onion_slice_env = $onion_slice_env;
+		$this->onion_slice_env = $onion_slice_env ?? (object) array();
 
 		$this->api_request_header = array(
 			'Content-Type: application/x-www-form-urlencoded',
@@ -371,6 +371,18 @@ class app {
 			$stdout .= shell_exec($this->get_cmd('php').' '.$this->get_cmd('composer').' install');
 		}
 
+		// post-deploy-cmd を実行する
+		if( !is_null( $this->onion_slice_env->scripts->{'post-deploy-cmd'} ?? null ) ){
+			$commands = $this->onion_slice_env->scripts->{'post-deploy-cmd'};
+			if( is_string($commands) ){
+				$commands = array($commands);
+			}
+			foreach($commands as $command){
+				$command = preg_replace('/^\@php\s/', $this->get_cmd('php').' ', $command);
+				$stdout .= shell_exec($command);
+			}
+		}
+
 		chdir($cd);
 		return true;
 	}
@@ -564,6 +576,9 @@ class app {
 	 * コマンドのパスを取得する
 	 */
 	private function get_cmd($cmd){
+		if( $cmd == 'php' ){
+			return $this->onion_slice_env->commands->{$cmd} ?? (strlen(PHP_BINARY ?? '') ? PHP_BINARY : null) ?? $cmd;
+		}
 		return $this->onion_slice_env->commands->{$cmd} ?? $cmd;
 	}
 
