@@ -174,19 +174,20 @@ class scheduler {
 
 		$realpath_base = $this->realpath_project_data_dir.'scheduler/'.urlencode($task_id).'/';
 		$csv = $this->rencon->fs()->read_csv($realpath_base.'log.csv.php');
-		foreach($csv as $idx => $csv_row){
-			if( !$idx ){
-				continue;
+		if( $csv && is_array($csv) ){
+			foreach($csv as $idx => $csv_row){
+				if( !$idx ){
+					continue;
+				}
+				$row = (object) array();
+				$row->datetime = $csv_row[0];
+				$row->remote_addr = $csv_row[1];
+				$row->task_id = $csv_row[2];
+				$row->result = $csv_row[3];
+				$row->message = $csv_row[4];
+				array_push($rtn->log, $row);
 			}
-			$row = (object) array();
-			$row->datetime = $csv_row[0];
-			$row->remote_addr = $csv_row[1];
-			$row->task_id = $csv_row[2];
-			$row->result = $csv_row[3];
-			$row->message = $csv_row[4];
-			array_push($rtn->log, $row);
 		}
-
 		return $rtn;
 	}
 
