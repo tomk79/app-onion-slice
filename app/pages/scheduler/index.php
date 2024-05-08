@@ -15,9 +15,11 @@ $active_schedules = $scheduler->get_schedule_all();
 if( !count(array_keys(get_object_vars($active_schedules))) ){
     echo "<p>配信予定はありません。</p>";
 }else{
-    echo '<div class="px2-responsive">'."\n";
-    echo '<table class="px2-table" style="width:100%;">'."\n";
+    $active_schedules_keys = array_keys(get_object_vars($active_schedules));
+    $active_schedules_keys = array_reverse($active_schedules_keys);
     ?>
+    <div class="px2-responsive">
+    <table class="px2-table" style="width:100%;">
     <thead>
     <tr>
         <th>ID</th>
@@ -26,9 +28,10 @@ if( !count(array_keys(get_object_vars($active_schedules))) ){
         <th></th>
     </tr>
     </thead>
+    <tbody>
     <?php
-    echo '<tbody>'."\n";
-    foreach( $active_schedules as $schedule_id => $schedule_info ){
+    foreach( $active_schedules_keys as $schedule_id ){
+        $schedule_info = $active_schedules->{$schedule_id};
         ?>
         <tr>
             <td><?= htmlspecialchars($schedule_id) ?></td>
@@ -38,8 +41,10 @@ if( !count(array_keys(get_object_vars($active_schedules))) ){
         </tr>
         <?php
     }
-    echo '</tbody>'."\n";
-    echo '</table>'."\n";
-    echo '</div>'."\n";
+    ?>
+    </tbody>
+    </table>
+    </div>
+    <?php
 }
 ?>
