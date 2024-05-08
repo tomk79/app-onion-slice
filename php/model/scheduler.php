@@ -67,6 +67,9 @@ class scheduler {
 		ksort($current_schedule);
 		$current_schedule = (object) $current_schedule;
 
+		// 古いスタンバイを削除する
+		$current_schedule = $this->remove_old_standbies($current_schedule);
+
 		$json = (object) array(
 			'uniqid' => uniqid(),
 			'type' => 'reserve',
@@ -268,6 +271,34 @@ class scheduler {
 	public function get_schedule($schedule_id){
 		$all_schedule = $this->get_schedule_all();
 		return $all_schedule->{$schedule_id} ?? null;
+	}
+
+	/**
+	 * 古いスタンバイ(配信スケジュール)を削除する
+	 */
+	private function remove_old_standbies($current_schedule){
+		$target_schedule_ids = array_keys(get_object_vars($current_schedule));
+		sort($target_schedule_ids);
+
+		foreach($target_schedule_ids as $idx => $target_schedule_id){
+			$schedule_created_at = $this->parse_release_at($target_schedule_id);
+			$schedule_created_at_time = strtotime($schedule_created_at);
+			if( $schedule_created_at_time > time() ){
+				unset($target_schedule_ids[$idx]);
+			}
+		}
+
+		// 過去最新のリリーススケジュールを含め、3世代分を残す
+		for( $i = 0; $i < 3; $i ++ ){
+			array_pop($target_schedule_ids);
+		}
+
+		// 削除対象となったスタンバイを削除する
+		$target_ids = $target_schedule_ids;
+		foreach($target_schedule_ids as $target_schedule_id){
+			unset($current_schedule->{$target_schedule_id});
+		}
+		return $current_schedule;
 	}
 
 
