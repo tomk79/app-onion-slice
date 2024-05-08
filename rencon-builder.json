@@ -70,11 +70,11 @@
 			"page": "tomk79\\onionSlice\\pages\\scheduler\\scheduler::delete"
 		},
 		"proj.{projectId?}.scheduler.tasks": {
-			"title": "配信スケジュール履歴",
+			"title": "配信タスク履歴",
 			"page": "app/pages/scheduler/tasks.php"
 		},
 		"proj.{projectId?}.scheduler.tasks.{taskId?}.detail": {
-			"title": "配信スケジュール履歴詳細",
+			"title": "配信タスク履歴詳細",
 			"page": "app/pages/scheduler/task_detail.php"
 		},
 

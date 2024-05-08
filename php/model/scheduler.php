@@ -82,6 +82,9 @@ class scheduler {
 			return false;
 		}
 
+		// 古いタスクをアーカイブする
+		$this->archive_old_tasks();
+
 		return true;
 	}
 
@@ -130,6 +133,9 @@ class scheduler {
 			return false;
 		}
 
+		// 古いタスクをアーカイブする
+		$this->archive_old_tasks();
+
 		return true;
 	}
 
@@ -140,6 +146,9 @@ class scheduler {
 		$dirs = $this->rencon->fs()->ls($this->realpath_project_data_dir.'scheduler/');
 		$rtn = array();
 		foreach($dirs as $dirname){
+			if( !preg_match('/^[0-9]{4}\-[0-9]{2}\-[0-9]{2}\-[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/', $dirname) ){
+				continue;
+			}
 			$json = dataDotPhp::read_json($this->realpath_project_data_dir.'scheduler/'.urlencode($dirname).'/task.json.php');
 			if( !$json ){
 				continue;
@@ -179,8 +188,7 @@ class scheduler {
 	}
 
 	/**
-	 * 配信スケジュール情報を取得する
-	 * @return void
+	 * タスクの処理経過を記録する
 	 */
 	public function log_task( $task_id, $result, $message ){
 		if(!strlen($task_id ?? '')){
@@ -201,6 +209,37 @@ class scheduler {
 		return;
 	}
 
+	/**
+	 * 古いタスクをアーカイブに移動する
+	 */
+	private function archive_old_tasks(){
+		$realpath_base_dir = $this->realpath_project_data_dir.'scheduler/';
+		$realpath_archive_dir = $this->realpath_project_data_dir.'scheduler/_archives/';
+		$tasks = $this->get_task_all();
+
+		$task_ids = array_keys(get_object_vars($tasks));
+		sort($task_ids);
+
+		// 最新のタスクは残す (古くても残す)
+		// 最新の `expected_results` が必要なので、消せない。
+		array_pop($task_ids);
+
+		$archive_targets = array();
+		foreach($task_ids as $task_id){
+			$task_created_at = $this->parse_release_at($task_id);
+			$task_created_at_time = strtotime($task_created_at);
+			if( $task_created_at_time < time() - (10*24*60*60) ){
+				array_push($archive_targets, $task_id);
+			}
+		}
+
+		// アーカイブ対象のディレクトリを、 `_archives` に移動する。
+		foreach($archive_targets as $target_task_id){
+			$archive_path = preg_replace('/\-/', '/', $target_task_id);
+			$this->rencon->fs()->mkdir_r($realpath_archive_dir.$archive_path);
+			$this->rencon->fs()->rename($realpath_base_dir.$target_task_id, $realpath_archive_dir.$archive_path);
+		}
+	}
 
 	// --------------------------------------
 	// スケジュール
