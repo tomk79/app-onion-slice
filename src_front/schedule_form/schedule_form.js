@@ -3,6 +3,7 @@ $(window).on('load', function(){
 	const $releaseDate = $('input[name=input-release_at-date]');
 	const $releaseHour = $('select[name=input-release_at-hour]');
 	const $releaseMin = $('select[name=input-release_at-min]');
+	const $worldClock = $('.os-world-clock');
 
 	(function(){
 		// 初期化
@@ -20,17 +21,19 @@ $(window).on('load', function(){
 
 	// ユーザーの入力を反映する
 	function onChange(){
-		const date = new Date(
-			$releaseDate.val() + 'T'
+		const timeZ = $releaseDate.val() + 'T'
 			+ $releaseHour.val().toString().padStart(2, '0') + ':'
 			+ $releaseMin.val().toString().padStart(2, '0') + ':'
 			+ '00'
-			+ 'Z'
-		);
+			+ 'Z';
+		const date = new Date(timeZ);
 		$release_at.val( date.getTime() / 1000 );
+
+		window.osWorldClock.drawWorldClock(timeZ, $worldClock);
 	}
 
 	$releaseDate.on('change', onChange);
 	$releaseHour.on('change', onChange);
 	$releaseMin.on('change', onChange);
+	onChange();
 });

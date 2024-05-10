@@ -127,6 +127,7 @@ class scheduler {
 						<option value="<?= intval($i) ?>"><?= intval($i) ?></option>
 						<?php } ?>
 					</select>
+					<div class="os-world-clock"></div>
 				</div>
 			</li>
 		</ul>
@@ -232,7 +233,13 @@ if( !$this->schedule_info ){
 	</tr>
 	<tr>
 		<th>公開予定日時</th>
-		<td><?= htmlspecialchars($this->schedule_info->release_at ?? '---') ?></td>
+		<td>
+			<?= htmlspecialchars($this->schedule_info->release_at ?? '---') ?>
+			<div class="os-world-clock"></div>
+			<script>
+				window.osWorldClock.drawWorldClock(<?= json_encode($this->schedule_info->release_at ?? '---') ?>, $('.os-world-clock'));
+			</script>
+		</td>
 	</tr>
 	<tr>
 		<th>リビジョン</th>
