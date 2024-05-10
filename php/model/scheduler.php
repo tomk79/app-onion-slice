@@ -275,6 +275,26 @@ class scheduler {
 	}
 
 	/**
+	 * 現在配信中のスケジュールIDを取得する
+	 */
+	public function get_current_schedule_id(){
+		$all_tasks = $this->get_schedule_all();
+		$keys = array_keys(get_object_vars($all_tasks));
+		sort($keys);
+		$now = time();
+		$current_schedule_id = null;
+		foreach($keys as $key){
+			$schedule_released_at = $this->parse_release_at($key);
+			$schedule_released_at_time = strtotime($schedule_released_at);
+			if($schedule_released_at_time > $now){
+				break;
+			}
+			$current_schedule_id = $key;
+		}
+		return $current_schedule_id;
+	}
+
+	/**
 	 * 古いスタンバイ(配信スケジュール)を削除する
 	 */
 	private function remove_old_standbies($current_schedule){
@@ -282,9 +302,9 @@ class scheduler {
 		sort($target_schedule_ids);
 
 		foreach($target_schedule_ids as $idx => $target_schedule_id){
-			$schedule_created_at = $this->parse_release_at($target_schedule_id);
-			$schedule_created_at_time = strtotime($schedule_created_at);
-			if( $schedule_created_at_time > time() ){
+			$schedule_released_at = $this->parse_release_at($target_schedule_id);
+			$schedule_released_at_time = strtotime($schedule_released_at);
+			if( $schedule_released_at_time > time() ){
 				unset($target_schedule_ids[$idx]);
 			}
 		}
@@ -309,7 +329,7 @@ class scheduler {
 	/**
 	 * リリース予約のディレクトリ名をパースする
 	 */
-	private function parse_release_at( $dir ){
+	public function parse_release_at( $dir ){
 		if( !preg_match('/^([0-9]{4})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})\-([0-9]{2})$/', $dir??'', $matched) ){
 			return false;
 		}

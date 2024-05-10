@@ -78,6 +78,11 @@ mix
 	.js('src_front/schedule_form/schedule_form.js', 'resources/schedule_form/')
 	.sass('src_front/schedule_form/schedule_form.scss', 'resources/schedule_form/')
 
+	// --------------------------------------
+	// Scheduler
+	.js('src_front/scheduler/scheduler.js', 'resources/scheduler/')
+	.sass('src_front/scheduler/scheduler.scss', 'resources/scheduler/')
+
 
 	// --------------------------------------
 	// Static Frontend Libraries
