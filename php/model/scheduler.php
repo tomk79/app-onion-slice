@@ -58,9 +58,21 @@ class scheduler {
 			return false;
 		}
 
+		// リビジョンに関する情報を収集する
+		$projects = new \tomk79\onionSlice\model\projects($this->rencon);
+		$project_info = $projects->get_project($this->project->get_project_id());
+		$staging_project_info = $projects->get_project( $project_info->staging );
+		$gitHelper = new \tomk79\onionSlice\helpers\git($this->rencon, $staging_project_info);
+		$revision_info = $gitHelper->get_revision_info($revision);
+
+		// 新しい配信予約情報を作成
 		$current_schedule->{$schedule_id} = (object) array(
 			'id' => $schedule_id,
 			'revision' => $revision,
+			'author' => $revision_info->author ?? '',
+			'author_email' => $revision_info->author_email ?? '',
+			'date' => $revision_info->date ?? '',
+			'title' => $revision_info->title ?? '',
 			'release_at' => $release_at,
 		);
 		$current_schedule = (array) $current_schedule;
@@ -70,6 +82,7 @@ class scheduler {
 		// 古いスタンバイを削除する
 		$current_schedule = $this->remove_old_standbies($current_schedule);
 
+		// タスクを保存する
 		$json = (object) array(
 			'uniqid' => uniqid(),
 			'type' => 'reserve',

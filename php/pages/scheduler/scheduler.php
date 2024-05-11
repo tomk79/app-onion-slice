@@ -107,6 +107,15 @@ class scheduler {
 					<?php if( strlen($validationResult->errors->{'input-revision'} ?? '') ){ ?><div class="px2-error"><?= htmlspecialchars($validationResult->errors->{'input-revision'}) ?></div><?php } ?>
 					<input type="hidden" id="input-revision" name="input-revision" value="<?= htmlspecialchars($this->rencon->req()->get_param('input-revision') ?? '') ?>" />
 					<?= htmlspecialchars($this->rencon->req()->get_param('input-revision') ?? '') ?>
+
+					<?php
+					$project_info = $this->projects->get_project($this->project_id);
+					$staging_project_info = $this->projects->get_project( $project_info->staging );
+					$gitHelper = new \tomk79\onionSlice\helpers\git($this->rencon, $staging_project_info);
+					$revision_info = $gitHelper->get_revision_info($this->rencon->req()->get_param('input-revision'));
+					?>
+					<div>Author: <code><?= htmlspecialchars($revision_info->author ?? '') ?> (<?= htmlspecialchars($revision_info->author_email ?? '') ?>)</code></div>
+					<div>Title: <code><?= htmlspecialchars($revision_info->title ?? '') ?></code></div>
 				</div>
 			</li>
 			<li class="px2-form-input-list__li">

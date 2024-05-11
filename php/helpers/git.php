@@ -80,6 +80,44 @@ class git {
 	}
 
 	/**
+	 * 指定したリビジョン(コミットID)の情報を取得する
+	 */
+	public function get_revision_info($revision){
+		$sep = ',-----,';
+		$result = $this->exec_git_command(array(
+			'show',
+			'-s',
+			'--format=%H'
+				.$sep.'%an'
+				.$sep.'%ae'
+				.$sep.'%cn'
+				.$sep.'%ce'
+				.$sep.'%aI'
+				.$sep.'%s'
+				.$sep.'%b',
+			$revision));
+		if(!($result['result'] ?? false)){
+			return false;
+		}
+		if(!is_string($result['stdout']) || !strlen($result['stdout'] ?? '')){
+			return false;
+		}
+		$stdout_ary = explode($sep, trim($result['stdout']));
+		$idx = 0;
+		$rtn = (object) array(
+			"revision" => $stdout_ary[$idx++],
+			"author" => $stdout_ary[$idx++],
+			"author_email" => $stdout_ary[$idx++],
+			"committer" => $stdout_ary[$idx++],
+			"committer_email" => $stdout_ary[$idx++],
+			"date" => $stdout_ary[$idx++],
+			"title" => $stdout_ary[$idx++],
+			"comment" => $stdout_ary[$idx++],
+		);
+		return $rtn;
+	}
+
+	/**
 	 * Gitリモートサーバーからデフォルトのブランチ名を取得する
 	 */
 	public function get_remote_default_branch_name( $git_url = null ) {
