@@ -29,6 +29,7 @@ if( !count(array_keys(get_object_vars($active_schedules))) ){
 				<tr>
 					<th>公開予定日時</th>
 					<th>リビジョン</th>
+					<th>タイトル</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -46,6 +47,7 @@ if( !count(array_keys(get_object_vars($active_schedules))) ){
 				<tr<?= $class_name ?>>
 					<td><?= htmlspecialchars($schedule_info->release_at ?? '---') ?></td>
 					<td><?= htmlspecialchars($schedule_info->revision ?? '---') ?></td>
+					<td><?= htmlspecialchars($schedule_info->title ?? '---') ?></td>
 					<td><a href="?a=proj.<?= htmlspecialchars($project_id ?? '') ?>.scheduler.<?= htmlspecialchars($schedule_id ?? '') ?>.detail" class="px2-btn px2-btn--primary">詳細</a></td>
 				</tr>
 				<?php

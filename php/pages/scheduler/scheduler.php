@@ -9,6 +9,7 @@ class scheduler {
 	private $scheduler;
 	private $schedule_id;
 	private $schedule_info;
+	private $gitHelper;
 
 	/**
 	 * 新規作成画面
@@ -45,6 +46,10 @@ class scheduler {
 		$this->scheduler = new \tomk79\onionSlice\model\scheduler( $this->rencon, $this->project_id );
 		$this->schedule_id = $rencon->get_route_param('scheduleId');
 		$this->schedule_info = $this->scheduler->get_schedule($this->schedule_id);
+
+		$project_info = $this->projects->get_project($this->project_id);
+		$staging_project_info = $this->projects->get_project( $project_info->staging );
+		$this->gitHelper = new \tomk79\onionSlice\helpers\git($this->rencon, $staging_project_info);
 	}
 
 
@@ -109,10 +114,7 @@ class scheduler {
 					<?= htmlspecialchars($this->rencon->req()->get_param('input-revision') ?? '') ?>
 
 					<?php
-					$project_info = $this->projects->get_project($this->project_id);
-					$staging_project_info = $this->projects->get_project( $project_info->staging );
-					$gitHelper = new \tomk79\onionSlice\helpers\git($this->rencon, $staging_project_info);
-					$revision_info = $gitHelper->get_revision_info($this->rencon->req()->get_param('input-revision'));
+					$revision_info = $this->gitHelper->get_revision_info($this->rencon->req()->get_param('input-revision'));
 					?>
 					<div>Author: <code><?= htmlspecialchars($revision_info->author ?? '') ?> (<?= htmlspecialchars($revision_info->author_email ?? '') ?>)</code></div>
 					<div>Title: <code><?= htmlspecialchars($revision_info->title ?? '') ?></code></div>
@@ -252,7 +254,18 @@ if( !$this->schedule_info ){
 	</tr>
 	<tr>
 		<th>リビジョン</th>
-		<td><?= htmlspecialchars($this->schedule_info->revision ?? '---') ?></td>
+		<td>
+			<div><?= htmlspecialchars($this->schedule_info->revision ?? '---') ?></div>
+			<?php
+			if( $this->schedule_info->revision ?? null ){
+				$revision_info = $this->gitHelper->get_revision_info($this->schedule_info->revision);
+				?>
+				<div>Author: <code><?= htmlspecialchars($revision_info->author ?? '') ?> (<?= htmlspecialchars($revision_info->author_email ?? '') ?>)</code></div>
+				<div>Title: <code><?= htmlspecialchars($revision_info->title ?? '') ?></code></div>
+				<?php
+			}
+			?>
+		</td>
 	</tr>
 </tbody>
 </table>

@@ -5,6 +5,10 @@ $project = $projects->get($project_id);
 $scheduler = $project->scheduler();
 $task_id = $rencon->get_route_param('taskId');
 $task_info = $scheduler->get_task($task_id);
+
+$project_info = $projects->get_project($project_id);
+$staging_project_info = $projects->get_project( $project_info->staging );
+$gitHelper = new \tomk79\onionSlice\helpers\git($rencon, $staging_project_info);
 ?>
 
 
@@ -42,7 +46,18 @@ if( !$task_info ){
 			</tr>
 			<tr>
 				<th>リビジョン</th>
-				<td><?= htmlspecialchars($task_info->properties->revision ?? '---') ?></td>
+				<td>
+					<div><?= htmlspecialchars($task_info->properties->revision ?? '---') ?></div>
+					<?php
+					if( $task_info->properties->revision ?? null ){
+						$revision_info = $gitHelper->get_revision_info($task_info->properties->revision);
+						?>
+						<div>Author: <code><?= htmlspecialchars($revision_info->author ?? '') ?> (<?= htmlspecialchars($revision_info->author_email ?? '') ?>)</code></div>
+						<div>Title: <code><?= htmlspecialchars($revision_info->title ?? '') ?></code></div>
+						<?php
+					}
+					?>
+				</td>
 			</tr>
 		</tbody>
 	</table>
