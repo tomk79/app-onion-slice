@@ -48,7 +48,7 @@ Onion Slice には、スケジュール更新機能が付属しています。
 
 ## 更新履歴 - Change log
 
-### tomk79/app-onion-slice v0.2.1 (リリース日未定)
+### tomk79/app-onion-slice v0.3.0 (2024年5月17日)
 
 - `onion-slice--waiter.phar` の設定に `scripts.post-deploy-cmd` を追加。
 - `onion-slice--waiter.phar` にPHPコマンドのパスが設定されていないときに、実行中のPHPからコマンドのパスを取得するようになった。
