@@ -218,6 +218,9 @@ class git {
 		$rtn = array();
 		$rtn['result'] = true;
 		$rtn['message'] = 'OK';
+		$rtn['exitcode'] = null;
+		$rtn['stdout'] = null;
+		$rtn['stderr'] = null;
 
 		if( !is_array( $git_command_array ) || !count( $git_command_array ) ){
 			return array(
@@ -245,10 +248,8 @@ class git {
 		$this->clear_remote_origin();
 
 		if( !$res_cmd['result'] ){
-			return array(
-				'result' => false,
-				'message' => $this->conceal_confidentials($res_cmd['stdout']).$this->conceal_confidentials($res_cmd['stderr']),
-			);
+			$rtn['result'] = false;
+			$rtn['message'] = 'Command failed.';
 		}
 
 		$rtn['exitcode'] = $res_cmd['exitcode'];
@@ -372,6 +373,7 @@ class git {
 			'result' => null,
 			'stdout' => null,
 			'stderr' => null,
+			'exitcode' => null,
 		);
 		$realpath_git_root = $this->realpath_git_root();
 		if( !$realpath_git_root ){
@@ -379,6 +381,7 @@ class git {
 				'result' => false,
 				'stdout' => null,
 				'stderr' => '.git is not found.',
+				'exitcode' => 1,
 			);
 		}
 
@@ -454,9 +457,9 @@ class git {
 
 		$rtn['result'] = true;
 		$rtn['exitcode'] = $stat['exitcode'];
-		$rtn['stdout'] = $io[1]; // stdout
-		if( isset($io[2]) && strlen( $io[2] ) ){
-			$rtn['stderr'] = $io[2]; // stderr
+		$rtn['stdout'] = $io[1];
+		if( strlen( $io[2] ?? '' ) ){
+			$rtn['stderr'] = $io[2];
 		}
 		if( $rtn['exitcode'] ){
 			$rtn['result'] = false;
