@@ -148,6 +148,11 @@
 			"allow_methods": "post",
 			"page": "tomk79\\onionSlice\\api\\remote_finder::gpi"
 		},
+		"api.{projectId?}.remote_finder.download": {
+			"title": "Remote Finder: Download",
+			"allow_methods": "get",
+			"page": "tomk79\\onionSlice\\api\\remote_finder::download"
+		},
 		"api.{projectId?}.remote_finder.parse_px2_filepath": {
 			"title": "api.parse_px2_filepath",
 			"allow_methods": "post",

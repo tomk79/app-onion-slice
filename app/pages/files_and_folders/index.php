@@ -391,7 +391,10 @@ var remoteFinder = window.remoteFinder = new RemoteFinder(
 					return;
 				}); })
 			;
-		}
+		},
+		"generateDownloadLink": function(targetFile, callback){
+			callback("?a=api.<?= htmlspecialchars( $project_id ?? '' ) ?>.remote_finder.download&path=" + encodeURIComponent(targetFile));
+		},
 	}
 );
 remoteFinder.init('/', {}, function(){
