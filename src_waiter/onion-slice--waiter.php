@@ -364,22 +364,22 @@ class app {
 			$stdout .= shell_exec($this->get_cmd('git').' init');
 			$stdout .= shell_exec($this->get_cmd('git').' fetch --depth 1 '.escapeshellarg($this->onion_slice_env->git_remote).' '.escapeshellarg($revision).'');
 			$stdout .= shell_exec($this->get_cmd('git').' reset --hard FETCH_HEAD');
-		}
 
-		// composer install する
-		if( is_file('./composer.json') ){
-			$stdout .= shell_exec($this->get_cmd('php').' '.$this->get_cmd('composer').' install');
-		}
-
-		// post-deploy-cmd を実行する
-		if( !is_null( $this->onion_slice_env->scripts->{'post-deploy-cmd'} ?? null ) ){
-			$commands = $this->onion_slice_env->scripts->{'post-deploy-cmd'};
-			if( is_string($commands) ){
-				$commands = array($commands);
+			// composer install する
+			if( is_file('./composer.json') ){
+				$stdout .= shell_exec($this->get_cmd('php').' '.$this->get_cmd('composer').' install');
 			}
-			foreach($commands as $command){
-				$command = preg_replace('/^\@php\s/', $this->get_cmd('php').' ', $command);
-				$stdout .= shell_exec($command);
+
+			// post-deploy-cmd を実行する
+			if( !is_null( $this->onion_slice_env->scripts->{'post-deploy-cmd'} ?? null ) ){
+				$commands = $this->onion_slice_env->scripts->{'post-deploy-cmd'};
+				if( is_string($commands) ){
+					$commands = array($commands);
+				}
+				foreach($commands as $command){
+					$command = preg_replace('/^\@php\s/', $this->get_cmd('php').' ', $command);
+					$stdout .= shell_exec($command);
+				}
 			}
 		}
 

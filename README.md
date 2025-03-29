@@ -52,6 +52,7 @@ Onion Slice には、スケジュール更新機能が付属しています。
 
 - Git操作機能のエラー処理に関する改善。
 - ファイルとフォルダ機能で、ダウンロードの処理を改善した。
+- `onion-slice--waiter.phar` が、デプロイタスクがない場合にも `scripts.post-deploy-cmd` と `composer install` を実行する問題を修正した。
 
 ### tomk79/app-onion-slice v0.3.0 (2024年5月17日)
 
